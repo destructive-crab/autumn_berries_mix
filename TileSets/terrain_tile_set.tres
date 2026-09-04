@@ -1,0 +1,25 @@
+[gd_resource type="TileSet" format=3 uid="uid://c7yd4n7b2pxec"]
+
+[ext_resource type="Texture2D" uid="uid://cv6kwvksaco0s" path="res://Art/GrassTile.png" id="1_iu0kk"]
+[ext_resource type="Texture2D" uid="uid://daqhnqql0yx00" path="res://Art/AttackOverlay.png" id="2_kf8tp"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kf8tp"]
+texture = ExtResource("1_iu0kk")
+texture_region_size = Vector2i(36, 42)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rrinc"]
+texture = ExtResource("2_kf8tp")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+
+[resource]
+tile_size = Vector2i(36, 36)
+sources/0 = SubResource("TileSetAtlasSource_kf8tp")
+sources/1 = SubResource("TileSetAtlasSource_rrinc")

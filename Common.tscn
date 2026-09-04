@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dhjjlcfusym3v"]
+
+[ext_resource type="Script" uid="uid://bfqmcj0am00be" path="res://CodeBase/Level/LevelRoot.cs" id="1_lco8v"]
+[ext_resource type="TileSet" uid="uid://c7yd4n7b2pxec" path="res://TileSets/terrain_tile_set.tres" id="2_ai7lv"]
+
+[node name="Node2D" type="Node2D" unique_id=2079866789]
+script = ExtResource("1_lco8v")
+TerrainTileSet = ExtResource("2_ai7lv")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=960265084]
+zoom = Vector2(4.955, 4.955)

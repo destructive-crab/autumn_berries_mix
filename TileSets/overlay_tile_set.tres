@@ -1,0 +1,32 @@
+[gd_resource type="TileSet" format=3 uid="uid://c4yaa0eifwep5"]
+
+[ext_resource type="Texture2D" uid="uid://cflv03hc0foi7" path="res://Art/Arrow.png" id="1_y1eyj"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d842k"]
+texture = ExtResource("1_y1eyj")
+texture_region_size = Vector2i(36, 36)
+3:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+9:0/0 = 0
+10:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+8:1/0 = 0
+9:1/0 = 0
+10:1/0 = 0
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+4:0/0 = 0
+
+[resource]
+sources/0 = SubResource("TileSetAtlasSource_d842k")
