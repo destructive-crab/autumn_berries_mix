@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://x0df32w03bsx"
-path="res://.godot/imported/Wind.png-872260a8602ae15ee712c27673b5b66f.ctex"
+path="res://.godot/imported/Wind.png-426e0260715cb64fb5085d53901ff5fa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Wind.png"
-dest_files=["res://.godot/imported/Wind.png-872260a8602ae15ee712c27673b5b66f.ctex"]
+source_file="res://art/Wind.png"
+dest_files=["res://.godot/imported/Wind.png-426e0260715cb64fb5085d53901ff5fa.ctex"]
 
 [params]
 

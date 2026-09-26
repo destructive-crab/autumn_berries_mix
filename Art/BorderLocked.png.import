@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://blu5jm5qnk212"
-path="res://.godot/imported/BorderLocked.png-e2f64d2a59b3587e85417234d64b0568.ctex"
+path="res://.godot/imported/BorderLocked.png-1392dd3847a97c5e4d52faa47d2deb38.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/BorderLocked.png"
-dest_files=["res://.godot/imported/BorderLocked.png-e2f64d2a59b3587e85417234d64b0568.ctex"]
+source_file="res://art/BorderLocked.png"
+dest_files=["res://.godot/imported/BorderLocked.png-1392dd3847a97c5e4d52faa47d2deb38.ctex"]
 
 [params]
 

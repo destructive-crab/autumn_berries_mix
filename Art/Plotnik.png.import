@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bcbqas7mpia0f"
-path="res://.godot/imported/Plotnik.png-0999006b71d3db025902127b81ed8e91.ctex"
+path="res://.godot/imported/Plotnik.png-4083737d3215726883cac98f6ce74976.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Plotnik.png"
-dest_files=["res://.godot/imported/Plotnik.png-0999006b71d3db025902127b81ed8e91.ctex"]
+source_file="res://art/Plotnik.png"
+dest_files=["res://.godot/imported/Plotnik.png-4083737d3215726883cac98f6ce74976.ctex"]
 
 [params]
 

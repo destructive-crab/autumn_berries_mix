@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dd1gvt8xf87ea"]
 
-[ext_resource type="Script" uid="uid://h03lu8c02qsv" path="res://CodeBase/Units/Chainy/ChainyUnit.cs" id="1_whs23"]
-[ext_resource type="Texture2D" uid="uid://d4kxfcov45gb3" path="res://Art/Chainy.png" id="2_pwnm2"]
+[ext_resource type="Texture2D" uid="uid://d4kxfcov45gb3" path="res://art/Chainy.png" id="2_pwnm2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qq23j"]
 atlas = ExtResource("2_pwnm2")
@@ -26,7 +25,6 @@ animations = [{
 }]
 
 [node name="Chainy" type="Node2D" unique_id=1413957695]
-script = ExtResource("1_whs23")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=618865715]
 z_index = 2
@@ -34,4 +32,3 @@ sprite_frames = SubResource("SpriteFrames_0fhg4")
 animation = &"idle"
 frame_progress = 0.8538009
 offset = Vector2(0, -18)
-script = ExtResource("1_whs23")

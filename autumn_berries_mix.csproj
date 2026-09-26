@@ -15,4 +15,7 @@
   <ItemGroup>
     <PackageReference Include="GDTask" Version="3.2.1" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="code_base\gui\" />
+  </ItemGroup>
 </Project>

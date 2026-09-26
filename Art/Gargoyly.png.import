@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://tpo73tfq0yxw"
-path="res://.godot/imported/Gargoyly.png-29c44f8fe4c9fd38fa281010c1945797.ctex"
+path="res://.godot/imported/Gargoyly.png-ca8de022032c1a4553e14c2e78201356.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Gargoyly.png"
-dest_files=["res://.godot/imported/Gargoyly.png-29c44f8fe4c9fd38fa281010c1945797.ctex"]
+source_file="res://art/Gargoyly.png"
+dest_files=["res://.godot/imported/Gargoyly.png-ca8de022032c1a4553e14c2e78201356.ctex"]
 
 [params]
 

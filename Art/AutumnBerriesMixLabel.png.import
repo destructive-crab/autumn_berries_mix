@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://chhqo6shc6mv7"
-path="res://.godot/imported/AutumnBerriesMixLabel.png-989761bae68296137be8f9ab93985ad0.ctex"
+path="res://.godot/imported/AutumnBerriesMixLabel.png-c18512fe50f4409590737233eea0dadb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/AutumnBerriesMixLabel.png"
-dest_files=["res://.godot/imported/AutumnBerriesMixLabel.png-989761bae68296137be8f9ab93985ad0.ctex"]
+source_file="res://art/AutumnBerriesMixLabel.png"
+dest_files=["res://.godot/imported/AutumnBerriesMixLabel.png-c18512fe50f4409590737233eea0dadb.ctex"]
 
 [params]
 

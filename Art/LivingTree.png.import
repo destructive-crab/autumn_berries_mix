@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cohtkjj3a5sbr"
-path="res://.godot/imported/LivingTree.png-a6761e720dee95dc5654336562fe7db8.ctex"
+path="res://.godot/imported/LivingTree.png-c23b97fc7e3d9dd35de0fd5b34ca471b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/LivingTree.png"
-dest_files=["res://.godot/imported/LivingTree.png-a6761e720dee95dc5654336562fe7db8.ctex"]
+source_file="res://art/LivingTree.png"
+dest_files=["res://.godot/imported/LivingTree.png-c23b97fc7e3d9dd35de0fd5b34ca471b.ctex"]
 
 [params]
 

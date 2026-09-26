@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://dqetolemrv5ha"]
+
+[ext_resource type="Texture2D" uid="uid://cflv03hc0foi7" path="res://art/Overlay/Arrow.png" id="1_hqa8y"]
+[ext_resource type="Script" uid="uid://0qnen75meiel" path="res://code_base/gameplay/overlay/OverlayAnimatedNode.cs" id="2_fu8yg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7j15w"]
+atlas = ExtResource("1_hqa8y")
+region = Rect2(144, 0, 36, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rowcf"]
+atlas = ExtResource("1_hqa8y")
+region = Rect2(108, 0, 36, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqa8y"]
+atlas = ExtResource("1_hqa8y")
+region = Rect2(0, 0, 36, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o331s"]
+atlas = ExtResource("1_hqa8y")
+region = Rect2(36, 0, 36, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m0yl1"]
+atlas = ExtResource("1_hqa8y")
+region = Rect2(72, 0, 36, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ixi5"]
+atlas = ExtResource("1_hqa8y")
+region = Rect2(108, 0, 36, 36)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fu8yg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7j15w")
+}],
+"loop": 1,
+"name": &"pointed_began",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rowcf")
+}],
+"loop": 1,
+"name": &"pointed_ended",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.25,
+"texture": SubResource("AtlasTexture_hqa8y")
+}, {
+"duration": 0.25,
+"texture": SubResource("AtlasTexture_o331s")
+}, {
+"duration": 0.25,
+"texture": SubResource("AtlasTexture_m0yl1")
+}, {
+"duration": 0.25,
+"texture": SubResource("AtlasTexture_0ixi5")
+}],
+"loop": 0,
+"name": &"ready",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": 1,
+"name": &"selected",
+"speed": 5.0
+}]
+
+[node name="Selection" type="Node2D" unique_id=1504160349]
+z_index = 3
+script = ExtResource("2_fu8yg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=899933973]
+rotation = 3.1415927
+sprite_frames = SubResource("SpriteFrames_fu8yg")
+animation = &"ready"

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://daqhnqql0yx00"
-path="res://.godot/imported/AttackOverlay.png-a930dc1675fe321bd244d876a10cd82a.ctex"
+path="res://.godot/imported/AttackOverlay.png-851b9e269cb3f4e43015fa17306d74ae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/AttackOverlay.png"
-dest_files=["res://.godot/imported/AttackOverlay.png-a930dc1675fe321bd244d876a10cd82a.ctex"]
+source_file="res://art/AttackOverlay.png"
+dest_files=["res://.godot/imported/AttackOverlay.png-851b9e269cb3f4e43015fa17306d74ae.ctex"]
 
 [params]
 

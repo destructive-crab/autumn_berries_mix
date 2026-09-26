@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://coj3n56ydb4v4"]
+
+[ext_resource type="Texture2D" uid="uid://bxlmwkosbobyp" path="res://art/Border.png" id="1_uuu0o"]
+[ext_resource type="Script" uid="uid://dtufsx0isr3fc" path="res://code_base/gameplay/overlay/OverlayNode.cs" id="2_c1tee"]
+
+[node name="Selection" type="Sprite2D" unique_id=2109466638]
+z_index = 2
+texture = ExtResource("1_uuu0o")
+script = ExtResource("2_c1tee")

@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dikb2owjfs6m7"]
+
+[ext_resource type="Script" uid="uid://doe6xc8dmoesq" path="res://code_base/gui/GameHUD.cs" id="1_o4xvh"]
+[ext_resource type="Script" uid="uid://dgl18cejvvrsy" path="res://code_base/gui/ActionsHUD/ActionsPanel.cs" id="2_tweix"]
+[ext_resource type="PackedScene" uid="uid://ba1jhwwekgpxm" path="res://art/UI/AbilitiesHUD/action_button.tscn" id="3_lo41u"]
+[ext_resource type="Texture2D" uid="uid://dkebvoptjl06t" path="res://art/UI/AbilitiesPanel.png" id="4_q1h7t"]
+
+[node name="GameHUD" type="CanvasLayer" unique_id=291493118]
+script = ExtResource("1_o4xvh")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1358952687]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -176.0
+offset_right = 296.0
+grow_vertical = 0
+
+[node name="ActionsPanel" type="GridContainer" parent="CenterContainer" unique_id=1382378743]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 4
+script = ExtResource("2_tweix")
+actionButton = ExtResource("3_lo41u")
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer" unique_id=997894285]
+custom_minimum_size = Vector2(380, 200)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_q1h7t")
