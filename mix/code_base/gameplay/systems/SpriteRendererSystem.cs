@@ -1,11 +1,13 @@
+using System.Numerics;
 using destruct.Debug;
 using destruct.ecs;
 using destruct.scenes;
+using mix.gameplay.systems;
 using Raylib_cs;
 
 namespace mix.code_base;
 
-public sealed class RendererSystem : ISceneSystem, ISceneSystemTick
+public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemTick
 {
     private readonly ECSWorld world;
     
@@ -14,7 +16,7 @@ public sealed class RendererSystem : ISceneSystem, ISceneSystemTick
 
     private readonly List<int> entities = new();
     
-    public RendererSystem(ECSWorld world)
+    public SpriteRendererSystem(ECSWorld world)
     {
         this.world = world;
         texturesPool = world.Pool<Sprite>();
@@ -70,11 +72,18 @@ public sealed class RendererSystem : ISceneSystem, ISceneSystemTick
             if (sprite.Hidden) continue;
             
             var position = positionPool.Get(entity);
+            Vector2 pivot = new(sprite.Rect.Width * sprite.Pivot.X - sprite.DrawOffsetInPixels.X, 
+                                sprite.Rect.Height * sprite.Pivot.Y - sprite.DrawOffsetInPixels.Y);
 
-            Raylib.DrawTexture(
+            int x = (int)Math.Round(position.X * Global.PixelsPerUnit);
+            int y = (int)Math.Round(position.Y * Global.PixelsPerUnit);
+
+            Raylib.DrawTexturePro(
                 sprite.Texture, 
-                (int)Math.Round(position.X * Global.PixelsPerUnit - sprite.Texture.Width*sprite.Pivot.X + sprite.DrawOffsetInPixels.X), 
-                (int)Math.Round(position.Y * Global.PixelsPerUnit - sprite.Texture.Height*sprite.Pivot.Y + sprite.DrawOffsetInPixels.Y), 
+                sprite.Rect,
+                new Rectangle(x,y, sprite.Rect.Width, sprite.Rect.Height),
+                pivot, 
+                0,
                 Color.White);
         }
     }

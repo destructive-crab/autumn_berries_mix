@@ -41,8 +41,7 @@ public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemTick
         world.Pool<Position>().NewComponent(pointedCellOverlayEntity);
         world.Pool<Sprite>().NewComponent(pointedCellOverlayEntity, (ref Sprite s) =>
         {
-            s.Texture = Assets.LoadTexture(AssetsPath.PointedCellBorder);
-            s.Pivot = new(0.5f, 0.5f);
+            s = Sprite.From(AssetsPath.PointedCellBorder);
             s.DrawOrder = 1;
         });
         
@@ -50,8 +49,7 @@ public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemTick
         world.Pool<Position>().NewComponent(selectedCellOverlayEntity);
         world.Pool<Sprite>().NewComponent(selectedCellOverlayEntity, (ref Sprite s) =>
         {
-            s.Texture = Assets.LoadTexture(AssetsPath.SelectedCellBorder);
-            s.Pivot = new(0.5f, 0.5f);
+            s = Sprite.From(AssetsPath.SelectedCellBorder);
             s.DrawOrder = 1;
             s.Hidden = true;
         });

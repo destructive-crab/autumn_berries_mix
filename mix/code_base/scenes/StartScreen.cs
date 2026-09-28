@@ -12,18 +12,18 @@ public sealed class StartScreen : Scene, IDependenciesProvider
 
     protected override void OnSceneLoaded()
     {
-        ImGUI.Font = Raylib.LoadFont("assets/font.ttf");
+        deGUI.Font = Raylib.LoadFont("assets/font.ttf");
     }
 
     public override void Tick()
     {
-        ImGUI.BeginGUI();
+        deGUI.BeginGUI();
         {
-            if (ImGUI.Button("Test Scene", ImGUI.CenterX()-100, ImGUI.CenterY() - 15, 200, 30))
+            if (deGUI.Button("Test Scene", deGUI.CenterX()-100, deGUI.CenterY() - 15, 200, 30))
             {
                 Game.G<SceneSwitcher>().SwitchTo(new TestScene());
             }
         }
-        ImGUI.EndGUI();
+        deGUI.EndGUI();
     }
 }

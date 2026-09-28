@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using destruct.Debug;
 using destruct.ServiceLocators;
 using Raylib_cs;
@@ -18,6 +19,8 @@ public partial class Game
     public static readonly IServiceLocator[] ModulesLocators = [modulesStorage, debugModulesStorage];
 
     public static Scene CurrentScene => G<SceneSwitcher>().CurrentScene;
+
+    public static float DeltaTime { get; private set; }
     
     public static async Task StartGame(bool allowDebug, GameStartPoint point)
     {
@@ -68,8 +71,12 @@ public partial class Game
 
     public static void Loop()
     {
+        Stopwatch stopwatch = new();
+        stopwatch.Start();
+        
         while (Awake && !Raylib.WindowShouldClose())
         {
+            DeltaTime = Raylib.GetFrameTime();
             Raylib.BeginDrawing();
             {
                 Raylib.ClearBackground(Color.Black);

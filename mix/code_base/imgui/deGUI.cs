@@ -7,7 +7,7 @@ namespace destruct.imgui;
 
 public struct GUIContainer
 {
-    public GUIRect Rect;
+    public Rect Rect;
     
     public GUIContainer(int x, int y, int w, int h)
     {
@@ -15,23 +15,7 @@ public struct GUIContainer
     }
 }
 
-public struct GUIRect
-{
-    public int X;
-    public int Y;
-    public int W;
-    public int H;
-
-    public GUIRect(int x, int y, int w, int h)
-    {
-        X = x;
-        Y = y;
-        W = w;
-        H = h;
-    }
-}
-
-public static class ImGUI
+public static class deGUI
 {
     private static readonly List<GUIContainer> containers = new();
     
@@ -109,7 +93,7 @@ public static class ImGUI
         return click;
     }
 
-    private static bool IsOverlapped(GUIRect rect)
+    private static bool IsOverlapped(Rect rect)
     {
         Vector2 mp = Raylib.GetMousePosition();
         return mp.X >= rect.X && mp.Y >= rect.Y && mp.X <= (rect.X + rect.W) && mp.Y <= (rect.Y + rect.H);

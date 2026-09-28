@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="RayGUI-cs" Version="2.0.5" />
+      <PackageReference Include="AsepriteDotNet" Version="1.9.1" />
       <PackageReference Include="Raylib-cs" Version="8.1.0" />
     </ItemGroup>
 
