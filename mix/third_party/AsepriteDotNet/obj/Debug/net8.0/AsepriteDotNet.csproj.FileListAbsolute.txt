@@ -1,0 +1,12 @@
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\bin\Debug\net8.0\AsepriteDotNet.deps.json
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\bin\Debug\net8.0\AsepriteDotNet.dll
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\bin\Debug\net8.0\AsepriteDotNet.pdb
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\AsepriteDotNet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\AsepriteDotNet.AssemblyInfoInputs.cache
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\AsepriteDotNet.AssemblyInfo.cs
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\AsepriteDotNet.csproj.CoreCompileInputs.cache
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\AsepriteDotNet.sourcelink.json
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\AsepriteDotNet.dll
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\refint\AsepriteDotNet.dll
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\AsepriteDotNet.pdb
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\third_party\AsepriteDotNet\obj\Debug\net8.0\ref\AsepriteDotNet.dll

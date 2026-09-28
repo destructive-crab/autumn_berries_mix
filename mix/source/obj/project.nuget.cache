@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "JrV0vnzDOzo=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\destructive_crab\\dev\\1 - projectz\\autumn_berries_mix\\mix\\source\\mix.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\destructive_crab\\.nuget\\packages\\raylib-cs\\8.1.0\\raylib-cs.8.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}
