@@ -13,7 +13,7 @@ public struct Sprite
     public Vector2 Pivot;
     public Vec2I DrawOffsetInPixels;
     
-    public Texture2D Texture;
+    public CachedTexture Texture;
 
     public Rectangle Rect;
     
@@ -27,7 +27,7 @@ public struct Sprite
     {
         Sprite s = new();
         s.Texture = Assets.LoadTexture(assetPath);
-        s.Rect = new Rectangle(0, 0, s.Texture.Width, s.Texture.Height);
+        s.Rect = new Rectangle(0, 0, s.Texture.Get().Width, s.Texture.Get().Height);
         s.Pivot = new(0.5f, 0.5f);
         s.Hidden = false;
         s.DrawOrder = 0;

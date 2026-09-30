@@ -1,3 +1,7 @@
+using AsepriteDotNet.Common;
+using destruct.Debug;
+using mix.aseprite;
+using mix.gameplay.systems;
 using Raylib_cs;
 
 public struct AssetsPath
@@ -7,15 +11,85 @@ public struct AssetsPath
     public const string SelectedCellBorder = "assets/overlay/cell_selected.png";
 }
 
+public abstract class CachedTexture : IDisposable
+{
+    public abstract Texture2D Get();
+
+    public abstract void Dispose();
+}
+
+public sealed class RaylibCachedTexture : CachedTexture
+{
+    private readonly Texture2D texture;
+
+    public RaylibCachedTexture(string assetPath)
+    {
+        texture = Raylib.LoadTexture(assetPath);
+    }
+
+    ~RaylibCachedTexture() 
+        => Dispose();
+
+    public override Texture2D Get() 
+        => texture;
+
+    public override void Dispose() 
+        => Raylib.UnloadTexture(texture);
+}
+
+public sealed class AsepriteCachedTexture : CachedTexture
+{
+    private readonly Texture2D texture;
+    
+    public AsepriteCachedTexture(AsepriteDotNet.Texture texture)
+    {
+        Image image = Raylib.GenImageColor(texture.Size.Width, texture.Size.Height, Color.Blank);
+
+        for (var i = 0; i < texture.Pixels.Length; i++)
+        {
+            Rgba32 pixel = texture.Pixels[i];
+            Raylib.ImageDrawPixel(ref image, 
+                i % texture.Size.Height, 
+                i / texture.Size.Width, 
+                new(pixel.R, pixel.G, pixel.B, pixel.A));
+        }
+
+        this.texture = Raylib.LoadTextureFromImage(image);
+        Raylib.UnloadImage(image);
+    }
+    
+    public override Texture2D Get() 
+        => texture;
+
+    public override void Dispose()
+    {
+        Raylib.UnloadTexture(texture);
+    }
+}
+
 public static class Assets
 {
-    private static readonly Dictionary<string, Texture2D> cachedTextures = new();
-    
-    public static Texture2D LoadTexture(string path)
-    {
-        if (cachedTextures.TryGetValue(path, out var cache)) return cache;
+    private static readonly Dictionary<string, CachedTexture> cachedTextures = new();
 
-        Texture2D texture = Raylib.LoadTexture(path);
+    public static AnimationClip[] LoadClipsFromAseFile(string path) 
+        => AsepriteImporter.ImportClips(path);
+
+    public static CachedTexture CreateTextureFromAsepriteTextureAndCache(string path, AsepriteDotNet.Texture texture)
+    {
+        if (cachedTextures.TryGetValue(path, out var cache)) 
+            return cache;
+
+        AsepriteCachedTexture res = new AsepriteCachedTexture(texture);
+        cachedTextures.Add(path, res);
+        return res;
+    }
+    
+    public static CachedTexture LoadTexture(string path)
+    {
+        if (cachedTextures.TryGetValue(path, out var cache)) 
+            return cache;
+
+        RaylibCachedTexture texture = new RaylibCachedTexture(path);
         cachedTextures.Add(path, texture);
         return texture;
     }
@@ -24,7 +98,7 @@ public static class Assets
     {
         if (cachedTextures.TryGetValue(path, out var cache))
         {
-            Raylib.UnloadTexture(cache);
+            cache.Dispose();
             cachedTextures.Remove(path);
         }
     }

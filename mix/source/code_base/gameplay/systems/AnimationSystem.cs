@@ -9,7 +9,7 @@ namespace mix.gameplay.systems;
 
 public struct AnimationClipFrame
 {
-    public Texture2D Texture;
+    public CachedTexture Texture;
 
     public int FrameDurationMS;
 
@@ -17,14 +17,14 @@ public struct AnimationClipFrame
 
     public AnimationClipFrame() {}
     
-    public AnimationClipFrame(Texture2D texture, int frameDurationMs, Rectangle rect)
+    public AnimationClipFrame(CachedTexture texture, int frameDurationMs, Rectangle rect)
     {
         Texture = texture;
         FrameDurationMS = frameDurationMs;
         Rect = rect;
     }
 
-    public AnimationClipFrame(Texture2D texture, int x, int y, int w, int h)
+    public AnimationClipFrame(CachedTexture texture, int x, int y, int w, int h)
     {
         FrameDurationMS = 200;
         Texture = texture;

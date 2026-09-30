@@ -73,17 +73,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
         {
             var t = Assets.LoadTexture("assets/units/enemies/ghost.png");
             animator.ClipFrame = 0;
-            AnimationClip clip = new();
-            clip.Cycle = true;
-            
-            AnimationClipFrame frame1 = new(t, 0,0,36,36);
-            AnimationClipFrame frame2 = new(t, 36,0,36,36);
-            AnimationClipFrame frame3 = new(t, 72,0,36,36);
-            AnimationClipFrame frame4 = new(t, 108,0,36,36);
-
-            clip.Frames = [frame1, frame2, frame3, frame4];
-
-            animator.Current = clip;
+            animator.Current = Assets.LoadClipsFromAseFile("assets/units/enemies/ghost.ase")[0];
         });
     }
 

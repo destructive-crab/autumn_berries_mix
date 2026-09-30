@@ -2,6 +2,7 @@ using System.Numerics;
 using destruct.Debug;
 using destruct.ecs;
 using destruct.scenes;
+using mix.gameplay.systems;
 using Raylib_cs;
 
 namespace mix.code_base;
@@ -41,8 +42,8 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemTick
             var aOrder = aSprite.DrawOrder;
             var bOrder = bSprite.DrawOrder;
             
-            var aY = world.Pool<Position>().Get(a).Y - aSprite.Pivot.Y * (aSprite.Texture.Height/(float)Global.PixelsPerUnit) + aSprite.DrawOffsetInPixels.Y;
-            var bY = world.Pool<Position>().Get(b).Y - bSprite.Pivot.Y * (bSprite.Texture.Height/(float)Global.PixelsPerUnit) + bSprite.DrawOffsetInPixels.Y;
+            var aY = world.Pool<Position>().Get(a).Y - aSprite.Pivot.Y * (aSprite.Texture.Get().Height/(float)Global.PixelsPerUnit) + aSprite.DrawOffsetInPixels.Y;
+            var bY = world.Pool<Position>().Get(b).Y - bSprite.Pivot.Y * (bSprite.Texture.Get().Height/(float)Global.PixelsPerUnit) + bSprite.DrawOffsetInPixels.Y;
 
             if (aOrder > bOrder)
             {
@@ -66,8 +67,13 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemTick
     {
         foreach (int entity in entities)
         {
-            var sprite = texturesPool.Get(entity);
-            
+            Sprite sprite = texturesPool.Get(entity);
+
+            if (sprite.Texture == null)
+            {
+                LGR.PW($"Null texture on sprite of {entity}");
+                continue;
+            }
             if (sprite.Hidden) continue;
             
             var position = positionPool.Get(entity);
@@ -78,7 +84,7 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemTick
             int y = (int)Math.Round(position.Y * Global.PixelsPerUnit);
 
             Raylib.DrawTexturePro(
-                sprite.Texture, 
+                sprite.Texture.Get(), 
                 sprite.Rect,
                 new Rectangle(x,y, sprite.Rect.Width, sprite.Rect.Height),
                 pivot, 

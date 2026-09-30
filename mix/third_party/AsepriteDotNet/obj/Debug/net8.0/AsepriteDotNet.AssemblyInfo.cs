@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AsepriteDotNet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7fcda839f1da1925fe58d6c803aa48b9eb333e70")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7445021556b66d3e8d1deb77df3a014aefb6c334")]
 [assembly: System.Reflection.AssemblyProductAttribute("AsepriteDotNet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AsepriteDotNet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
