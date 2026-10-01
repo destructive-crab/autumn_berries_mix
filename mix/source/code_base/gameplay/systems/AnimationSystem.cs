@@ -50,7 +50,7 @@ public static class AnimatorExtensions
         
         animator.Current = name;
         animator.ClipFrame = 0;
-        animator.MSLeftToNextFrame = animator.Current().Frames[0].FrameDurationMS;
+        animator.TimeLeftToNextFrame = animator.Current().Frames[0].FrameDurationMS;
     }
 
     public static void Pause(ref this Animator animator)
@@ -105,7 +105,7 @@ public struct Animator
     public bool Paused;
     
     public int ClipFrame;
-    public int MSLeftToNextFrame;
+    public float TimeLeftToNextFrame;
 }
 
 public sealed class AnimationsContainer
@@ -140,7 +140,7 @@ public sealed class AnimationsContainer
     }
 }
 
-public sealed class AnimationSystem : ISceneSystem, ISceneSystemTick
+public sealed class AnimationSystem : ISceneSystem, ISceneSystemWorldRenderer
 {
     public string DebugName() => nameof(AnimationSystem);
 
@@ -163,12 +163,17 @@ public sealed class AnimationSystem : ISceneSystem, ISceneSystemTick
 
     private void FilterEvaluated(IEnumerable<int> entities)
     {
+        foreach (int entity in entities)
+        {
+            LGR.PM(entity);
+        }
+
         animatedSprites = entities;
     }
 
-    public void Tick()
+    public void RenderWorld()
     {
-        int deltaTimeMs = (int)(Game.DeltaTime * 1000);
+        float deltaTimeMs = Game.DeltaTime * 1000;
         
         foreach (int animatedSprite in animatedSprites)
         {
@@ -178,14 +183,14 @@ public sealed class AnimationSystem : ISceneSystem, ISceneSystemTick
             if (!animator.HasCurrentAnimation()) continue;
             if (animator.Paused) continue;
             
-            animator.MSLeftToNextFrame -= deltaTimeMs;
-            if (animator.MSLeftToNextFrame <= 0)
+            animator.TimeLeftToNextFrame -= deltaTimeMs;
+            if (animator.TimeLeftToNextFrame <= 0)
             {
                 if (animator.ClipFrame < animator.Current().Frames.Length - 1)
                 {
                     ref Sprite sprite = ref world.Pool<Sprite>().Get(animatedSprite);
                     animator.ClipFrame++;
-                    animator.MSLeftToNextFrame = animator.Current().Frames[0].FrameDurationMS;
+                    animator.TimeLeftToNextFrame = animator.Current().Frames[0].FrameDurationMS;
                     sprite.Texture = animator.Current().Frames[animator.ClipFrame].Texture;
                     sprite.Rect = animator.Current().Frames[animator.ClipFrame].Rect;
                 }

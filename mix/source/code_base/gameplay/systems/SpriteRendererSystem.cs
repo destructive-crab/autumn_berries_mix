@@ -7,7 +7,7 @@ using Raylib_cs;
 
 namespace mix.code_base;
 
-public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemTick
+public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRenderer
 {
     private readonly ECSWorld world;
     
@@ -63,7 +63,7 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemTick
 
     public string DebugName() => nameof(SpriteRendererSystem);
 
-    public void Tick()
+    public void RenderWorld()
     {
         foreach (int entity in entities)
         {

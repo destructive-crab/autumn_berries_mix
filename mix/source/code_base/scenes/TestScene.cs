@@ -3,6 +3,7 @@ using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
 using mix.code_base.gameplay;
+using mix.code_base.gameplay.systems;
 using mix.gameplay.systems;
 using mix.inputs;
 using Raylib_cs;
@@ -27,6 +28,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new TileSelectionSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CameraControlsSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
 
         camera.CurrentCamera = new Camera2D();
         camera.CurrentCamera.Zoom = 2;
@@ -56,8 +58,11 @@ public sealed class TestScene : Scene, IDependenciesProvider
         {
             s = Sprite.From("assets/units/player/chainy.png");
             s.DrawOrder = 3;
+            s.Pivot = new(0.5f, 0.8f);
         });
         world.Pool<Tile>().New(chainyId);
+        world.Pool<Name>().New(chainyId, (ref Name name) => name.Value = "Chainy");
+        world.Pool<Description>().New(chainyId, (ref Description description) => description.Value = "text text text text text text sdkfsjdflksjdf text fkdsjf text dskfk text tkdkfj");
         world.Pool<Animator>().New(chainyId, (ref Animator animator) =>
         {
             animator.InitializeFromAse("assets/units/player/chainy.ase");
@@ -70,6 +75,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
         {
             s = Sprite.From("assets/units/enemies/ghost.png");
             s.DrawOrder = 3;
+            s.Pivot = new(0.5f, 0.8f);
         });
         world.Pool<Tile>().New(ghostId);
         world.Pool<Name>().New(ghostId, (ref Name name) => name.Value = "Ghost!!!");
@@ -89,14 +95,24 @@ public sealed class TestScene : Scene, IDependenciesProvider
 
     public override void Tick()
     {
+        foreach (var inputsProcessor in Systems.Filter<ISceneSystemProcessInputs>())
+        {
+            inputsProcessor.ProcessInputs();
+        }
+        
         Raylib.BeginMode2D(camera.CurrentCamera);
         {
-            foreach (ISceneSystemTick tick in Systems.Filter<ISceneSystemTick>())
+            foreach (var renderer in Systems.Filter<ISceneSystemWorldRenderer>())
             {
-                tick.Tick();
+                renderer.RenderWorld();
             }
         }
         Raylib.EndMode2D();
+        
+        foreach (var postRenderer in Systems.Filter<ISceneSystemPostWorldRenderer>())
+        {
+            postRenderer.PostWorldRenderer();
+        }
     }
     
     [Provide(true)]

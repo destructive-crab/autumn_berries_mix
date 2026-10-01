@@ -6,7 +6,7 @@ using destruct.scenes;
 using mix.code_base;
 using mix.inputs;
 
-public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemTick
+public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemProcessInputs 
 {
     public string DebugName() => nameof(TileSelectionSystem);
 
@@ -54,8 +54,8 @@ public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemTick
             s.Hidden = true;
         });
     }
-    
-    public void Tick()
+
+    public void ProcessInputs()
     {
         Vector2 position = inputService.MousePosition;
         position += TileDetectionOffset;
@@ -73,12 +73,15 @@ public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemTick
             world.Pool<Sprite>().Get(selectedCellOverlayEntity).Hidden = false;
             world.Pool<Position>().Get(selectedCellOverlayEntity).Set(pointedCell.X, pointedCell.Y);
             currentSelectedCell = pointedCell;
-            
-            if (currentPointedCell == currentSelectedCell && TrySelectNext()) return; 
-            
-            selectionQueue.Clear();
-            foreach (int entity in map.GetEntitiesAt(pointedCell).Reverse()) 
-                selectionQueue.Enqueue(entity);
+
+            if (currentPointedCell != currentSelectedCell || !TrySelectNext())
+            {
+                selectionQueue.Clear();
+                foreach (int entity in map.GetEntitiesAt(pointedCell).Reverse()) 
+                    selectionQueue.Enqueue(entity);
+
+                TrySelectNext();
+            }
         }
         
         if (currentPointedCell == pointedCell)
@@ -98,6 +101,7 @@ public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemTick
 
             world.Pool<Selected>().New(entity);
             currentSelectedEntity = entity;
+            
             return true;
         }
 

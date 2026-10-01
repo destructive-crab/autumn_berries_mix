@@ -6,14 +6,14 @@ using Raylib_cs;
 
 namespace mix.gameplay.systems;
 
-public sealed class CameraControlsSystem : ISceneSystem, ISceneSystemTick
+public sealed class CameraControlsSystem : ISceneSystem, ISceneSystemWorldRenderer
 {
     public string DebugName() => nameof(CameraControlsSystem);
 
     [Inject] private Camera camera;
     [Inject] private ICameraInputSystem inputService;
 
-    public void Tick()
+    public void RenderWorld()
     {
         camera.CurrentCamera.Target -= inputService.GetCameraPositionDelta()/camera.CurrentCamera.Zoom;
         camera.CurrentCamera.Zoom += inputService.GetCameraZoomDelta()/10;
