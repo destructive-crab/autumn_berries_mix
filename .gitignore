@@ -1,3 +1,7 @@
 *.idea
 */bin
 */obj
+/mix/source/bin
+/mix/source/obj
+/mix/third_party/AsepriteDotNet/obj
+/mix/third_party/AsepriteDotNet/bin

@@ -37,43 +37,47 @@ public sealed class TestScene : Scene, IDependenciesProvider
             for (int y = 0; y < 10; y++)
             {
                 int tileId = world.New().Id;
-                world.Pool<Position>().NewComponent(tileId, (ref Position p) => p.Set(x,y) );
-                world.Pool<Sprite>()  .NewComponent(tileId, (ref Sprite s) =>
+                world.Pool<Position>().New(tileId, (ref Position p) => p.Set(x,y) );
+                world.Pool<Sprite>().New(tileId, (ref Sprite s) =>
                 {
                     s = Sprite.From("assets/tiles/autumn_terrain.png");
                     s.DrawOffsetInPixels = new(0, 3);
                 });
-                world.Pool<Tile>().NewComponent(tileId);
-                world.Pool<Name>().NewComponent(tileId, (ref Name name) => name.Value = "Autumn Terrain");
-                world.Pool<Description>().NewComponent(tileId, (ref Description description) => description.Value = "Walkable terrain");
+                world.Pool<Tile>().New(tileId);
+                world.Pool<Name>().New(tileId, (ref Name name) => name.Value = "Autumn Terrain");
+                world.Pool<Description>().New(tileId, (ref Description description) => description.Value = "Walkable terrain");
             }
         }
         world.UnblockFiltersEvaluationAndEvaluate();
 
         var chainyId = world.New();
-        world.Pool<Position>().NewComponent(chainyId, (ref Position p) => p.Set(1,1));
-        world.Pool<Sprite>().NewComponent(chainyId, (ref Sprite s) =>
+        world.Pool<Position>().New(chainyId, (ref Position p) => p.Set(1,1));
+        world.Pool<Sprite>().New(chainyId, (ref Sprite s) =>
         {
             s = Sprite.From("assets/units/player/chainy.png");
             s.DrawOrder = 3;
         });
-        world.Pool<Tile>().NewComponent(chainyId);
+        world.Pool<Tile>().New(chainyId);
+        world.Pool<Animator>().New(chainyId, (ref Animator animator) =>
+        {
+            animator.InitializeFromAse("assets/units/player/chainy.ase");
+            animator.Play("idle");
+        });
         
         var ghostId = world.New();
-        world.Pool<Position>().NewComponent(ghostId, (ref Position p) => p.Set(1,2));
-        world.Pool<Sprite>().NewComponent(ghostId, (ref Sprite s) =>
+        world.Pool<Position>().New(ghostId, (ref Position p) => p.Set(1,2));
+        world.Pool<Sprite>().New(ghostId, (ref Sprite s) =>
         {
             s = Sprite.From("assets/units/enemies/ghost.png");
             s.DrawOrder = 3;
         });
-        world.Pool<Tile>().NewComponent(ghostId);
-        world.Pool<Name>().NewComponent(ghostId, (ref Name name) => name.Value = "Ghost!!!");
-        world.Pool<Description>().NewComponent(ghostId, (ref Description description) => description.Value = "!!!!!!!");
-        world.Pool<Animator>().NewComponent(ghostId, (ref Animator animator) =>
+        world.Pool<Tile>().New(ghostId);
+        world.Pool<Name>().New(ghostId, (ref Name name) => name.Value = "Ghost!!!");
+        world.Pool<Description>().New(ghostId, (ref Description description) => description.Value = "!!!!!!!");
+        world.Pool<Animator>().New(ghostId, (ref Animator animator) =>
         {
-            var t = Assets.LoadTexture("assets/units/enemies/ghost.png");
-            animator.ClipFrame = 0;
-            animator.Current = Assets.LoadClipsFromAseFile("assets/units/enemies/ghost.ase")[0];
+            animator.InitializeFromAse("assets/units/enemies/ghost.ase");
+            animator.Play("idle");
         });
     }
 

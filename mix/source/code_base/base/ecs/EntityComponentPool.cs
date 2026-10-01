@@ -96,7 +96,7 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
         OnRemoved?.Invoke(this, entityId);
     }
 
-    public ref TComponent NewComponent(int entityId, ComponentConfiguration<TComponent> configuration = null)
+    public ref TComponent New(int entityId, ComponentConfiguration<TComponent> configuration)
     {
         int index = GetNewComponentIndexFor(entityId);
         
@@ -111,8 +111,8 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
         return ref components[index];
     }
     
-    public ref TComponent NewComponent(Entity entity, ComponentConfiguration<TComponent> configuration = null)
-        => ref NewComponent(entity.Id, configuration);
+    public ref TComponent New(Entity entity, ComponentConfiguration<TComponent> configuration = null)
+        => ref New(entity.Id, configuration);
 
     public object GetItem(int entityId)
     {

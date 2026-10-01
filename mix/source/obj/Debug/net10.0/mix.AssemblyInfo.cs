@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("mix")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7445021556b66d3e8d1deb77df3a014aefb6c334")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ba8fa9d16219e3ad98a42e26f2e362022598bcd7")]
 [assembly: System.Reflection.AssemblyProductAttribute("mix")]
 [assembly: System.Reflection.AssemblyTitleAttribute("mix")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

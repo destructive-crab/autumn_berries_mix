@@ -38,16 +38,16 @@ public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemTick
         this.map = map;
 
         pointedCellOverlayEntity = world.New().Id;
-        world.Pool<Position>().NewComponent(pointedCellOverlayEntity);
-        world.Pool<Sprite>().NewComponent(pointedCellOverlayEntity, (ref Sprite s) =>
+        world.Pool<Position>().New(pointedCellOverlayEntity);
+        world.Pool<Sprite>().New(pointedCellOverlayEntity, (ref Sprite s) =>
         {
             s = Sprite.From(AssetsPath.PointedCellBorder);
             s.DrawOrder = 1;
         });
         
         selectedCellOverlayEntity = world.New().Id;
-        world.Pool<Position>().NewComponent(selectedCellOverlayEntity);
-        world.Pool<Sprite>().NewComponent(selectedCellOverlayEntity, (ref Sprite s) =>
+        world.Pool<Position>().New(selectedCellOverlayEntity);
+        world.Pool<Sprite>().New(selectedCellOverlayEntity, (ref Sprite s) =>
         {
             s = Sprite.From(AssetsPath.SelectedCellBorder);
             s.DrawOrder = 1;

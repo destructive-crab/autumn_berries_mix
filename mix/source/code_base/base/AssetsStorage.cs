@@ -55,7 +55,6 @@ public sealed class AsepriteCachedTexture : CachedTexture
         }
 
         this.texture = Raylib.LoadTextureFromImage(image);
-        Raylib.UnloadImage(image);
     }
     
     public override Texture2D Get() 
@@ -70,9 +69,18 @@ public sealed class AsepriteCachedTexture : CachedTexture
 public static class Assets
 {
     private static readonly Dictionary<string, CachedTexture> cachedTextures = new();
+    private static readonly Dictionary<string, AnimationsContainer> cachedAnimationContainers = new();
+    
+    public static AnimationsContainer LoadAnimationsContainer(string pathToAseFile)
+    {
+        if (cachedAnimationContainers.TryGetValue(pathToAseFile, out var cache))
+            return cache;
 
-    public static AnimationClip[] LoadClipsFromAseFile(string path) 
-        => AsepriteImporter.ImportClips(path);
+        AnimationsContainer newContainer = new(AsepriteImporter.ImportClips(pathToAseFile));
+        cachedAnimationContainers.Add(pathToAseFile, newContainer);
+        
+        return newContainer;
+    }
 
     public static CachedTexture CreateTextureFromAsepriteTextureAndCache(string path, AsepriteDotNet.Texture texture)
     {

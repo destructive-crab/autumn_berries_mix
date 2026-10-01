@@ -62,3 +62,4 @@ C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\source\obj\Deb
 C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\source\obj\Debug\net10.0\mix.pdb
 C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\source\obj\Debug\net10.0\mix.genruntimeconfig.cache
 C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\source\obj\Debug\net10.0\ref\mix.dll
+C:\Users\destructive_crab\dev\1 - projectz\autumn_berries_mix\mix\source\bin\Debug\net10.0\assets\units\player\chainy.ase
