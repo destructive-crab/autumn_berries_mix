@@ -4,5 +4,9 @@ namespace mix.inputs;
 
 public interface IGeneralInputService
 {
-    Vector2 MousePosition { get; }
+    Vector2 ScreenMousePosition { get; }
+    Vector2 GlobalMousePosition { get; }
+    
+    bool LeftMouseButtonDown { get; }
+    bool RightMouseButtonDown { get; }
 }

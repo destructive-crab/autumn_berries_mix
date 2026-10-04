@@ -20,18 +20,15 @@ public sealed class StartScreen : Scene, IDependenciesProvider
             .SetDefaultButtonPressedColor(Color.Gray);
     }
 
-    public override void Tick()
+    public override async void Tick()
     {
         deGUI.BeginGUI();
         {
-            var mp = Raylib.GetMousePosition();
-                
             deGUI.FillContainer(Color.Magenta);
-            deGUI.BeginContainerCenter(400, 400);
+            deGUI.BeginContainerCenter(deGUI.ConW()/3 * 2, deGUI.ConH()/3 * 2);
             {
                 deGUI.FillContainer(Color.Purple);
                 
-                int buttonW = deGUI.ConW() / 2;
                 int buttonH = 30;
 
                 deGUI.BeginMarginContainerX(30);
@@ -43,7 +40,7 @@ public sealed class StartScreen : Scene, IDependenciesProvider
                     if (startPressed)
                     {
                         deGUI.EndGUI();
-                        Game.G<SceneSwitcher>().SwitchTo(new TestScene());
+                        await Game.G<SceneSwitcher>().SwitchTo(new TestScene());
                         return;
                     }
                     

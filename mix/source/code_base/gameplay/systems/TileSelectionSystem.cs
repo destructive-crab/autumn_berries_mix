@@ -4,9 +4,11 @@ using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
 using mix.code_base;
+using mix.code_base.gameplay.systems;
+using mix.gameplay.systems;
 using mix.inputs;
 
-public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemProcessInputs 
+public sealed class TileSelectionSystem : ISceneSystem
 {
     public string DebugName() => nameof(TileSelectionSystem);
 
@@ -16,7 +18,7 @@ public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemProcessInput
     private readonly Vector2 TileDetectionOffset;
     
     private ECSWorld      world;
-    private GameMapSystem map;
+    private GameMap map;
     [Inject] private IGridInputService inputService;
     
     //overlay
@@ -32,79 +34,52 @@ public sealed class TileSelectionSystem : ISceneSystem, ISceneSystemProcessInput
     }
 
     [Inject]
-    private void Inject(ECSWorld world, GameMapSystem map)
+    private void Inject(ECSWorld world, GameMap map)
     {
         this.world = world;
         this.map = map;
 
         pointedCellOverlayEntity = world.New().Id;
-        world.Pool<Position>().New(pointedCellOverlayEntity);
+        world.Pool<Position>().New(pointedCellOverlayEntity, (ref Position p) => p.Set(0,0,1));
+        world.Pool<Origin>().New(pointedCellOverlayEntity, (ref Origin o) => o.Set(0.5f, 0.5f));
         world.Pool<Sprite>().New(pointedCellOverlayEntity, (ref Sprite s) =>
         {
             s = Sprite.From(AssetsPath.PointedCellBorder);
-            s.DrawOrder = 1;
         });
         
         selectedCellOverlayEntity = world.New().Id;
-        world.Pool<Position>().New(selectedCellOverlayEntity);
+        world.Pool<Position>().New(selectedCellOverlayEntity, (ref Position p) => p.Set(0,0,1));
+        world.Pool<Origin>().New(selectedCellOverlayEntity, (ref Origin o) => o.Set(0.5f, 0.5f));
         world.Pool<Sprite>().New(selectedCellOverlayEntity, (ref Sprite s) =>
         {
             s = Sprite.From(AssetsPath.SelectedCellBorder);
-            s.DrawOrder = 1;
             s.Hidden = true;
         });
-    }
 
-    public void ProcessInputs()
-    {
-        Vector2 position = inputService.MousePosition;
-        position += TileDetectionOffset;
-        
-        position /= Global.PixelsPerUnit;
-
-        Vec2I pointedCell = new((int)Math.Floor(position.X), (int)Math.Floor(position.Y));
-
-        if (!map.Contains(pointedCell)) return;
-
-        world.Pool<Sprite>().Get(pointedCellOverlayEntity).Hidden = pointedCell == currentSelectedCell;
-
-        if (inputService.IsCellSelectionPressed())
+        world
+            .Filter()
+            .In<Selected>()
+            .Subscribe((h) =>
         {
-            world.Pool<Sprite>().Get(selectedCellOverlayEntity).Hidden = false;
-            world.Pool<Position>().Get(selectedCellOverlayEntity).Set(pointedCell.X, pointedCell.Y);
-            currentSelectedCell = pointedCell;
-
-            if (currentPointedCell != currentSelectedCell || !TrySelectNext())
-            {
-                selectionQueue.Clear();
-                foreach (int entity in map.GetEntitiesAt(pointedCell).Reverse()) 
-                    selectionQueue.Enqueue(entity);
-
-                TrySelectNext();
-            }
-        }
-        
-        if (currentPointedCell == pointedCell)
-            return;
-
-        world.Pool<Position>().Get(pointedCellOverlayEntity).Set(pointedCell.X, pointedCell.Y);
-    }
-
-    private bool TrySelectNext()
-    {
-        if (selectionQueue.TryDequeue(out var entity))
-        {
-            if (currentSelectedEntity != -1)
-            {
-                world.Pool<Selected>().Remove(currentSelectedEntity);
-            }
-
-            world.Pool<Selected>().New(entity);
-            currentSelectedEntity = entity;
+            world.Pool<Sprite>().Get(selectedCellOverlayEntity).Hidden = h.Count() == 0;
             
-            return true;
-        }
-
-        return false;
+            if (h.Count() == 0) return;
+            
+            world.Pool<Position>().Get(selectedCellOverlayEntity).X = world.Pool<Position>().Get(h.Last()).X;
+            world.Pool<Position>().Get(selectedCellOverlayEntity).Y = world.Pool<Position>().Get(h.Last()).Y;
+            currentSelectedEntity = h.Last();
+        }).Evaluate();
+        
+        world
+            .Filter()
+            .In<Hovered>()
+            .Subscribe((h) =>
+        {
+            if (h.Count() == 0) return;
+            
+            world.Pool<Sprite>().Get(pointedCellOverlayEntity).Hidden = h.Last() == currentSelectedEntity;
+            world.Pool<Position>().Get(pointedCellOverlayEntity).X = world.Pool<Position>().Get(h.Last()).X;
+            world.Pool<Position>().Get(pointedCellOverlayEntity).Y = world.Pool<Position>().Get(h.Last()).Y;
+        }).Evaluate();
     }
 }

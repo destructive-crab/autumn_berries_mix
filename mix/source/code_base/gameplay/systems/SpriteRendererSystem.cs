@@ -1,14 +1,16 @@
 using System.Numerics;
+using destruct;
 using destruct.Debug;
 using destruct.ecs;
 using destruct.scenes;
-using mix.gameplay.systems;
 using Raylib_cs;
 
 namespace mix.code_base;
 
 public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRenderer
 {
+    public string DebugName() => nameof(SpriteRendererSystem);
+    
     private readonly ECSWorld world;
     
     private readonly EntityComponentPool<Sprite> texturesPool;
@@ -25,43 +27,24 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRender
         world.Filter()
             .In<Sprite>()
             .In<Position>()
+            .In<Origin>()
             .Subscribe(UpdateEntitiesToRender)
             .Evaluate();
     }
 
     private void UpdateEntitiesToRender(IEnumerable<int> entities)
     {
+        string a = "TO RENDERER ";
+        foreach (int entity in entities)
+        {
+            a += " " + entity;
+        }
+        LGR.PM(a);
         this.entities.Clear();
         this.entities.AddRange(entities);
         
-        this.entities.Sort((a, b) =>
-        {
-            var aSprite = world.Pool<Sprite>().Get(a);
-            var bSprite = world.Pool<Sprite>().Get(b);
-            
-            var aOrder = aSprite.DrawOrder;
-            var bOrder = bSprite.DrawOrder;
-            
-            var aY = world.Pool<Position>().Get(a).Y - aSprite.Pivot.Y * (aSprite.Texture.Get().Height/(float)Global.PixelsPerUnit) + aSprite.DrawOffsetInPixels.Y;
-            var bY = world.Pool<Position>().Get(b).Y - bSprite.Pivot.Y * (bSprite.Texture.Get().Height/(float)Global.PixelsPerUnit) + bSprite.DrawOffsetInPixels.Y;
-
-            if (aOrder > bOrder)
-            {
-                return 1;
-            }
-            
-            if (aOrder == bOrder)
-            {
-                if (aY > bY) return 1;
-                if (Math.Abs(aY - bY) <= 0.01) return 0;
-                    
-                return -1;
-            }
-            return -1;
-        });
+        this.entities.Sort((a, b) => UTL.CompareEntitiesRendererOrder(a, b, world));
     }
-
-    public string DebugName() => nameof(SpriteRendererSystem);
 
     public void RenderWorld()
     {
@@ -77,19 +60,42 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRender
             if (sprite.Hidden) continue;
             
             var position = positionPool.Get(entity);
-            Vector2 pivot = new(sprite.Rect.Width * sprite.Pivot.X - sprite.DrawOffsetInPixels.X, 
-                                sprite.Rect.Height * sprite.Pivot.Y - sprite.DrawOffsetInPixels.Y);
+            Vector2 origin = world.Pool<Origin>().Get(entity).ToV2();
 
-            int x = (int)Math.Round(position.X * Global.PixelsPerUnit);
-            int y = (int)Math.Round(position.Y * Global.PixelsPerUnit);
-
+            origin = new(origin.X * sprite.Rect.Width, origin.Y * sprite.Rect.Height);
+            
             Raylib.DrawTexturePro(
                 sprite.Texture.Get(), 
                 sprite.Rect,
-                new Rectangle(x,y, sprite.Rect.Width, sprite.Rect.Height),
-                pivot, 
+                new Rectangle(UTL.UnitsToPixels(position) + sprite.DrawOffsetInPixels, sprite.Rect.Width, sprite.Rect.Height),
+                origin, 
                 0,
                 Color.White);
+
+            if (Raylib.IsKeyDown(KeyboardKey.A))
+            {
+                var originColor = Color.Red;
+                var originRadius = 3 - position.ZZZ;
+                if (originRadius == 3) originRadius = 0;
+                if (position.ZZZ > 1)
+                {
+                    originColor = Color.Blue;
+                }
+
+                if (position.ZZZ == 1) originColor = Color.Green;
+
+                Raylib.DrawCircle((int)UTL.UnitsToPixels(position).X - (int)world.Pool<Origin>().Get(entity).ToV2().X,
+                    (int)UTL.UnitsToPixels(position).Y - (int)world.Pool<Origin>().Get(entity).ToV2().Y, originRadius,
+                    originColor);
+                Raylib.DrawRectangleLinesEx(new(
+                    (int)UTL.UnitsToPixels(position).X + sprite.DrawOffsetInPixels.X - (int)origin.X - 1,
+                    (int)UTL.UnitsToPixels(position).Y + sprite.DrawOffsetInPixels.Y - (int)origin.Y - 1,
+                    (int)sprite.Rect.Width+2, (int)sprite.Rect.Height+2), 3, Color.Black);
+                Raylib.DrawRectangleLinesEx(new(
+                    (int)UTL.UnitsToPixels(position).X + sprite.DrawOffsetInPixels.X - (int)origin.X,
+                    (int)UTL.UnitsToPixels(position).Y + sprite.DrawOffsetInPixels.Y - (int)origin.Y,
+                    (int)sprite.Rect.Width, (int)sprite.Rect.Height), 1, originColor);
+            }
         }
     }
 }

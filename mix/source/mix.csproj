@@ -22,4 +22,8 @@
     <ItemGroup>
       <PackageReference Include="Raylib-cs" Version="8.1.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="code_base\gameplay\units\chainy\" />
+    </ItemGroup>
 </Project>

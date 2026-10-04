@@ -1,11 +1,12 @@
-using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.imgui;
 using destruct.scenes;
+using mix.code_base;
+using mix.code_base.gameplay.systems;
 using Raylib_cs;
 
-namespace mix.code_base.gameplay.systems;
+namespace mix.gameplay.systems;
 
 public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer 
 {
@@ -15,6 +16,8 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
 
     private string PanelDescriptionText;
     private string PanelLabelText;
+
+    private PlayerUnitAbility[] playerAbilities = null;
     
     [Inject]
     public void Inject(ECSWorld world)
@@ -59,7 +62,14 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
             {
                 deGUI.ContainerBorder();
                 deGUI.FillContainer(new Color(0, 0, 0, 100));
-                deGUI.TextCenter("Actions panel", 20, Color.White);
+
+                if (playerAbilities != null)
+                {
+                    foreach (var ability in playerAbilities)
+                    {
+                        deGUI.ImageButton(ability.Icon(), 10 + deGUI.NextX(), 10, 30, 30);
+                    }
+                }
             }
             deGUI.EndContainer();
             

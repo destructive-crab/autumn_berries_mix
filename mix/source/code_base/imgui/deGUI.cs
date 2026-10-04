@@ -312,24 +312,46 @@ public static class deGUI
 
     public static bool ButtonWFull(string label, int containerY, int h)
         => Button(label, 0, containerY, ConW(), h, Style.DefaultButton);
+
+    public static bool ImageButton(Texture2D texture, int containerX, int containerY, int w, int h)
+    {
+        return Button(containerX, containerY, w, h, (overlap, pressed) =>
+        {
+            Image(texture);
+        });
+    }
     
     public static bool Button(string label, int containerX, int containerY, int w, int h, ButtonStyle style)
+    {
+        return Button(containerX, containerY, w, h, (overlap, pressed) =>
+        {
+            if (overlap && pressed) FillContainer(style.Pressed);
+            else if(overlap)        FillContainer(style.Hovered);
+            else                    FillContainer(style.Idle);
+        
+            int fontSize = h / 2;
+            TextCenter(label, fontSize, Color.Black);
+        });
+    }
+    
+    /// <param name="containerX"> container relative x position </param>
+    /// <param name="containerY"> container relative y position </param>
+    /// <param name="w">button container width</param>
+    /// <param name="h">button container height</param>
+    /// <param name="insideContainer">first boolean - is overlapped; second boolean is pressed</param>
+    /// <returns>is button pressed</returns>
+    public static bool Button(int containerX, int containerY, int w, int h, Action<bool, bool> insideContainer)
     {
         int x = ConX() + containerX;
         int y = ConY() + containerY;
         
         bool overlap = IsOverlapped(new(x,y,w,h));
-        bool click = overlap && Raylib.IsMouseButtonReleased(MouseButton.Left);
-        bool pressed = Raylib.IsMouseButtonDown(MouseButton.Left);
+        bool click = Raylib.IsMouseButtonDown(MouseButton.Left);
+        bool pressed = overlap && click;
         
         BeginContainer(containerX, containerY, w, h);
         {
-            if (overlap && pressed) FillContainer(style.Pressed);
-            else if(overlap)        FillContainer(style.Hovered);
-            else                    FillContainer(style.Idle);
-            
-            int fontSize = h / 2;
-            TextCenter(label, fontSize, Color.Black);
+            insideContainer?.Invoke(overlap, pressed);
         }
         EndContainer();
         

@@ -2,7 +2,7 @@ namespace destruct.scenes;
 
 public interface ISceneSystemProcessInputs
 {
-    void ProcessInputs();
+    void ProcessInputs(bool guiWasOverlapped);
 }
 
 public interface ISceneSystemWorldRenderer

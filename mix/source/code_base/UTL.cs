@@ -1,4 +1,11 @@
-﻿namespace destruct;
+﻿using System.Numerics;
+using destruct.Debug;
+using destruct.ecs;
+using destruct.imgui;
+using mix.code_base;
+using Raylib_cs;
+
+namespace destruct;
 
 public static class UTL
 {
@@ -20,6 +27,65 @@ public static class UTL
             new Vec2I( 1, -1),
             new Vec2I(-1,  1),
         ];
+    }
+
+    public static Vector2 TranslatePositionInPixelsToUnits(Vector2 pixels)
+    {
+        return new Vector2(pixels.X / Global.PixelsPerUnit, pixels.Y / Global.PixelsPerUnit);
+    }
+
+    public static int CompareEntitiesRendererOrder(int a, int b, ECSWorld world)
+    {
+        Sprite aSprite = world.Pool<Sprite>().Get(a);
+        Sprite bSprite = world.Pool<Sprite>().Get(b);
+
+        Position aPosition = world.Pool<Position>().Get(a);
+        Position bPosition = world.Pool<Position>().Get(b);
+        
+        Vector2 aOrigin = new (0, 0);
+        Vector2 bOrigin = new(0, 0);
+        if(world.Pool<Origin>().Has(a)) aOrigin = world.Pool<Origin>().Get(a).ToV2();
+        if(world.Pool<Origin>().Has(b)) bOrigin = world.Pool<Origin>().Get(b).ToV2();
+
+        var aY = aPosition.Y * Global.PixelsPerUnit - aOrigin.Y * aSprite.Rect.Height;
+        var bY = bPosition.Y * Global.PixelsPerUnit - bOrigin.Y * bSprite.Rect.Height;
+
+        if (aPosition.ZZZ > bPosition.ZZZ)
+            return 1;
+
+        if (aPosition.ZZZ == bPosition.ZZZ)
+        {
+            if (aY > bY)                   return 1;
+            if (Math.Abs(aY - bY) <= 0.01) return 0;
+
+            return -1;
+        }
+
+        return -1;
+    }
+    
+    public static Vector2 UnitsToPixels(in Position position)
+    {
+        int x = (int)Math.Round(position.X * Global.PixelsPerUnit);
+        int y = (int)Math.Round(position.Y * Global.PixelsPerUnit);
+
+        return new(x,y);
+    }
+    
+    public static Vector2 PixelsToUnits(in Position position)
+    {
+        int x = (int)Math.Round(position.X / Global.PixelsPerUnit);
+        int y = (int)Math.Round(position.Y / Global.PixelsPerUnit);
+
+        return new(x,y);
+    }
+
+    public static Vector2 GetWorldScale(in Scale scale)
+    {
+        int x = (int)Math.Round(scale.X * Global.PixelsPerUnit);
+        int y = (int)Math.Round(scale.Y * Global.PixelsPerUnit);
+
+        return new(x, y);
     }
 
     public static Vec2I[] GetOnlyStraightOffsets()

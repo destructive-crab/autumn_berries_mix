@@ -1,9 +1,12 @@
 using destruct;
+using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
+using destruct.imgui;
 using destruct.scenes;
-using mix.code_base.gameplay;
 using mix.code_base.gameplay.systems;
+using mix.gameplay.overlay;
+using mix.gameplay.overlay.models;
 using mix.gameplay.systems;
 using mix.inputs;
 using Raylib_cs;
@@ -14,7 +17,9 @@ public sealed class TestScene : Scene, IDependenciesProvider
 {
     private ECSWorld world;
     private Camera camera;
+    
     private readonly UltimateInputService inputService = new();
+    private TileFactory tileFactory;
     
     public override IDependenciesProvider[] GetProviders()
     {
@@ -25,10 +30,12 @@ public sealed class TestScene : Scene, IDependenciesProvider
     {
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SpriteRendererSystem(world), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new GameMapSystem(), Systems));
-        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new TileSelectionSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HoverSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CameraControlsSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new TileSelectionSystem(), Systems));
 
         camera.CurrentCamera = new Camera2D();
         camera.CurrentCamera.Zoom = 2;
@@ -38,53 +45,14 @@ public sealed class TestScene : Scene, IDependenciesProvider
         {
             for (int y = 0; y < 10; y++)
             {
-                int tileId = world.New().Id;
-                world.Pool<Position>().New(tileId, (ref Position p) => p.Set(x,y) );
-                world.Pool<Sprite>().New(tileId, (ref Sprite s) =>
-                {
-                    s = Sprite.From("assets/tiles/autumn_terrain.png");
-                    s.DrawOffsetInPixels = new(0, 3);
-                });
-                world.Pool<Tile>().New(tileId);
-                world.Pool<Name>().New(tileId, (ref Name name) => name.Value = "Autumn Terrain");
-                world.Pool<Description>().New(tileId, (ref Description description) => description.Value = "Walkable terrain");
+                tileFactory.CreateTileFromID(TileIds.AutumnTerrain, x, y);
             }
         }
+
         world.UnblockFiltersEvaluationAndEvaluate();
 
-        var chainyId = world.New();
-        world.Pool<Position>().New(chainyId, (ref Position p) => p.Set(1,1));
-        world.Pool<Sprite>().New(chainyId, (ref Sprite s) =>
-        {
-            s = Sprite.From("assets/units/player/chainy.png");
-            s.DrawOrder = 3;
-            s.Pivot = new(0.5f, 0.8f);
-        });
-        world.Pool<Tile>().New(chainyId);
-        world.Pool<Name>().New(chainyId, (ref Name name) => name.Value = "Chainy");
-        world.Pool<Description>().New(chainyId, (ref Description description) => description.Value = "text text text text text text sdkfsjdflksjdf text fkdsjf text dskfk text tkdkfj");
-        world.Pool<Animator>().New(chainyId, (ref Animator animator) =>
-        {
-            animator.InitializeFromAse("assets/units/player/chainy.ase");
-            animator.Play("idle");
-        });
-        
-        var ghostId = world.New();
-        world.Pool<Position>().New(ghostId, (ref Position p) => p.Set(1,2));
-        world.Pool<Sprite>().New(ghostId, (ref Sprite s) =>
-        {
-            s = Sprite.From("assets/units/enemies/ghost.png");
-            s.DrawOrder = 3;
-            s.Pivot = new(0.5f, 0.8f);
-        });
-        world.Pool<Tile>().New(ghostId);
-        world.Pool<Name>().New(ghostId, (ref Name name) => name.Value = "Ghost!!!");
-        world.Pool<Description>().New(ghostId, (ref Description description) => description.Value = "!!!!!!!");
-        world.Pool<Animator>().New(ghostId, (ref Animator animator) =>
-        {
-            animator.InitializeFromAse("assets/units/enemies/ghost.ase");
-            animator.Play("idle");
-        });
+        tileFactory.CreateTileFromID(TileIds.Chainy, 1, 1);
+        tileFactory.CreateTileFromID(TileIds.Ghost, 1, 2);
     }
 
     public override Task DisposeScene()
@@ -97,7 +65,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
     {
         foreach (var inputsProcessor in Systems.Filter<ISceneSystemProcessInputs>())
         {
-            inputsProcessor.ProcessInputs();
+            inputsProcessor.ProcessInputs(deGUI.GUIWasOverlapped());
         }
         
         Raylib.BeginMode2D(camera.CurrentCamera);
@@ -130,11 +98,27 @@ public sealed class TestScene : Scene, IDependenciesProvider
     }
     
     [Provide(true)]
+    private ITileFactory ProvideTileFactoryForDI()
+    {
+        tileFactory = new();
+        return tileFactory;
+    }
+    
+    [Provide(true)]
+    private GameMap ProvideGameMapForDI()
+    {
+        return new GameMap();
+    }
+    
+    [Provide(true)]
     private IGeneralInputService ProvideGeneralInputServiceForDI() => inputService;
+    
     [Provide(true)]
     private IGridInputService ProvideGridInputServiceForDI() => inputService;
+    
     [Provide(true)]
     private IGameplayInputService ProvideGameplayInputServiceForDI() => inputService;
+    
     [Provide(true)]
     private ICameraInputSystem ProvideCameraMovementInputServiceForDI() => inputService;
 }

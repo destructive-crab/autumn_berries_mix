@@ -54,6 +54,7 @@ public partial class Game
         IsBootstrapping = false;
         Awake = true;
         
+        Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(800, 600, "MIX");
         
         point.Complete();

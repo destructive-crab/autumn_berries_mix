@@ -148,6 +148,8 @@ public sealed class ECSWorld
 
     public void EvaluateFilter(Filter filter)
     {
+        if (filtersEvaluationBlocked) return;
+        
         filter.Clear();
         
         for (var i = 0; i <= lastEntityId; i++)

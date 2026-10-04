@@ -1,6 +1,6 @@
 using System.Numerics;
 using destruct.DI;
-using mix.code_base.gameplay;
+using mix.gameplay.overlay;
 using Raylib_cs;
 
 namespace mix.inputs;
@@ -9,7 +9,11 @@ public sealed class UltimateInputService : IGeneralInputService, IGridInputServi
 {
     [Inject] private Camera camera;
 
-    public Vector2 MousePosition => Raylib.GetScreenToWorld2D(Raylib.GetMousePosition(), camera.CurrentCamera);
+    public Vector2 ScreenMousePosition => Raylib.GetMousePosition();
+    public Vector2 GlobalMousePosition => Raylib.GetScreenToWorld2D(Raylib.GetMousePosition(), camera.CurrentCamera);
+    public bool LeftMouseButtonDown => Raylib.IsMouseButtonDown(MouseButton.Left);
+    public bool RightMouseButtonDown => Raylib.IsMouseButtonDown(MouseButton.Right);
+
     public Vector2 GetCameraPositionDelta()
     {
         if (!Raylib.IsMouseButtonDown(MouseButton.Right))

@@ -1,6 +1,6 @@
 using Raylib_cs;
 
-namespace mix.code_base.gameplay;
+namespace mix.gameplay.overlay;
 
 public sealed class Camera
 {
