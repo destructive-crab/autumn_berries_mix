@@ -3,6 +3,7 @@ using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
+using destruct.imgui;
 using destruct.scenes;
 using mix.code_base;
 using mix.inputs;
@@ -43,6 +44,8 @@ public sealed class HoverSystem : ISceneSystem, ISceneSystemProcessInputs
 
     public void ProcessInputs(bool guiWasOverlapped)
     {
+        if (deGUI.GUIWasOverlapped()) return;
+        
         foreach (int entity in entities)
         {
             Vector2 p = world.Pool<Position>().Get(entity).ToV2();

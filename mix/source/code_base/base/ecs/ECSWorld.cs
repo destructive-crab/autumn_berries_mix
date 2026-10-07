@@ -51,10 +51,12 @@ public sealed class ECSWorld
             throw new Exception($"Invalid entity id: {entityId}");
         if (entities[entityId].World == null)
             throw new Exception("Entity not created or was destroyed");
-        
-        foreach (int component in entities[entityId].Components)
+
+        for (var i = 0; i < entities[entityId].Components.Count; i++)
         {
+            var component = entities[entityId].Components[i];
             pools[component].Remove(entityId);
+            i--;
         }
 
         entities[entityId].World = null;

@@ -168,6 +168,7 @@ public static class deGUI
         if (containers.Count > 0) throw new Exception("Cannot begin GUI until previous GUI is ended");
 
         BeginContainer(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        guiWasOverlapped = false;
     }
 
     public static void EndGUI()
@@ -313,7 +314,7 @@ public static class deGUI
     public static bool ButtonWFull(string label, int containerY, int h)
         => Button(label, 0, containerY, ConW(), h, Style.DefaultButton);
 
-    public static bool ImageButton(Texture2D texture, int containerX, int containerY, int w, int h)
+    public static bool ImageButton(TextureFragment texture, int containerX, int containerY, int w, int h)
     {
         return Button(containerX, containerY, w, h, (overlap, pressed) =>
         {
@@ -346,7 +347,7 @@ public static class deGUI
         int y = ConY() + containerY;
         
         bool overlap = IsOverlapped(new(x,y,w,h));
-        bool click = Raylib.IsMouseButtonDown(MouseButton.Left);
+        bool click = Raylib.IsMouseButtonPressed(MouseButton.Left);
         bool pressed = overlap && click;
         
         BeginContainer(containerX, containerY, w, h);
@@ -357,7 +358,12 @@ public static class deGUI
         
         PushLastDrawnElement(containerX, containerY, w, h);
 
-        return click;
+        return pressed;
+    }
+    
+    public static void Image(TextureFragment t)
+    {
+        Image(t, 0, 0, ConW(), ConH());
     }
     
     public static void Image(Texture2D t)
@@ -368,6 +374,11 @@ public static class deGUI
     public static void Image(Texture2D t, int containerX, int containerY, int w, int h)
     {
         Raylib.DrawTexturePro(t, new(0, 0, t.Width, t.Height), new(containerX, containerY, w, h), new(0,0), 0, Color.White);
+    }
+    
+    public static void Image(TextureFragment t, int containerX, int containerY, int w, int h)
+    {
+        Raylib.DrawTexturePro(t.Texture.Get(), t.Rect, new(ConX()+containerX, ConY()+containerY, w, h), new(0,0), 0, Color.White);
     }
 
     private static bool IsOverlapped(Rect rect)

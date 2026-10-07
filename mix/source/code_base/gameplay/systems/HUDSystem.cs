@@ -1,3 +1,4 @@
+using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.imgui;
@@ -18,7 +19,8 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
     private string PanelLabelText;
 
     private PlayerUnitAbility[] playerAbilities = null;
-    
+    private PlayerUnitAbility selectedAbility;
+
     [Inject]
     public void Inject(ECSWorld world)
     {
@@ -51,6 +53,11 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
             {
                 PanelDescriptionText = deGUI.WrapText(world.Pool<Description>().Get(entity).Value, 350, 20);
             }
+
+            if (world.Pool<PlayerUnit>().Has(entity))
+            {
+                playerAbilities = world.Pool<PlayerUnit>().Get(entity).Abilities;
+            }
         }
     }
 
@@ -67,7 +74,24 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
                 {
                     foreach (var ability in playerAbilities)
                     {
-                        deGUI.ImageButton(ability.Icon(), 10 + deGUI.NextX(), 10, 30, 30);
+                        if (ability != selectedAbility)
+                        {
+                            if (deGUI.ImageButton(ability.Icon(), 10 + deGUI.NextX(), 10, 60, 60))
+                            {
+                                LGR.PM("DFKSDLKFJ");
+                                selectedAbility?.Deselect();
+                                selectedAbility = ability;
+                                selectedAbility.Select();
+                            }
+                        }
+                        else
+                        {
+                            if (deGUI.ImageButton(ability.SelectedIcon(), 10 + deGUI.NextX(), 10, 60, 60))
+                            {
+                                selectedAbility?.Deselect();
+                                selectedAbility = null;
+                            }
+                        }
                     }
                 }
             }

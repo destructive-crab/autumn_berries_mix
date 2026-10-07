@@ -213,7 +213,7 @@
 
     public static explicit operator Vec2I(Vector2 value)
     {
-      return new Vec2I((int) value.X, (int) value.Y);
+     return new Vec2I((int) value.X, (int) value.Y);
     }
 
     public override readonly bool Equals([NotNullWhen(true)] object? obj)
@@ -240,5 +240,10 @@
       X,
       /// <summary>The vector's Y axis.</summary>
       Y,
+    }
+
+    public float Angle()
+    { 
+      return (float)((float)Math.Atan2(Y, X) * (180 / Math.PI));
     }
   }

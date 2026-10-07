@@ -2,6 +2,7 @@ using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
+using destruct.imgui;
 using destruct.scenes;
 using mix.gameplay.systems;
 using mix.inputs;
@@ -44,6 +45,8 @@ public sealed class SelectionSystem : ISceneSystem, ISceneSystemProcessInputs
     
     public void ProcessInputs(bool guiWasOverlapped)
     {
+        if (deGUI.GUIWasOverlapped()) return;
+        
         if (inputService.LeftMouseButtonDown)
         {
             foreach (int entity in hoveredEntitiesSorted)

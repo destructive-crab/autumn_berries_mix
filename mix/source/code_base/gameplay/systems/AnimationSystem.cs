@@ -66,26 +66,22 @@ public static class AnimatorExtensions
 
 public struct AnimationClipFrame
 {
-    public CachedTexture Texture;
+    public TextureFragment Fragment;
 
     public int FrameDurationMS;
-
-    public Rectangle Rect;
 
     public AnimationClipFrame() {}
     
     public AnimationClipFrame(CachedTexture texture, int frameDurationMs, Rectangle rect)
     {
-        Texture = texture;
+        Fragment = new TextureFragment(texture, rect);
         FrameDurationMS = frameDurationMs;
-        Rect = rect;
     }
 
     public AnimationClipFrame(CachedTexture texture, int x, int y, int w, int h)
     {
         FrameDurationMS = 200;
-        Texture = texture;
-        Rect = new(x, y, w, h);
+        Fragment = new(texture, new(x,y,w,h));
     }
 }
 
@@ -164,12 +160,16 @@ public sealed class AnimationSystem : ISceneSystem, ISceneSystemWorldRenderer
 
     private void FilterEvaluated(IEnumerable<int> entities)
     {
+        animatedSprites = entities;
         foreach (int entity in entities)
         {
-            LGR.PM(entity);
+            if (world.Pool<Sprite>().Get(entity).Fragment.Texture == null &&
+                world.Pool<Animator>().Get(entity).HasCurrentAnimation())
+            {
+                world.Pool<Sprite>().Get(entity).Fragment = world.Pool<Animator>().Get(entity).Current()
+                    .Frames[world.Pool<Animator>().Get(entity).ClipFrame].Fragment;
+            }
         }
-
-        animatedSprites = entities;
     }
 
     public void RenderWorld()
@@ -192,8 +192,7 @@ public sealed class AnimationSystem : ISceneSystem, ISceneSystemWorldRenderer
                     ref Sprite sprite = ref world.Pool<Sprite>().Get(animatedSprite);
                     animator.ClipFrame++;
                     animator.TimeLeftToNextFrame = animator.Current().Frames[0].FrameDurationMS;
-                    sprite.Texture = animator.Current().Frames[animator.ClipFrame].Texture;
-                    sprite.Rect = animator.Current().Frames[animator.ClipFrame].Rect;
+                    sprite.Fragment = animator.Current().Frames[animator.ClipFrame].Fragment;
                 }
                 else if (animator.Current().Cycle)
                 {

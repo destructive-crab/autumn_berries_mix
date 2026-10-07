@@ -94,7 +94,7 @@ public sealed class GameMap
     
     public bool Contains(Vec2I pos)
     {
-        return pos.X > 0 && pos.Y > 0 && pos.X < LayerWidth && pos.Y < LayerHeight;
+        return pos.X >= 0 && pos.Y >= 0 && pos.X < LayerWidth && pos.Y < LayerHeight;
     }
     
     public ref Cell GetCell(Vec2I pos)
@@ -124,7 +124,7 @@ public sealed class GameMap
     
     public IEnumerable<Vec2I> GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(int x, int y)
         where TComponent : struct
-        => GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(x, y);
+        => GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(new(x,y));
     
     public IEnumerable<Vec2I> GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(Vec2I position)
         where TComponent : struct

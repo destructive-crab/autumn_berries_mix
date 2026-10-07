@@ -46,7 +46,7 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRender
         {
             Sprite sprite = texturesPool.Get(entity);
 
-            if (sprite.Texture == null)
+            if (sprite.Fragment.Texture == null)
             {
                 LGR.PW($"Null texture on sprite of {entity}");
                 continue;
@@ -56,14 +56,14 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRender
             var position = positionPool.Get(entity);
             Vector2 origin = world.Pool<Origin>().Get(entity).ToV2();
 
-            origin = new(origin.X * sprite.Rect.Width, origin.Y * sprite.Rect.Height);
+            origin = new(origin.X * sprite.Fragment.Rect.Width, origin.Y * sprite.Fragment.Rect.Height);
             
             Raylib.DrawTexturePro(
-                sprite.Texture.Get(), 
-                sprite.Rect,
-                new Rectangle(UTL.UnitsToPixels(position) + sprite.DrawOffsetInPixels, sprite.Rect.Width, sprite.Rect.Height),
+                sprite.Fragment.Texture.Get(), 
+                sprite.Fragment.Rect,
+                new Rectangle(UTL.UnitsToPixels(position) + sprite.DrawOffsetInPixels, sprite.Fragment.Rect.Width, sprite.Fragment.Rect.Height),
                 origin, 
-                0,
+                sprite.Rotation,
                 Color.White);
 
             if (Raylib.IsKeyDown(KeyboardKey.A))
@@ -84,7 +84,7 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRender
                 Raylib.DrawRectangleLinesEx(new(
                     (int)UTL.UnitsToPixels(position).X + sprite.DrawOffsetInPixels.X - (int)origin.X,
                     (int)UTL.UnitsToPixels(position).Y + sprite.DrawOffsetInPixels.Y - (int)origin.Y,
-                    (int)sprite.Rect.Width, (int)sprite.Rect.Height), 1, originColor);
+                    (int)sprite.Fragment.Rect.Width, (int)sprite.Fragment.Rect.Height), 1, originColor);
             }
         }
     }

@@ -34,9 +34,10 @@ public static class AsepriteImporter
                 AsepriteDotNet.Common.Rectangle rect 
                     = sheet.TextureAtlas.Regions[regionIndex].Bounds;
                 
-                frames[regionIndex-tag.From].Rect = new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
                 frames[regionIndex-tag.From].FrameDurationMS = file.Frames[regionIndex].Duration.Milliseconds;
-                frames[regionIndex-tag.From].Texture = texture;
+
+                frames[regionIndex - tag.From].Fragment =
+                    new(texture, new Rectangle(rect.X, rect.Y, rect.Width, rect.Height));
             }
 
             clips[tagIndex].Frames = frames;

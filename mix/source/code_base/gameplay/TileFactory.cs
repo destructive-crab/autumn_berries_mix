@@ -1,3 +1,4 @@
+using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
@@ -91,8 +92,8 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Description>()
                     .New(tileId, (ref Description description) => description.Value = "text text text text text text sdkfsjdflksjdf text fkdsjf text dskfk text tkdkfj");
 
-                world.Pool<PlayerUnitAbilities>().New(tileId, 
-                    (ref PlayerUnitAbilities a) => a.Abilities = [new MoveAbility(tileId.Id)]);
+                world.Pool<PlayerUnit>().New(tileId, 
+                    (ref PlayerUnit a) => a.Abilities = [Game.G<DIKernel>().InjectWithBase(new MoveAbility(tileId.Id))]);
                 return tileId.Id;
             }
             case TileIds.Ghost:

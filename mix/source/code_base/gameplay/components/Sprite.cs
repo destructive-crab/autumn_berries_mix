@@ -42,21 +42,15 @@ public struct Sprite
     public bool Hidden;
     
     public Vec2I DrawOffsetInPixels;
-    
-    public CachedTexture Texture;
+    public float Rotation;
 
-    public Rectangle Rect;
-    
-    public Sprite()
-    {
-        Texture = default;
-    }
+    public TextureFragment Fragment;
 
     public static Sprite From(string assetPath)
     {
         Sprite s = new();
-        s.Texture = Assets.LoadTexture(assetPath);
-        s.Rect = new Rectangle(0, 0, s.Texture.Get().Width, s.Texture.Get().Height);
+        
+        s.Fragment = TextureFragment.Full(Assets.LoadTexture(assetPath));
         s.Hidden = false;
         return s;
     }

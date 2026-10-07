@@ -117,7 +117,10 @@ public sealed class TestScene : Scene, IDependenciesProvider
     
     [Provide(true)]
     private IGeneralInputService ProvideGeneralInputServiceForDI() => inputService;
-    
+
+    [Provide(true)]
+    private OverlayFactory ProvideOverlayFactoryForDI() => new();
+
     [Provide(true)]
     private IGridInputService ProvideGridInputServiceForDI() => inputService;
     

@@ -1,14 +1,43 @@
 using AsepriteDotNet.Common;
 using destruct.Debug;
+using destruct.imgui;
 using mix.aseprite;
 using mix.gameplay.systems;
 using Raylib_cs;
+using Rectangle = Raylib_cs.Rectangle;
 
 public struct AssetsPath
 {
     public const string AutumnTerrain      = "assets/tiles/autumn_terrain.png";
     public const string PointedCellBorder  = "assets/overlay/cell_pointed.png";
     public const string SelectedCellBorder = "assets/overlay/cell_selected.png";
+}
+
+public struct TextureFragment
+{
+    public CachedTexture Texture;
+    public Rectangle Rect;
+
+    public TextureFragment(CachedTexture texture, Rectangle rect)
+    {
+        Texture = texture;
+        Rect = rect;
+    }
+
+    public static TextureFragment Full(CachedTexture texture)
+    {
+        return new(texture, new(0, 0, texture.Get().Width, texture.Get().Height));
+    }
+    
+    public static TextureFragment FromZeroTo(CachedTexture texture, int w, int h)
+    {
+        return new(texture, new(0, 0, w, h));
+    }
+    
+    public static TextureFragment WithRect(CachedTexture texture, int x, int y, int w, int h)
+    {
+        return new(texture, new(x, y, w, h));
+    }
 }
 
 public abstract class CachedTexture : IDisposable

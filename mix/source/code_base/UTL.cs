@@ -46,8 +46,8 @@ public static class UTL
         if(world.Pool<Origin>().Has(a)) aOrigin = world.Pool<Origin>().Get(a).ToV2();
         if(world.Pool<Origin>().Has(b)) bOrigin = world.Pool<Origin>().Get(b).ToV2();
 
-        var aY = aPosition.Y * Global.PixelsPerUnit - aOrigin.Y * aSprite.Rect.Height;
-        var bY = bPosition.Y * Global.PixelsPerUnit - bOrigin.Y * bSprite.Rect.Height;
+        var aY = aPosition.Y * Global.PixelsPerUnit - aOrigin.Y * aSprite.Fragment.Rect.Height;
+        var bY = bPosition.Y * Global.PixelsPerUnit - bOrigin.Y * bSprite.Fragment.Rect.Height;
 
         if (aPosition.ZZZ > bPosition.ZZZ)
             return 1;
