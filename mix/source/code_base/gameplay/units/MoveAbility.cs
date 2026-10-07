@@ -46,5 +46,6 @@ public sealed class MoveAbility : PlayerUnitAbility
 
     public override void Deselected()
     {
+        
     }
 }

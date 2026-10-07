@@ -20,7 +20,8 @@ public sealed class TestScene : Scene, IDependenciesProvider
     
     private readonly UltimateInputService inputService = new();
     private TileFactory tileFactory;
-    
+    private GameMap gameMap;
+
     public override IDependenciesProvider[] GetProviders()
     {
         return [this];
@@ -35,8 +36,10 @@ public sealed class TestScene : Scene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CameraControlsSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CellSelectionSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new TileSelectionSystem(), Systems));
 
+        gameMap.Create(10,10);
         camera.CurrentCamera = new Camera2D();
         camera.CurrentCamera.Zoom = 2;
 
@@ -86,28 +89,30 @@ public sealed class TestScene : Scene, IDependenciesProvider
     [Provide(true)]
     private ECSWorld ProvideECSWorldForDI()
     {
-        world = new();
+        world = new ECSWorld();
         return world;
     }
     
     [Provide(true)]
     private Camera ProvideCameraForDI()
     {
-        camera = new();
+        camera = new Camera();
         return camera;
     }
     
     [Provide(true)]
     private ITileFactory ProvideTileFactoryForDI()
     {
-        tileFactory = new();
+        tileFactory = new TileFactory();
         return tileFactory;
     }
     
     [Provide(true)]
     private GameMap ProvideGameMapForDI()
     {
-        return new GameMap();
+        gameMap = Game.G<DIKernel>().InjectWithBase(new GameMap());
+        
+        return gameMap;
     }
     
     [Provide(true)]

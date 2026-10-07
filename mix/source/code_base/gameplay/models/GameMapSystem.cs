@@ -8,7 +8,7 @@ namespace mix.gameplay.overlay.models;
 public sealed class GameMapSystem : ISceneSystem
 {
     public string DebugName() => nameof(GameMap);
-
+    
     [Inject]
     private void Construct(ECSWorld world, GameMap map)
     {

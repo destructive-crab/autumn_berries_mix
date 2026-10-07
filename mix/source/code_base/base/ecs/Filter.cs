@@ -1,9 +1,15 @@
+using destruct.Debug;
+
 namespace destruct.ecs;
 
 public sealed class Filter : IFilter
 {
+    public bool ReactOnComponentDataChanges;
+
+    public string DebugName { get; private set; }
+    
     public IEnumerable<int> Entities => entities;
-    private readonly List<int> entities = new();
+    private List<int> entities = new();
 
     public IEnumerable<int> IncludedComponents => includedComponents;
     private readonly List<int> includedComponents = new();
@@ -12,7 +18,9 @@ public sealed class Filter : IFilter
     private readonly List<int> excludedComponents = new();
 
     private readonly ECSWorld world;
+    
     private readonly List<Action<IEnumerable<int>>> subscribers = new();
+    private readonly Dictionary<int, List<Action<IEnumerable<int>>>> dataChangesSubscribers = new();
 
     public Filter(ECSWorld world)
     {
@@ -23,6 +31,7 @@ public sealed class Filter : IFilter
         where TComponent : struct
     {
         includedComponents.Add(EntityComponent<TComponent>.TypeIndex);
+        DebugName += $"In[{typeof(TComponent).Name}] ";
         return this;
     }
 
@@ -30,6 +39,7 @@ public sealed class Filter : IFilter
         where TComponent : struct
     {
         excludedComponents.Add(EntityComponent<TComponent>.TypeIndex);
+        DebugName += $"Ex[{typeof(TComponent).Name}] ";
         return this;
     }
     
@@ -50,12 +60,40 @@ public sealed class Filter : IFilter
         return true;
     }
 
-    public void AddEntityIfCompatible(int id, EntityData entity)
+    public bool AddEntityAndTrackChanges(int id, EntityData entity)
+    {
+        if (!trackNewEvaluationChanges)
+        {
+            throw new Exception("You need to begin evaluation changes tracking before processing entities");
+        }
+
+        if (!IsCompatible(entity)) return changed;
+        
+        newEvaluation.Add(id);
+        changed = entities.Count != newEvaluation.Count;
+        
+        if (!changed)
+        {
+            for (var i = 0; i < entities.Count; i++)
+            {
+                //because entities are stored in array using indexes and they are evaluated using for loop on entities array 
+                //then we can be sure that in filter's list they will be always in same order
+                changed = entities[i] != newEvaluation[i];
+                if (changed) break;
+            }
+        }
+
+        return changed;
+    }
+    
+    public bool AddEntityIfCompatible(int id, EntityData entity)
     {
         if (IsCompatible(entity))
         {
             entities.Add(id);
         }
+
+        return changed;
     }
 
     public void Clear()
@@ -71,6 +109,16 @@ public sealed class Filter : IFilter
         }
     }
     
+    public void InformSubscribersAboutChanges<TComponent>(int entityId) 
+        where TComponent : struct
+    {
+        int[] entities = [entityId];
+        foreach (var subscriber in dataChangesSubscribers[EntityComponent<TComponent>.TypeIndex])
+        {
+            subscriber.Invoke(entities);
+        }
+    }
+    
     public IFilter Evaluate()
     {
         world.EvaluateFilter(this);
@@ -80,6 +128,20 @@ public sealed class Filter : IFilter
     public IFilter Subscribe(Action<IEnumerable<int>> callback)
     {
         subscribers.Add(callback);
+        
+        return this;
+    }
+
+    public IFilter SubscribeOnDataChanges<TComponent>(Action<IEnumerable<int>> callback) 
+        where TComponent : struct
+    {
+        //todo unsubscribe
+        world.Pool<TComponent>().OnChanged += InformSubscribersAboutChanges<TComponent>;
+        
+        int index = EntityComponent<TComponent>.TypeIndex;
+        dataChangesSubscribers.TryAdd(index, new());
+        dataChangesSubscribers[index].Add(callback);
+        
         return this;
     }
 
@@ -88,5 +150,22 @@ public sealed class Filter : IFilter
         return obj is Filter mapFilter &&
                mapFilter.IncludedComponents == IncludedComponents &&
                mapFilter.ExcludedComponents == ExcludedComponents;
+    }
+
+    private bool trackNewEvaluationChanges;
+    private bool changed;
+    private List<int> newEvaluation;
+    public void TrackIsChanged()
+    {
+        trackNewEvaluationChanges = true;
+        changed = false;
+        newEvaluation = new();
+        newEvaluation.Clear();
+    }
+
+    public void FinishTracking()
+    {
+        trackNewEvaluationChanges = false;
+        entities = newEvaluation;
     }
 }

@@ -16,7 +16,7 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
 
     private int componentsCount = 0;
 
-    public event Action OnChanged;
+    public event Action<int> OnChanged;
     
     public event Action<EntityComponentPool<TComponent>, int> OnNew;
     public event Action<EntityComponentPool<TComponent>, int> OnRemoved;
@@ -66,6 +66,11 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
 
         return index;
     }
+
+    public void Changed(int entityId)
+    {
+        OnChanged?.Invoke(entityId);
+    }
     
     public int New(int entityId)
     {
@@ -74,7 +79,6 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
         entityToComponent[entityId] = index;
         
         OnNew?.Invoke(this, entityId);
-        OnChanged?.Invoke();
 
         world.AddComponentFor(entityId, EntityComponent<TComponent>.TypeIndex);
         
@@ -104,7 +108,6 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
         configuration?.Invoke(ref components[index]);
         
         OnNew?.Invoke(this, entityId);
-        OnChanged?.Invoke();
 
         world.AddComponentFor(entityId, EntityComponent<TComponent>.TypeIndex);
         

@@ -16,7 +16,7 @@ public sealed class HoverSystem : ISceneSystem, ISceneSystemProcessInputs
 {
     public string DebugName() => nameof(HoverSystem);
 
-    private IEnumerable<int> entities;
+    private IEnumerable<int> entities = [];
     private ECSWorld world;
     
     private IGeneralInputService inputService;
@@ -33,8 +33,8 @@ public sealed class HoverSystem : ISceneSystem, ISceneSystemProcessInputs
             .In<Position>()
             .Subscribe((e) =>
             {
-                LGR.PM(e.Count());
-                entities = e;
+                LGR.PM("HOVERABLE " + e.Count());
+                entities = e.ToArray();
             });
 
         this.world = world;
@@ -43,7 +43,6 @@ public sealed class HoverSystem : ISceneSystem, ISceneSystemProcessInputs
 
     public void ProcessInputs(bool guiWasOverlapped)
     {
-        
         foreach (int entity in entities)
         {
             Vector2 p = world.Pool<Position>().Get(entity).ToV2();

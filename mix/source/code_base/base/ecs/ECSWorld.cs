@@ -1,3 +1,5 @@
+using destruct.Debug;
+
 namespace destruct.ecs;
 
 public sealed class ECSWorld
@@ -150,16 +152,22 @@ public sealed class ECSWorld
     {
         if (filtersEvaluationBlocked) return;
         
-        filter.Clear();
+        bool changed = false;
         
+        filter.TrackIsChanged();
         for (var i = 0; i <= lastEntityId; i++)
         {
             if (entities[i].World != null)
             {
-                filter.AddEntityIfCompatible(i, entities[i]);
+                changed = filter.AddEntityAndTrackChanges(i, entities[i]);
             }
         }
+        filter.FinishTracking();
 
-        filter.InformSubscribers();
+
+        if (changed)
+        {
+            filter.InformSubscribers();
+        }
     }
 }

@@ -11,7 +11,7 @@ public sealed class UltimateInputService : IGeneralInputService, IGridInputServi
 
     public Vector2 ScreenMousePosition => Raylib.GetMousePosition();
     public Vector2 GlobalMousePosition => Raylib.GetScreenToWorld2D(Raylib.GetMousePosition(), camera.CurrentCamera);
-    public bool LeftMouseButtonDown => Raylib.IsMouseButtonDown(MouseButton.Left);
+    public bool LeftMouseButtonDown => Raylib.IsMouseButtonPressed(MouseButton.Left);
     public bool RightMouseButtonDown => Raylib.IsMouseButtonDown(MouseButton.Right);
 
     public Vector2 GetCameraPositionDelta()

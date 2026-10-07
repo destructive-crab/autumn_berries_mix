@@ -145,8 +145,9 @@ public sealed class AnimationSystem : ISceneSystem, ISceneSystemWorldRenderer
     public string DebugName() => nameof(AnimationSystem);
 
     private ECSWorld world;
-    private IEnumerable<int> animatedSprites;
     private EntityComponentPool<Animator> animatorsPool;
+    
+    private IEnumerable<int> animatedSprites = [];
 
     [Inject] 
     private void Inject(ECSWorld world)

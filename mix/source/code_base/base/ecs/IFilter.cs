@@ -2,6 +2,8 @@ namespace destruct.ecs;
 
 public interface IFilter
 {
+    string DebugName { get; }
+    
     IEnumerable<int> Entities { get; }
     
     IEnumerable<int> IncludedComponents { get; }

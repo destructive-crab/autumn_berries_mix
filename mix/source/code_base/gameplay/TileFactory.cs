@@ -2,7 +2,6 @@ using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using mix.code_base;
-using mix.code_base.gameplay.systems;
 using mix.gameplay.overlay.units;
 using mix.gameplay.systems;
 
@@ -32,7 +31,6 @@ public sealed class TileFactory : ITileFactory
 
     public int CreateTileFromID(string id, int x, int y)
     {
-        LGR.PM($"TRYING TO SPAWN {id}");
         switch (id)
         {
             case TileIds.AutumnTerrain:
@@ -41,8 +39,6 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Position>().New(tileId, (ref Position p) => p.Set(x, y));
                 world.Pool<Origin>().New(tileId, (ref Origin o) => o.Set(0.5f,0.5f));
                 world.Pool<Scale>().New(tileId, (ref Scale s) => s.Set(1,1));
-                world.Pool<Hoverable>().New(tileId);
-                world.Pool<Selectable>().New(tileId);
                 world.Pool<Sprite>().New(tileId, (ref Sprite s) =>
                 {
                     s = Sprite.From("assets/tiles/autumn_terrain.png");
@@ -78,8 +74,6 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Position>().New(tileId, (ref Position p) => p.Set(x, y, 2));
                 world.Pool<Origin>().New(tileId, (ref Origin o) => o.Set(0.5f,0.8f));
                 world.Pool<Scale>().New(tileId, (ref Scale s) => s.Set(1,1));
-                world.Pool<Hoverable>().New(tileId);
-                world.Pool<Selectable>().New(tileId);
                 world.Pool<Sprite>().New(tileId, (ref Sprite s) =>
                 {
                     s = Sprite.From("assets/units/player/chainy.png");
@@ -119,9 +113,6 @@ public sealed class TileFactory : ITileFactory
                     animator.InitializeFromAse("assets/units/enemies/ghost.ase");
                     animator.Play("idle");
                 });
-                
-                world.Pool<Hoverable>().New(tileId);
-                world.Pool<Selectable>().New(tileId);
 
                 return tileId.Id;
             }

@@ -34,16 +34,10 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRender
 
     private void UpdateEntitiesToRender(IEnumerable<int> entities)
     {
-        string a = "TO RENDERER ";
-        foreach (int entity in entities)
-        {
-            a += " " + entity;
-        }
-        LGR.PM(a);
         this.entities.Clear();
         this.entities.AddRange(entities);
         
-        this.entities.Sort((a, b) => UTL.CompareEntitiesRendererOrder(a, b, world));
+        this.entities.Sort((a, b) => UTL.CompareSpritesRendererOrder(a, b, world));
     }
 
     public void RenderWorld()
@@ -87,10 +81,6 @@ public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRender
                 Raylib.DrawCircle((int)UTL.UnitsToPixels(position).X - (int)world.Pool<Origin>().Get(entity).ToV2().X,
                     (int)UTL.UnitsToPixels(position).Y - (int)world.Pool<Origin>().Get(entity).ToV2().Y, originRadius,
                     originColor);
-                Raylib.DrawRectangleLinesEx(new(
-                    (int)UTL.UnitsToPixels(position).X + sprite.DrawOffsetInPixels.X - (int)origin.X - 1,
-                    (int)UTL.UnitsToPixels(position).Y + sprite.DrawOffsetInPixels.Y - (int)origin.Y - 1,
-                    (int)sprite.Rect.Width+2, (int)sprite.Rect.Height+2), 3, Color.Black);
                 Raylib.DrawRectangleLinesEx(new(
                     (int)UTL.UnitsToPixels(position).X + sprite.DrawOffsetInPixels.X - (int)origin.X,
                     (int)UTL.UnitsToPixels(position).Y + sprite.DrawOffsetInPixels.Y - (int)origin.Y,

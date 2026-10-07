@@ -1,4 +1,5 @@
 using destruct;
+using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
@@ -35,11 +36,12 @@ public sealed class SelectionSystem : ISceneSystem, ISceneSystemProcessInputs
             {
                 hoveredEntitiesSorted.Clear();
                 hoveredEntitiesSorted.AddRange(e);
-                hoveredEntitiesSorted.Sort((a,b)=>UTL.CompareEntitiesRendererOrder(a,b,world));
+                hoveredEntitiesSorted.Sort((a,b) => UTL.CompareZOrderInPosition(a,b,world));
             });
 
-        this.inputService = levelInputService;
+        inputService = levelInputService;
     }
+    
     public void ProcessInputs(bool guiWasOverlapped)
     {
         if (inputService.LeftMouseButtonDown)
