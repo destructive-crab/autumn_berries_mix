@@ -61,13 +61,15 @@ public sealed class HoverSystem : ISceneSystem, ISceneSystemProcessInputs
             Vector2 posInUnits = UTL.TranslatePositionInPixelsToUnits(inputService.GlobalMousePosition);
 
             var hovered = hoveredPool.Has(entity);
+            
             if (!hovered &&
                 posInUnits.X > p.X       && posInUnits.Y > p.Y &&
                 posInUnits.X < p.X + s.X && posInUnits.Y < p.Y + s.Y)
             {
                 hoveredPool.New(entity);
             }
-            else if (hovered)
+            else if (hovered && !(posInUnits.X > p.X && posInUnits.Y > p.Y &&
+                                  posInUnits.X < p.X + s.X && posInUnits.Y < p.Y + s.Y))
             {
                 hoveredPool.Remove(entity);
             }

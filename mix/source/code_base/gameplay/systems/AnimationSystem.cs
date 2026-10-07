@@ -49,8 +49,8 @@ public static class AnimatorExtensions
         }
         
         animator.Current = name;
-        animator.ClipFrame = 0;
-        animator.TimeLeftToNextFrame = animator.Current().Frames[0].FrameDurationMS;
+        animator.ClipFrame = -1;
+        animator.TimeLeftToNextFrame = 0;
     }
 
     public static void Pause(ref this Animator animator)
@@ -161,15 +161,6 @@ public sealed class AnimationSystem : ISceneSystem, ISceneSystemWorldRenderer
     private void FilterEvaluated(IEnumerable<int> entities)
     {
         animatedSprites = entities;
-        foreach (int entity in entities)
-        {
-            if (world.Pool<Sprite>().Get(entity).Fragment.Texture == null &&
-                world.Pool<Animator>().Get(entity).HasCurrentAnimation())
-            {
-                world.Pool<Sprite>().Get(entity).Fragment = world.Pool<Animator>().Get(entity).Current()
-                    .Frames[world.Pool<Animator>().Get(entity).ClipFrame].Fragment;
-            }
-        }
     }
 
     public void RenderWorld()

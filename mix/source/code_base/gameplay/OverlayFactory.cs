@@ -43,7 +43,12 @@ public sealed class OverlayFactory
         world.Pool<Position>().New(entityId, (ref Position p) => p.Set(x, y, 1));
         world.Pool<Scale>().New(entityId, (ref Scale s) => s.Set(1,1));
         world.Pool<Origin>().New(entityId, (ref Origin o) => o.Set(0.5f, 0.5f));
-        
+        world.Pool<Hoverable>().New(entityId);
+        world.Pool<CursorAnimationReaction>().New(entityId, (ref CursorAnimationReaction r) =>
+        {
+            r.Idle = "idle";
+            r.Hovered = "hovered";
+        });
 
         return entityId;
     }

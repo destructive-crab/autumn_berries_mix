@@ -135,7 +135,7 @@ public sealed class GameMap
         for (int i = 0; i < offsets.Length; i++)
         {
             var cellPosition = position + offsets[i];
-            if (Contains(cellPosition) && !CellHasEntityWith<TComponent>(position))
+            if (Contains(cellPosition) && !CellHasEntityWith<TComponent>(cellPosition))
             {
                 result.Add(cellPosition);
             }

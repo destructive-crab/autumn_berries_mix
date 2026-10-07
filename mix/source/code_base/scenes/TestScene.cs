@@ -38,6 +38,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CellSelectionSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new TileSelectionSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationCursorReactionSystem(), Systems));
 
         gameMap.Create(10,10);
         camera.CurrentCamera = new Camera2D();

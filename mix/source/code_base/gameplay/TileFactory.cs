@@ -80,6 +80,7 @@ public sealed class TileFactory : ITileFactory
                     s = Sprite.From("assets/units/player/chainy.png");
                 });
                 world.Pool<Tile>().New(tileId);
+                world.Pool<BlockCell>().New(tileId);
                 
                 world.Pool<Animator>().New(tileId, (ref Animator animator) =>
                 {
@@ -108,6 +109,7 @@ public sealed class TileFactory : ITileFactory
                 });
                 world.Pool<Tile>().New(tileId);
                 world.Pool<Name>().New(tileId, (ref Name name) => name.Value = "Ghost!!!");
+                world.Pool<BlockCell>().New(tileId);
                 world.Pool<Description>().New(tileId, (ref Description description) => description.Value = "!!!!!!!");
                 world.Pool<Animator>().New(tileId, (ref Animator animator) =>
                 {
