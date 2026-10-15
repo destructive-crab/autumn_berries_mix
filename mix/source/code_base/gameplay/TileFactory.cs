@@ -1,9 +1,7 @@
-using destruct;
-using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using mix.code_base;
-using mix.gameplay.overlay.units;
+using mix.gameplay.overlay.units.abilities;
 using mix.gameplay.systems;
 
 namespace mix.gameplay.overlay;
@@ -71,31 +69,36 @@ public sealed class TileFactory : ITileFactory
             }
             case TileIds.Chainy:
             {
-                var tileId= world.New();
-                world.Pool<Position>().New(tileId, (ref Position p) => p.Set(x, y, 2));
-                world.Pool<Origin>().New(tileId, (ref Origin o) => o.Set(0.5f,0.8f));
-                world.Pool<Scale>().New(tileId, (ref Scale s) => s.Set(1,1));
-                world.Pool<Sprite>().New(tileId, (ref Sprite s) =>
+                var tileEntity= world.New();
+                world.Pool<Position>().New(tileEntity, (ref Position p) => p.Set(x, y, 2));
+                world.Pool<Origin>().New(tileEntity, (ref Origin o) => o.Set(0.5f,0.8f));
+                world.Pool<Scale>().New(tileEntity, (ref Scale s) => s.Set(1,1));
+                world.Pool<Sprite>().New(tileEntity, (ref Sprite s) =>
                 {
                     s = Sprite.From("assets/units/player/chainy.png");
                 });
-                world.Pool<Tile>().New(tileId);
-                world.Pool<BlockCell>().New(tileId);
+                world.Pool<Tile>().New(tileEntity);
+                world.Pool<BlockCell>().New(tileEntity);
                 
-                world.Pool<Animator>().New(tileId, (ref Animator animator) =>
+                world.Pool<Animator>().New(tileEntity, (ref Animator animator) =>
                 {
                     animator.InitializeFromAse("assets/units/player/chainy.ase");
                     animator.Play("idle");
                 });
                 
                 world.Pool<Name>()
-                    .New(tileId, (ref Name name) => name.Value = "Chainy");
+                    .New(tileEntity, (ref Name name) => name.Value = "Chainy");
                 world.Pool<Description>()
-                    .New(tileId, (ref Description description) => description.Value = "text text text text text text sdkfsjdflksjdf text fkdsjf text dskfk text tkdkfj");
+                    .New(tileEntity, (ref Description description) => description.Value = "text text text text text text sdkfsjdflksjdf text fkdsjf text dskfk text tkdkfj");
 
-                world.Pool<PlayerUnit>().New(tileId, 
-                    (ref PlayerUnit a) => a.Abilities = [Game.G<DIKernel>().InjectWithBase(new MoveAbility(tileId.Id))]);
-                return tileId.Id;
+                world.Pool<PlayerUnit>().New(tileEntity, (ref PlayerUnit u) =>
+                {
+                    Entity moveAbility = world.New()
+                        .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/move_ability.png"))
+                        .With(new MoveAbility());
+                    u.Abilities = [ moveAbility.Id ];
+                });
+                return tileEntity.Id;
             }
             case TileIds.Ghost:
             {

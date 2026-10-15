@@ -34,7 +34,6 @@ public sealed class HoverSystem : ISceneSystem, ISceneSystemProcessInputs
             .In<Position>()
             .Subscribe((e) =>
             {
-                LGR.PM("HOVERABLE " + e.Count());
                 entities = e.ToArray();
             });
 

@@ -92,6 +92,11 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
     
     public void Remove(int entityId)
     {
+        if (entityToComponent[entityId] == -1)
+        {
+            throw new Exception($"No component attached to {entityId}. Can not remove it");
+        }
+
         components[entityToComponent[entityId]] = default;
         freeComponents.Enqueue(entityToComponent[entityId]);
         entityToComponent[entityId] = 0;

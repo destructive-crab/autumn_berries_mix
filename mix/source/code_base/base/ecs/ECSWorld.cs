@@ -66,6 +66,22 @@ public sealed class ECSWorld
     {
         return pools[index];
     }
+
+    public ref TComponent GetFrom<TComponent>(int entityId) 
+        where TComponent : struct 
+        => ref Pool<TComponent>().Get(entityId);
+
+    public bool HasIn<TComponent>(int entityId)
+        where TComponent : struct
+    {
+        return Pool<TComponent>().Has(entityId);
+    }
+
+    public void RemoveFrom<TComponent>(int entity)
+        where TComponent : struct
+    {
+        Pool<TComponent>().Remove(entity);
+    }
     
     public EntityComponentPool<TComponent> Pool<TComponent>()
         where TComponent : struct
@@ -146,17 +162,17 @@ public sealed class ECSWorld
     private void EvaluateFiltersWith(int componentIndex)
     {
         foreach (Filter filter in filters)
-            if (filter.IncludedComponents.Contains(componentIndex))
+            if (filter.IncludedComponents.Contains(componentIndex) || filter.ExcludedComponents.Contains(componentIndex))
                 filter.Evaluate();
     }
 
     public void EvaluateFilter(Filter filter)
     {
         if (filtersEvaluationBlocked) return;
-        
-        bool changed = false;
-        
+
+        var changed = true;
         filter.TrackIsChanged();
+        
         for (var i = 0; i <= lastEntityId; i++)
         {
             if (entities[i].World != null)
@@ -164,10 +180,10 @@ public sealed class ECSWorld
                 changed = filter.AddEntityAndTrackChanges(i, entities[i]);
             }
         }
+
         filter.FinishTracking();
-
-
-        if (changed)
+        
+        if(changed)
         {
             filter.InformSubscribers();
         }

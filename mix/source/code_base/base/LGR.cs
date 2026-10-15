@@ -1,4 +1,6 @@
-﻿namespace destruct.Debug
+﻿using System.Text;
+
+namespace destruct.Debug
 {
     public static class LGR
     {
@@ -59,6 +61,11 @@
         private static void Print(string s)
         {
             Console.WriteLine(s);
+        }
+
+        public static void PENUMERABLE<T>(IEnumerable<T> enumerable)
+        {
+            PM(UTL.ToStringEnumerable(enumerable));
         }
     }
 }

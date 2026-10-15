@@ -33,8 +33,11 @@ public class AnimationCursorReactionSystem : ISceneSystem
         {
             foreach (int entity in currentHover)
             {
-                w.Pool<Animator>().Get(entity).Play(w.Pool<CursorAnimationReaction>().Get(entity).Idle);
-                LGR.PM($"PLAY {w.Pool<CursorAnimationReaction>().Get(entity).Idle}");
+                if (w.HasIn<Animator>(entity))
+                {
+                    w.Pool<Animator>().Get(entity).Play(w.Pool<CursorAnimationReaction>().Get(entity).Idle);
+                    LGR.PM($"PLAY {w.Pool<CursorAnimationReaction>().Get(entity).Idle}");
+                }
             }
         }
 

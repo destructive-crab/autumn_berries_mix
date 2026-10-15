@@ -18,7 +18,7 @@ public sealed class GameMap
     public int LayerWidth { get; private set; }
     public int LayerHeight { get; private set; }
     
-    private int[] cells;
+    private int[] cells = [];
 
     [Inject] private ECSWorld world;
 
@@ -28,6 +28,11 @@ public sealed class GameMap
 
     public void UpdateLayout(IEnumerable<int> entities)
     {
+        foreach (int cell in cells)
+        {
+            world.GetFrom<Cell>(cell).Entities.Clear();
+        }
+
         foreach (int entity in entities)
         {
             if (!world.Pool<Tile>().Has(entity))
@@ -37,6 +42,7 @@ public sealed class GameMap
             }
 
             var p = GetCellPositionForTile(entity);
+            world.GetFrom<Tile>(entity).CellId = cells[V2IToIndex(p)];
             GetCell(p).Entities.Add(entity);
         }
     }
@@ -99,8 +105,13 @@ public sealed class GameMap
     
     public ref Cell GetCell(Vec2I pos)
     {
-        ref Cell cell = ref world.Pool<Cell>().Get(cells[V2IToIndex(pos)]);
+        ref Cell cell = ref world.Pool<Cell>().Get(GetCellId(pos));
         return ref cell;
+    }
+
+    private int GetCellId(Vec2I pos)
+    {
+        return cells[V2IToIndex(pos)];
     }
 
     public IEnumerable<int> GetEntities(Vec2I pos)
@@ -166,6 +177,19 @@ public sealed class GameMap
     private Vec2I GetCellPositionForTile(int entityId)
     {
         Position posComponent = world.Pool<Position>().Get(entityId); 
-        return new Vec2I((int)Math.Round(posComponent.X), (int)Math.Round(posComponent.Y));
+        return posComponent.ToRoundedV2I();
+    }
+
+    public void MoveTile(int tileId, Vec2I newPosition)
+    {
+        if (!Contains(newPosition)) return;
+
+        ref Cell cell = ref world.GetFrom<Cell>(world.GetFrom<Tile>(tileId).CellId);
+        
+        cell.Entities.Remove(tileId);
+        
+        GetCell(newPosition).Entities.Add(tileId);
+        
+        world.GetFrom<Tile>(tileId).CellId = GetCellId(newPosition);
     }
 }

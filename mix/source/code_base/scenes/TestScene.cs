@@ -1,5 +1,4 @@
 using destruct;
-using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.imgui;
@@ -7,6 +6,8 @@ using destruct.scenes;
 using mix.code_base.gameplay.systems;
 using mix.gameplay.overlay;
 using mix.gameplay.overlay.models;
+using mix.gameplay.overlay.tweens;
+using mix.gameplay.overlay.units.abilities;
 using mix.gameplay.systems;
 using mix.inputs;
 using Raylib_cs;
@@ -35,10 +36,12 @@ public sealed class TestScene : Scene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CameraControlsSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationSystem(), Systems));
-        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
-        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CellSelectionSystem(), Systems));
-        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new TileSelectionSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CellSelectionSystemsRoot(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CellSelectionRedirector(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationCursorReactionSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new MoveAbilitySystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new PositionTweenSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
 
         gameMap.Create(10,10);
         camera.CurrentCamera = new Camera2D();

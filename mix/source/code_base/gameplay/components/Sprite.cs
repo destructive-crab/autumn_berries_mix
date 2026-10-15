@@ -25,6 +25,12 @@ public struct Origin
     public float X;
     public float Y;
 
+    public Origin(float x, float y)
+    {
+        X = x;
+        Y = y;
+    }
+
     public void Set(float x, float y)
     {
         X = x;

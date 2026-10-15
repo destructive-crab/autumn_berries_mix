@@ -1,4 +1,3 @@
-using destruct.Debug;
 
 namespace destruct.ecs;
 
@@ -158,9 +157,8 @@ public sealed class Filter : IFilter
     public void TrackIsChanged()
     {
         trackNewEvaluationChanges = true;
-        changed = false;
+        changed = true;
         newEvaluation = new();
-        newEvaluation.Clear();
     }
 
     public void FinishTracking()

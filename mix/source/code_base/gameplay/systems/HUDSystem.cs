@@ -1,3 +1,4 @@
+using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
@@ -5,6 +6,7 @@ using destruct.imgui;
 using destruct.scenes;
 using mix.code_base;
 using mix.code_base.gameplay.systems;
+using mix.gameplay.overlay.units.abilities;
 using Raylib_cs;
 
 namespace mix.gameplay.systems;
@@ -14,21 +16,31 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
     public string DebugName() => nameof(HUDSystem);
 
     private ECSWorld world;
+    private CellSelectionSystemsRoot root;
 
     private string PanelDescriptionText;
     private string PanelLabelText;
 
-    private PlayerUnitAbility[] playerAbilities = null;
-    private PlayerUnitAbility selectedAbility;
+    private int[] playerUnitAbilities;
+    private int selectedAbility = -1;
+    
+    private IFilter selectedCellFilter;
 
     [Inject]
-    public void Inject(ECSWorld world)
+    public void Inject(ECSWorld world, CellSelectionSystemsRoot root)
     {
         this.world = world;
+        this.root  = root;
+        
         world.Filter()
             .In<Tile>()
             .In<Selected>()
             .Subscribe(SelectedTilesChanged)
+            .Evaluate();
+        
+        selectedCellFilter = world.Filter()
+            .In<Cell>()
+            .In<Selected>()
             .Evaluate();
     }
 
@@ -36,7 +48,7 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
     {
         PanelLabelText = "";
         PanelDescriptionText = "";
-        
+
         if (entities.Count() > 1)
         {
             PanelLabelText = "Multiple selection";
@@ -56,7 +68,14 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
 
             if (world.Pool<PlayerUnit>().Has(entity))
             {
-                playerAbilities = world.Pool<PlayerUnit>().Get(entity).Abilities;
+                ref PlayerUnit unit = ref world.GetFrom<PlayerUnit>(entity);
+                playerUnitAbilities = unit.Abilities;
+                selectedAbility = unit.PreviousSelectedAbility;
+            }
+            else
+            {
+                playerUnitAbilities = [];
+                selectedAbility = -1;
             }
         }
     }
@@ -65,31 +84,40 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
     {
         deGUI.BeginGUI();
         {
+            deGUI.Text(Game.DeltaTime.ToString(), 20, 10,10, Color.White);
             deGUI.BeginContainer(0, deGUI.ConH()-140, 350, 140);
             {
                 deGUI.ContainerBorder();
                 deGUI.FillContainer(new Color(0, 0, 0, 100));
 
-                if (playerAbilities != null)
+                if (playerUnitAbilities != null)
                 {
-                    foreach (var ability in playerAbilities)
+                    foreach (var ability in playerUnitAbilities)
                     {
-                        if (ability != selectedAbility)
+                        var abilityComponent = world.GetFrom<PlayerUnitAbility>(ability);
+                        if (selectedAbility != ability)
                         {
-                            if (deGUI.ImageButton(ability.Icon(), 10 + deGUI.NextX(), 10, 60, 60))
+                            if (deGUI.ImageButton(abilityComponent.Icon, 10 + deGUI.NextX(), 10, 60, 60))
                             {
-                                LGR.PM("DFKSDLKFJ");
-                                selectedAbility?.Deselect();
+                                if (selectedAbility != -1)
+                                {
+                                    world.Pool<Selected>().Remove(selectedAbility);
+                                }
+                                
                                 selectedAbility = ability;
-                                selectedAbility.Select();
+                                world.Pool<Selected>().New(ability);
                             }
                         }
                         else
                         {
-                            if (deGUI.ImageButton(ability.SelectedIcon(), 10 + deGUI.NextX(), 10, 60, 60))
+                            if (deGUI.ImageButton(abilityComponent.SelectedIcon, 10 + deGUI.NextX(), 10, 60, 60))
                             {
-                                selectedAbility?.Deselect();
-                                selectedAbility = null;
+                                if (selectedAbility != -1)
+                                {
+                                    LGR.PM(selectedAbility + " deselect");
+                                    world.Pool<Selected>().Remove(selectedAbility);
+                                }
+                                selectedAbility = -1;
                             }
                         }
                     }
@@ -106,6 +134,21 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
                 deGUI.TextCenter(PanelDescriptionText, 20, Color.White);
             }
             deGUI.EndContainer();
+
+            if (selectedCellFilter.Entities.Count() != 0)
+            {
+                deGUI.BeginContainer(deGUI.ConW() - 300, 0, 300, 100);
+                {
+                    deGUI.FillContainer(Color.Black);
+                    ref Cell cell = ref world.GetFrom<Cell>(selectedCellFilter.Entities.Last());
+                    deGUI.TextXCenter(root?.Current?.DebugName(), 20, 20, Color.White);
+                    deGUI.YSpace(20);
+                    deGUI.TextXCenter(cell.Position.ToString(), deGUI.NextY(), 20, Color.White);
+                    deGUI.YSpace(10);
+                    deGUI.TextXCenter(UTL.ToStringEnumerable(cell.Entities), deGUI.NextY(), 20, Color.White);
+                }
+                deGUI.EndContainer();
+            }
         }
         deGUI.EndGUI();
     }

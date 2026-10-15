@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Text;
 using destruct.Debug;
 using destruct.ecs;
 using mix.code_base;
@@ -147,6 +148,17 @@ public static class UTL
         }
         
         throw new Exception("Invalid direction was provided; opposite dir not found");
+    }
+
+    public static string ToStringEnumerable<T>(IEnumerable<T> enumerable)
+    {
+        StringBuilder builder = new("[");
+        foreach (object o in enumerable)
+        {
+            builder.Append(o.ToString() + "; ");
+        }
+        builder.Append("]");
+        return builder.ToString();
     }
 }
 

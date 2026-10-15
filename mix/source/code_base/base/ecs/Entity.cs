@@ -10,4 +10,25 @@ public struct Entity
         Id = id;
         Owner = owner;
     }
+
+    public Entity With<TComponent>() 
+        where TComponent : struct
+    {
+        Owner.Pool<TComponent>().New(Id);
+        return this;
+    }
+    
+    public Entity With<TComponent>(ComponentConfiguration<TComponent> configuration) 
+        where TComponent : struct
+    {
+        Owner.Pool<TComponent>().New(Id, configuration);
+        return this;
+    }
+    
+    public Entity With<TComponent>(TComponent component) 
+        where TComponent : struct
+    {
+        Owner.Pool<TComponent>().New(Id, (ref TComponent c) => c = component);
+        return this;
+    }
 }

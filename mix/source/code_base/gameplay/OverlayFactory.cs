@@ -26,6 +26,17 @@ public sealed class OverlayFactory
 {
     [Inject] private ECSWorld world;
 
+    public List<int> SpawnArrows(IEnumerable<Vec2I> positions, Vec2I origin)
+    {
+        List<int> overlayEntityIds = new();
+        foreach (Vec2I position in positions)
+        {
+            overlayEntityIds.Add(SpawnArrow(position.X, position.Y, position - origin));
+        }
+
+        return overlayEntityIds;
+    }
+
     public int SpawnArrow(int x, int y, Vec2I dir)
     {
         int entityId = world.New().Id;
@@ -33,7 +44,6 @@ public sealed class OverlayFactory
             (ref Sprite s) =>
             {
                 s.Rotation = dir.Angle();
-                LGR.PM(s.Rotation);
             });
         world.Pool<Animator>().New(entityId, (ref Animator a) =>
         {
