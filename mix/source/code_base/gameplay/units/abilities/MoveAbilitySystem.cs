@@ -9,7 +9,7 @@ using mix.gameplay.systems;
 
 namespace mix.gameplay.overlay.units.abilities;
 
-public abstract class PlayerAbilitySystem<TAbility> : ISceneSystem, ISystemBasedOnCellSelection
+public abstract class PlayerAbilitySystem<TAbility> : ISceneSystem, ISystemBasedOnCellSelection, IPlayerTurnSystem
     where TAbility : struct 
 {
     public abstract string DebugName();
@@ -20,14 +20,19 @@ public abstract class PlayerAbilitySystem<TAbility> : ISceneSystem, ISystemBased
     protected IEnumerable<int> CurrentSelected => currentSelected;
     
     private List<int> currentSelected = new();
+    private IFilter filter;
+
+    protected PlayerTurn CurrentTurn => TurnState.CurrentTurn as PlayerTurn;
+    protected TurnState TurnState { get; private set; }
 
     [Inject]
-    protected void Inject(ECSWorld world, GameMap map)
+    protected void Inject(ECSWorld world, GameMap map, TurnState turnState)
     {
         World = world;
         Map = map;
+        TurnState = turnState;
         
-        world.Filter()
+        filter = world.Filter()
              .In<PlayerUnitAbility>()
              .In<Selected>()
              .In<TAbility>()
@@ -35,13 +40,10 @@ public abstract class PlayerAbilitySystem<TAbility> : ISceneSystem, ISystemBased
              .Evaluate();
     }
 
-    public void Active()
-    {
-    }
+    public void Active() { }
 
     public void OnCellSelected(int cell)
     {
-        LGR.PM($"CELL SELECTED {cell}");
         Vec2I cellPosition = World.GetFrom<Position>(cell).ToRoundedV2I();
 
         if (!Map.CellHasEntityWith<BlockCell>(cellPosition))
@@ -86,6 +88,24 @@ public abstract class PlayerAbilitySystem<TAbility> : ISceneSystem, ISystemBased
     protected virtual void OnFreeCellSelected(Vec2I cellPosition) {}
     protected virtual void OnBlockedCellSelected(Vec2I cellPosition) {}
     protected virtual void OnCellWithEnemySelected(Vec2I cellPosition) {}
+
+    protected void DeselectCurrent()
+    {
+        foreach (int ability in CurrentSelected)
+        {
+            World.RemoveFrom<Selected>(ability);
+        }
+    }
+
+    public void Begin(PlayerTurn turn)
+    {
+        
+    }
+
+    public void End(PlayerTurn turn)
+    {
+        
+    }
 }
 
 public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
@@ -142,7 +162,6 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
 
     protected override void OnFreeCellSelected(Vec2I cellPosition)
     {
-        LGR.PM("slkdfkjskdfjlk");
         bool moveWasPerformed = false;
         
         foreach (var pair in availableCells)
@@ -157,14 +176,14 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
 
         if (!moveWasPerformed)
         {
+            DeselectCurrent();
             selectionSystem.FocusPrevious();
         }
     }
 
     protected override void OnBlockedCellSelected(Vec2I cellPosition)
     {
-        LGR.PM("BLOCKED CELL SELECED");
-        DeselectAbilities(CurrentSelected);
+        DeselectCurrent();
         selectionSystem.FocusPrevious();
     }
 
@@ -186,5 +205,6 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
         map.MoveTile(UnitOf(abilityId), destPosition);
         World.Pool<Selected>().Remove(abilityId);
         selectionSystem.FocusPrevious();
+        CurrentTurn.RemovePoints(1);
     }
 }

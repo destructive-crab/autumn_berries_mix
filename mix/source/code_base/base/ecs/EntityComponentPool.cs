@@ -74,6 +74,10 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
     
     public int New(int entityId)
     {
+        if (Has(entityId))
+        {
+            return GetIndex(entityId);
+        }
         int index = GetNewComponentIndexFor(entityId);
         
         entityToComponent[entityId] = index;
@@ -92,13 +96,14 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
     
     public void Remove(int entityId)
     {
-        if (entityToComponent[entityId] == -1)
+        if (!Has(entityId))
         {
             throw new Exception($"No component attached to {entityId}. Can not remove it");
         }
 
-        components[entityToComponent[entityId]] = default;
-        freeComponents.Enqueue(entityToComponent[entityId]);
+        int componentIndex = GetIndex(entityId);
+        components[componentIndex] = default;
+        freeComponents.Enqueue(componentIndex);
         entityToComponent[entityId] = 0;
         
         world.RemoveComponentFor(entityId, EntityComponent<TComponent>.TypeIndex);
@@ -124,14 +129,18 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
 
     public object GetItem(int entityId)
     {
-        return components[entityToComponent[entityId]];
+        return components[GetIndex(entityId)];
     }
 
     public ref TComponent Get(int entityId)
     {
-        if (entityToComponent[entityId] == 0)
+        if (!Has(entityId))
             throw new Exception($"No component attached to {entityId}");
 
-        return ref components[entityToComponent[entityId]];
+        return ref components[GetIndex(entityId)];
     }
+    
+
+    private int GetIndex(int entityId) 
+        => entityToComponent[entityId];
 }

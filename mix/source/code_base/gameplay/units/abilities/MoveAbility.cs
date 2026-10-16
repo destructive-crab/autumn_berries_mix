@@ -5,6 +5,7 @@ namespace mix.gameplay.overlay.units.abilities;
 public struct PlayerUnitAbility
 {
     public int UnitId;
+    public int Cost;
     
     public TextureFragment Icon;
     public TextureFragment SelectedIcon;

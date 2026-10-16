@@ -23,13 +23,20 @@ public sealed class TestScene : Scene, IDependenciesProvider
     private TileFactory tileFactory;
     private GameMap gameMap;
 
+    private Shader backgroundShader;
+    private int timeLoc;
+    private TurnState turnState;
+
     public override IDependenciesProvider[] GetProviders()
     {
         return [this];
     }
-
+    
     protected override void OnSceneLoaded()
     {
+        backgroundShader = Raylib.LoadShader(null, "assets/shaders/background.fs");
+        timeLoc = Raylib.GetShaderLocation(backgroundShader, "time");
+        
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SpriteRendererSystem(world), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new GameMapSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HoverSystem(), Systems));
@@ -60,6 +67,8 @@ public sealed class TestScene : Scene, IDependenciesProvider
 
         tileFactory.CreateTileFromID(TileIds.Chainy, 1, 1);
         tileFactory.CreateTileFromID(TileIds.Ghost, 1, 2);
+        
+        turnState.StartTurnCycle(new PlayerTurn());
     }
 
     public override Task DisposeScene()
@@ -70,6 +79,8 @@ public sealed class TestScene : Scene, IDependenciesProvider
 
     public override void Tick()
     {
+        DrawBackgroundShader();
+
         foreach (var inputsProcessor in Systems.Filter<ISceneSystemProcessInputs>())
         {
             inputsProcessor.ProcessInputs(deGUI.GUIWasOverlapped());
@@ -89,7 +100,38 @@ public sealed class TestScene : Scene, IDependenciesProvider
             postRenderer.PostWorldRenderer();
         }
     }
-    
+
+    private void DrawBackgroundShader()
+    {
+        float time = (float)Raylib.GetTime();
+        Raylib.SetShaderValue(backgroundShader, timeLoc, time, ShaderUniformDataType.Float);
+        Raylib.BeginShaderMode(backgroundShader);
+        {
+            Rlgl.Begin(DrawMode.Triangles);
+            {
+                Rlgl.TexCoord2f(0.0f, 0.0f);
+                Rlgl.Vertex2f(0.0f, 0.0f);
+        
+                Rlgl.TexCoord2f(0.0f, Raylib.GetScreenHeight());
+                Rlgl.Vertex2f(0.0f, Raylib.GetScreenHeight());
+        
+                Rlgl.TexCoord2f(Raylib.GetScreenWidth(), 0.0f);
+                Rlgl.Vertex2f(Raylib.GetScreenWidth(), 0.0f);
+        
+                Rlgl.TexCoord2f(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+                Rlgl.Vertex2f(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        
+                Rlgl.TexCoord2f(Raylib.GetScreenWidth(), 0.0f);
+                Rlgl.Vertex2f(Raylib.GetScreenWidth(), 0.0f);
+        
+                Rlgl.TexCoord2f(0.0f, Raylib.GetScreenHeight());
+                Rlgl.Vertex2f(0.0f, Raylib.GetScreenHeight());
+            }
+            Rlgl.End();
+        }
+        Raylib.EndShaderMode();
+    }
+
     [Provide(true)]
     private ECSWorld ProvideECSWorldForDI()
     {
@@ -119,6 +161,13 @@ public sealed class TestScene : Scene, IDependenciesProvider
         return gameMap;
     }
     
+    [Provide(true)]
+    private TurnState ProvideTurnStateForDI()
+    {
+        turnState = new TurnState();
+        return turnState;
+    }
+
     [Provide(true)]
     private IGeneralInputService ProvideGeneralInputServiceForDI() => inputService;
 

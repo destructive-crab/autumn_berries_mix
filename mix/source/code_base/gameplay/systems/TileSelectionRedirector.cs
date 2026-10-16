@@ -9,17 +9,11 @@ public sealed class CellSelectionRedirector : ISystemBasedOnCellSelection, IScen
 {
     public string DebugName() => nameof(CellSelectionRedirector);
 
-    private Vec2I currentPointedCell;
-    private Vec2I currentSelectedCell;
-    
     [Inject] private IGridInputService inputService;
     [Inject] private GameMap           map;
     [Inject] private ECSWorld          world;
     
     //overlay
-    private int pointedCellOverlayEntity;
-
-    private readonly Queue<int> selectionQueue = new();
     private int currentSelectedTile = -1;
     
     private CellSelectionSystemsRoot root;
@@ -34,9 +28,7 @@ public sealed class CellSelectionRedirector : ISystemBasedOnCellSelection, IScen
     public void Active()
     {
         if (root.CurrentSelectedCell != -1)
-        {
             OnCellSelected(root.CurrentSelectedCell);
-        }
     }
 
     public void OnCellSelected(int cell)

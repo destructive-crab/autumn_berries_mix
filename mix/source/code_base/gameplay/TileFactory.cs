@@ -1,3 +1,4 @@
+using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using mix.code_base;
@@ -96,6 +97,8 @@ public sealed class TileFactory : ITileFactory
                     Entity moveAbility = world.New()
                         .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/move_ability.png"))
                         .With(new MoveAbility());
+
+                    u.Default();
                     u.Abilities = [ moveAbility.Id ];
                 });
                 return tileEntity.Id;

@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace destruct.Debug
+﻿namespace destruct.Debug
 {
     public static class LGR
     {

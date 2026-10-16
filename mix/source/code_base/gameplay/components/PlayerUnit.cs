@@ -8,6 +8,11 @@ public struct PlayerUnit
 
     public PlayerUnit()
     {
+        Default();
+    }
+
+    public void Default()
+    {
         PreviousSelectedAbility = -1;
     }
 }

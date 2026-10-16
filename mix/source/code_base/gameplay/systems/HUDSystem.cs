@@ -25,12 +25,14 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
     private int selectedAbility = -1;
     
     private IFilter selectedCellFilter;
+    private TurnState turnState;
 
     [Inject]
-    public void Inject(ECSWorld world, CellSelectionSystemsRoot root)
+    public void Inject(ECSWorld world, CellSelectionSystemsRoot root, TurnState turnState)
     {
         this.world = world;
         this.root  = root;
+        this.turnState = turnState;
         
         world.Filter()
             .In<Tile>()
@@ -84,72 +86,85 @@ public sealed class HUDSystem : ISceneSystem, ISceneSystemPostWorldRenderer
     {
         deGUI.BeginGUI();
         {
-            deGUI.Text(Game.DeltaTime.ToString(), 20, 10,10, Color.White);
-            deGUI.BeginContainer(0, deGUI.ConH()-140, 350, 140);
+            if (turnState.CurrentTurn is PlayerTurn playerTurn)
             {
-                deGUI.ContainerBorder();
-                deGUI.FillContainer(new Color(0, 0, 0, 100));
-
-                if (playerUnitAbilities != null)
+                deGUI.TextXCenter($"Points left {playerTurn.PointsLeft}", 30, 30, Color.White);
+                deGUI.Text((1f / Game.DeltaTime).ToString() + "fps", 20, 10, 10, Color.White);
+                deGUI.BeginContainer(0, deGUI.ConH() - 140, 350, 140);
                 {
-                    foreach (var ability in playerUnitAbilities)
+                    deGUI.ContainerBorder();
+                    deGUI.FillContainer(new Color(0, 0, 0, 100));
+                    if (playerUnitAbilities != null)
                     {
-                        var abilityComponent = world.GetFrom<PlayerUnitAbility>(ability);
-                        if (selectedAbility != ability)
+                        selectedAbility = -1;
+                        foreach (var ability in playerUnitAbilities)
                         {
-                            if (deGUI.ImageButton(abilityComponent.Icon, 10 + deGUI.NextX(), 10, 60, 60))
+                            PlayerUnitAbility abilityComponent = world.GetFrom<PlayerUnitAbility>(ability);
+                            if (!world.Pool<Selected>().Has(ability))
                             {
-                                if (selectedAbility != -1)
+                                if (deGUI.ImageButton(abilityComponent.Icon, 10 + deGUI.NextX(), 10, 60, 60))
                                 {
-                                    world.Pool<Selected>().Remove(selectedAbility);
+                                    if (selectedAbility != -1)
+                                    {
+                                        world.Pool<Selected>().Remove(selectedAbility);
+                                    }
+
+                                    selectedAbility = ability;
+                                    world.Pool<Selected>().New(ability);
                                 }
-                                
-                                selectedAbility = ability;
-                                world.Pool<Selected>().New(ability);
                             }
-                        }
-                        else
-                        {
-                            if (deGUI.ImageButton(abilityComponent.SelectedIcon, 10 + deGUI.NextX(), 10, 60, 60))
+                            else
                             {
-                                if (selectedAbility != -1)
+                                selectedAbility = ability;
+                                if (deGUI.ImageButton(abilityComponent.SelectedIcon, 10 + deGUI.NextX(), 10, 60, 60))
                                 {
-                                    LGR.PM(selectedAbility + " deselect");
                                     world.Pool<Selected>().Remove(selectedAbility);
+                                    selectedAbility = -1;
                                 }
-                                selectedAbility = -1;
                             }
                         }
                     }
                 }
-            }
-            deGUI.EndContainer();
-            
-            deGUI.BeginContainer(370, deGUI.ConH()-100, 400, 100);
-            {
-                deGUI.ContainerBorder();
-                deGUI.FillContainer(new Color(0, 0, 0, 100));
-                deGUI.TextXCenter(PanelLabelText, 10, 30, Color.White);
-                
-                deGUI.TextCenter(PanelDescriptionText, 20, Color.White);
-            }
-            deGUI.EndContainer();
-
-            if (selectedCellFilter.Entities.Count() != 0)
-            {
-                deGUI.BeginContainer(deGUI.ConW() - 300, 0, 300, 100);
+                deGUI.EndContainer();
+                deGUI.BeginContainer(370, deGUI.ConH() - 100, 400, 100);
                 {
-                    deGUI.FillContainer(Color.Black);
-                    ref Cell cell = ref world.GetFrom<Cell>(selectedCellFilter.Entities.Last());
-                    deGUI.TextXCenter(root?.Current?.DebugName(), 20, 20, Color.White);
-                    deGUI.YSpace(20);
-                    deGUI.TextXCenter(cell.Position.ToString(), deGUI.NextY(), 20, Color.White);
-                    deGUI.YSpace(10);
-                    deGUI.TextXCenter(UTL.ToStringEnumerable(cell.Entities), deGUI.NextY(), 20, Color.White);
+                    deGUI.ContainerBorder();
+                    deGUI.FillContainer(new Color(0, 0, 0, 100));
+                    deGUI.TextXCenter(PanelLabelText, 10, 30, Color.White);
+                    deGUI.TextCenter(PanelDescriptionText, 20, Color.White);
+                }
+                deGUI.EndContainer();
+                if (selectedCellFilter.Entities.Count() != 0)
+                {
+                    deGUI.BeginContainer(deGUI.ConW() - 300, 0, 300, 120);
+                    {
+                        deGUI.FillContainer(Color.Black);
+                        ref Cell cell = ref world.GetFrom<Cell>(selectedCellFilter.Entities.Last());
+                        deGUI.TextXCenter(root?.Current?.DebugName(), 20, 20, Color.White);
+                        deGUI.YSpace(20);
+                        deGUI.TextXCenter(cell.Position.ToString(), deGUI.NextY(), 20, Color.White);
+                        deGUI.YSpace(10);
+                        deGUI.TextXCenter(UTL.ToStringEnumerable(cell.Entities), deGUI.NextY(), 20, Color.White);
+                    }
+                    deGUI.EndContainer();
+                }
+                
+            }
+            else if (turnState.CurrentTurn is EnemyTurn enemyTurn)
+            {
+                deGUI.BeginContainerCenter(160, 60);
+                {
+                    deGUI.FillContainer(Color.Pink);
+                    deGUI.ContainerBorder();
+                    deGUI.TextCenter("WAIT " + enemyTurn.TimeLeft.ToString(), enemyTurnFontSize, Color.DarkBlue);
                 }
                 deGUI.EndContainer();
             }
         }
+
         deGUI.EndGUI();
     }
+
+    private int enemyTurnFontSize = 40;
+    private bool decrease = false;
 }
