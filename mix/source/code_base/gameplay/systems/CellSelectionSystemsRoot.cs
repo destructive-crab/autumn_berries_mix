@@ -5,13 +5,13 @@ using mix.gameplay.systems;
 
 namespace mix.code_base.gameplay.systems;
 
-public interface ISystemBasedOnCellSelection : ISceneSystem
+public interface ISystemBasedOnCellSelection : ISystem
 {
     void Active();
     void OnCellSelected(int cell);
 }
 
-public sealed class CellSelectionSystemsRoot : ISceneSystem
+public sealed class CellSelectionSystemsRoot : ISystem
 {
     public string DebugName() => nameof(CellSelectionSystemsRoot);
     

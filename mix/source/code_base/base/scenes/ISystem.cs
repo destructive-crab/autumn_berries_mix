@@ -1,6 +1,6 @@
 namespace destruct.scenes;
 
-public interface ISceneSystem
+public interface ISystem
 {
     string DebugName();
 }

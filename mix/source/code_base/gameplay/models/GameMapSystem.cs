@@ -5,7 +5,7 @@ using mix.code_base;
 
 namespace mix.gameplay.overlay.models;
 
-public sealed class GameMapSystem : ISceneSystem
+public sealed class GameMapSystem : ISystem
 {
     public string DebugName() => nameof(GameMap);
     

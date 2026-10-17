@@ -9,7 +9,7 @@ using mix.gameplay.systems;
 
 namespace mix.gameplay.overlay.units.abilities;
 
-public abstract class PlayerAbilitySystem<TAbility> : ISceneSystem, ISystemBasedOnCellSelection, IPlayerTurnSystem
+public abstract class PlayerAbilitySystem<TAbility> : ISystem, ISystemBasedOnCellSelection, IPlayerTurnSystem
     where TAbility : struct 
 {
     public abstract string DebugName();
@@ -118,12 +118,12 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
     [Inject] private readonly GameMap map;
     [Inject] private readonly OverlayFactory overlayFactory;
     
-    private CellSelectionSystemsRoot selectionSystem;
+    private CellSelectionSystemsRoot selectionRoot;
 
     [Inject]
-    private void Inject(CellSelectionSystemsRoot selectionSystem)
+    private void Inject(CellSelectionSystemsRoot selectionRoot)
     {
-        this.selectionSystem = selectionSystem;
+        this.selectionRoot = selectionRoot;
     }
     
     protected override void SelectAbilities(IEnumerable<int> selectedAbilities)
@@ -138,9 +138,9 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
             this.availableCells.Add(ability, availableCells);
         }
 
-        if (selectionSystem.Current != this)
+        if (selectionRoot.Current != this)
         {
-            selectionSystem.FocusOn(this);
+            selectionRoot.FocusOn(this);
         }
     }
 
@@ -156,7 +156,7 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
 
         if (CurrentSelected.Count() == 0 && deselectedAbilities.Count() != 0)
         {
-            selectionSystem.FocusPrevious();
+            selectionRoot.FocusPrevious();
         }
     }
 
@@ -177,14 +177,14 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
         if (!moveWasPerformed)
         {
             DeselectCurrent();
-            selectionSystem.FocusPrevious();
+            selectionRoot.FocusPrevious();
         }
     }
 
     protected override void OnBlockedCellSelected(Vec2I cellPosition)
     {
         DeselectCurrent();
-        selectionSystem.FocusPrevious();
+        selectionRoot.FocusPrevious();
     }
 
     private void PerformMove(int abilityId, Vec2I destPosition)
@@ -204,7 +204,7 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
 
         map.MoveTile(UnitOf(abilityId), destPosition);
         World.Pool<Selected>().Remove(abilityId);
-        selectionSystem.FocusPrevious();
+        selectionRoot.FocusPrevious();
         CurrentTurn.RemovePoints(1);
     }
 }

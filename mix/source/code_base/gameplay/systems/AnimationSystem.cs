@@ -136,7 +136,7 @@ public sealed class AnimationsContainer
     }
 }
 
-public sealed class AnimationSystem : ISceneSystem, ISceneSystemWorldRenderer
+public sealed class AnimationSystem : ISystem, IWorldRendererSystem
 {
     public string DebugName() => nameof(AnimationSystem);
 

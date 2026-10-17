@@ -13,7 +13,7 @@ namespace mix.gameplay.systems;
 public struct Hovered {}
 public struct Hoverable {}
 
-public sealed class HoverSystem : ISceneSystem, ISceneSystemProcessInputs
+public sealed class HoverSystem : ISystem, IInputsProcessSystem
 {
     public string DebugName() => nameof(HoverSystem);
 
@@ -43,7 +43,7 @@ public sealed class HoverSystem : ISceneSystem, ISceneSystemProcessInputs
 
     public void ProcessInputs(bool guiWasOverlapped)
     {
-        if (deGUI.GUIWasOverlapped()) return;
+        if (guiWasOverlapped) return;
         
         foreach (int entity in entities)
         {

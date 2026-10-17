@@ -7,7 +7,7 @@ using Raylib_cs;
 
 namespace mix.code_base;
 
-public sealed class SpriteRendererSystem : ISceneSystem, ISceneSystemWorldRenderer
+public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
 {
     public string DebugName() => nameof(SpriteRendererSystem);
     

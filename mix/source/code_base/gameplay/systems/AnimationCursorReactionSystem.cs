@@ -7,7 +7,7 @@ using mix.gameplay.systems;
 
 namespace mix.code_base.gameplay.systems;
 
-public class AnimationCursorReactionSystem : ISceneSystem
+public class AnimationCursorReactionSystem : ISystem
 {
     public string DebugName() => nameof(AnimationCursorReactionSystem);
 

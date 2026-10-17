@@ -7,7 +7,7 @@ using mix.code_base;
 
 namespace mix.gameplay.overlay.tweens;
 
-public sealed class PositionTweenSystem : ISceneSystem, ISceneSystemWorldRenderer
+public sealed class PositionTweenSystem : ISystem, IWorldRendererSystem
 {
     private IFilter filter;
     private ECSWorld world;

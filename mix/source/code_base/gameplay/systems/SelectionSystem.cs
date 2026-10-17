@@ -12,7 +12,7 @@ namespace mix.code_base.gameplay.systems;
 public struct Selected { }
 public struct Selectable { }
 
-public sealed class SelectionSystem : ISceneSystem, ISceneSystemProcessInputs
+public sealed class SelectionSystem : ISystem, IInputsProcessSystem
 {
     public string DebugName() => nameof(SelectionSystem);
 
@@ -45,7 +45,7 @@ public sealed class SelectionSystem : ISceneSystem, ISceneSystemProcessInputs
     
     public void ProcessInputs(bool guiWasOverlapped)
     {
-        if (deGUI.GUIWasOverlapped()) return;
+        if (guiWasOverlapped) return;
         
         if (inputService.LeftMouseButtonDown)
         {
@@ -59,7 +59,6 @@ public sealed class SelectionSystem : ISceneSystem, ISceneSystemProcessInputs
                 currentSelected = entity;
                 return;
             }
-            
         }
     }
 }

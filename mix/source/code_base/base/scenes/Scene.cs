@@ -4,7 +4,7 @@ using destruct.ServiceLocators;
 
 public abstract class Scene 
 {
-    public readonly ServiceLocator<ISceneSystem> Systems = new();
+    public readonly ServiceLocator<ISystem> Systems = new();
     
     public abstract IDependenciesProvider[] GetProviders();
 

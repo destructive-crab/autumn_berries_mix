@@ -29,6 +29,11 @@ public struct ButtonStyle
     }
 }
 
+public struct InputFieldRuntimeData
+{
+    public bool Selected;
+}
+
 public sealed class GUIStyle
 {
     public int BorderTileSize;
@@ -182,10 +187,10 @@ public static class deGUI
     public static void BeginContainerCenter(int width, int height)
         => BeginContainer(CenteredXFor(width), CenteredYFor(height), width, height);
     
-    public static void BeginContainer(int containerX, int containerY, int width, int height)
+    public static bool BeginContainer(int containerX, int containerY, int width, int height)
     {
         GUIContainer newContainer = new(containerX, containerY, width, height);
-
+        bool thisContainerOverlapped = false;
         if (containers.Count > 0)
         {
             var lastContainer = Container();
@@ -200,11 +205,14 @@ public static class deGUI
             
             //we do not check gui overlap when there is no containers yet because 
             //first container is always root container with screen size
-            guiWasOverlapped = guiWasOverlapped || IsOverlapped(newContainer.Rect);
+            thisContainerOverlapped = IsOverlapped(newContainer.Rect);
+            guiWasOverlapped = guiWasOverlapped || thisContainerOverlapped;
         }
 
         containers.Add(newContainer);
         lastDrawnElementOfEachContainer.Add(new Rect());
+
+        return thisContainerOverlapped;
     }
     
     public static void EndContainer()
@@ -438,6 +446,60 @@ public static class deGUI
     public static void TextXCenter(string text, int containerY, int fontSize, Color color)
     {
         Text(text, fontSize, CenteredXFor((int)Raylib.MeasureTextEx(Font, text, fontSize, 1).X), containerY, color);
+    }
+
+    public static bool InputField(string text, int containerX, int containerY, int containerW, ref InputFieldRuntimeData data, out string outputString)
+    {
+        outputString = text;
+
+        bool overlapped = BeginContainer(containerX, containerY, containerW, 30);
+        {
+            if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+            {
+                data.Selected = overlapped;
+            }
+            
+            ContainerBorder();
+            
+            if (data.Selected) FillContainer(new Color(40, 40, 40, 255));
+            else               FillContainer(Color.Black);
+            
+            BeginMarginContainerX(4);
+            {
+                Text(text, 30, containerX, containerY, Color.White);
+            }
+            EndContainer();
+        }
+        EndContainer();
+        
+        if (!data.Selected) return false;
+        
+        int character = Raylib.GetCharPressed();
+
+        if (Raylib.IsKeyPressed(KeyboardKey.Enter))
+        {
+            return true;
+        }
+        
+        if (outputString.Length != 0 && Raylib.IsKeyPressed(KeyboardKey.Backspace))
+        {
+            if (Raylib.IsKeyDown(KeyboardKey.LeftShift))
+            {
+                outputString = "";
+            }
+            else
+            {
+                outputString = outputString.Substring(0, outputString.Length - 1);
+            }
+        }
+
+        if (character == 0)
+        {
+            return false;
+        }
+
+        outputString += (char)character;
+        return false;
     }
     
     public static void TextCenter(string text, int fontSize, Color color)

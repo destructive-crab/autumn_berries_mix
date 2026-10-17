@@ -1,4 +1,5 @@
 using destruct;
+using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.imgui;
@@ -48,7 +49,9 @@ public sealed class TestScene : Scene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationCursorReactionSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new MoveAbilitySystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new PositionTweenSystem(), Systems));
+        
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new DebugHUDSystem(), Systems));
 
         gameMap.Create(10,10);
         camera.CurrentCamera = new Camera2D();
@@ -79,23 +82,21 @@ public sealed class TestScene : Scene, IDependenciesProvider
 
     public override void Tick()
     {
-        DrawBackgroundShader();
-
-        foreach (var inputsProcessor in Systems.Filter<ISceneSystemProcessInputs>())
+        foreach (var inputsProcessor in Systems.Filter<IInputsProcessSystem>())
         {
             inputsProcessor.ProcessInputs(deGUI.GUIWasOverlapped());
         }
         
+        DrawBackgroundShader();
+        
         Raylib.BeginMode2D(camera.CurrentCamera);
         {
-            foreach (var renderer in Systems.Filter<ISceneSystemWorldRenderer>())
-            {
+            foreach (var renderer in Systems.Filter<IWorldRendererSystem>())
                 renderer.RenderWorld();
-            }
         }
         Raylib.EndMode2D();
         
-        foreach (var postRenderer in Systems.Filter<ISceneSystemPostWorldRenderer>())
+        foreach (var postRenderer in Systems.Filter<IPostWorldRendererSystem>())
         {
             postRenderer.PostWorldRenderer();
         }

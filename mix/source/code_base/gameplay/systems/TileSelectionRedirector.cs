@@ -5,7 +5,7 @@ using mix.code_base;
 using mix.code_base.gameplay.systems;
 using mix.inputs;
 
-public sealed class CellSelectionRedirector : ISystemBasedOnCellSelection, ISceneSystem
+public sealed class CellSelectionRedirector : ISystemBasedOnCellSelection, ISystem
 {
     public string DebugName() => nameof(CellSelectionRedirector);
 

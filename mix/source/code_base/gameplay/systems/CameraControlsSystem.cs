@@ -6,7 +6,7 @@ using Raylib_cs;
 
 namespace mix.gameplay.systems;
 
-public sealed class CameraControlsSystem : ISceneSystem, ISceneSystemWorldRenderer
+public sealed class CameraControlsSystem : ISystem, IWorldRendererSystem
 {
     public string DebugName() => nameof(CameraControlsSystem);
 
