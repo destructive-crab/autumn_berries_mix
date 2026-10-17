@@ -19,8 +19,8 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
 
     public BackgroundSystem()
     {
-        noiseShader = Assets.LoadShader("assets/shaders/background/noise.fs");
-        cloudsShader = Assets.LoadShader("assets/shaders/background/clouds.fs");
+        noiseShader = Assets.Shaders.Load("assets/shaders/background/noise.fs");
+        cloudsShader = Assets.Shaders.Load("assets/shaders/background/clouds.fs");
         
         timeLoc = Raylib.GetShaderLocation(noiseShader, "u_time");
         UpdateScreenSize();

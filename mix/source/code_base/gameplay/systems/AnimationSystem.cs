@@ -12,7 +12,7 @@ public static class AnimatorExtensions
 {
     public static void InitializeFromAse(ref this Animator animator, string pathToAseFile)
     {
-        animator.AnimationsContainer = Assets.LoadAnimationsContainer(pathToAseFile);
+        animator.AnimationsContainer = Assets.AnimationContainers.Load(pathToAseFile);
     }
     
     public static bool HasCurrentAnimation(this in Animator animator)
@@ -104,7 +104,7 @@ public struct Animator
     public float TimeLeftToNextFrame;
 }
 
-public sealed class AnimationsContainer
+public sealed class AnimationsContainer : IDisposable
 {
     private readonly Dictionary<string, AnimationClip> clips;
 
@@ -134,6 +134,8 @@ public sealed class AnimationsContainer
 
         return clips[clipName];
     }
+
+    public void Dispose() { }
 }
 
 public sealed class AnimationSystem : ISystem, IWorldRendererSystem

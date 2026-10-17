@@ -1,4 +1,7 @@
+using AsepriteDotNet;
 using AsepriteDotNet.Common;
+using AsepriteDotNet.IO;
+using AsepriteDotNet.Processors;
 using destruct.Debug;
 using destruct.imgui;
 using mix.aseprite;
@@ -97,65 +100,80 @@ public sealed class AsepriteCachedTexture : CachedTexture
 
 public static class Assets
 {
-    private static readonly Dictionary<string, CachedTexture> cachedTextures = new();
-    private static readonly Dictionary<string, AnimationsContainer> cachedAnimationContainers = new();
-    private static readonly Dictionary<string, Shader> cachedShaders = new();
-    
-    public static AnimationsContainer LoadAnimationsContainer(string pathToAseFile)
+    public class CacheContainer<TAsset>
     {
-        if (cachedAnimationContainers.TryGetValue(pathToAseFile, out var cache))
-            return cache;
-
-        AnimationsContainer newContainer = new(AsepriteImporter.ImportClips(pathToAseFile));
-        cachedAnimationContainers.Add(pathToAseFile, newContainer);
+        public delegate TAsset LoadFunction(string path);
+        public delegate void UnloadFunction(TAsset path);
         
-        return newContainer;
-    }
-
-    public static CachedTexture CreateTextureFromAsepriteTextureAndCache(string path, AsepriteDotNet.Texture texture)
-    {
-        if (cachedTextures.TryGetValue(path, out var cache)) 
-            return cache;
-
-        AsepriteCachedTexture res = new AsepriteCachedTexture(texture);
-        cachedTextures.Add(path, res);
-        return res;
-    }
-    
-    public static CachedTexture LoadTexture(string path)
-    {
-        if (cachedTextures.TryGetValue(path, out var cache)) 
-            return cache;
-
-        RaylibCachedTexture texture = new RaylibCachedTexture(path);
-        cachedTextures.Add(path, texture);
+        private readonly Dictionary<string, TAsset> cache = new();
         
-        return texture;
-    }
+        private LoadFunction load;
+        private UnloadFunction unload;
 
-    public static Shader LoadShader(string path)
-    {
-        if (cachedShaders.TryGetValue(path, out var cache))
-            return cache;
-
-        Shader shader = Raylib.LoadShader(null, path);
-        cachedShaders.Add(path, shader);
-
-        return shader;
-    }
-
-    public static void UnloadTexture(string path)
-    {
-        if (cachedTextures.TryGetValue(path, out var cache))
+        public CacheContainer(LoadFunction load, UnloadFunction unload)
         {
-            cache.Dispose();
-            cachedTextures.Remove(path);
+            this.load = load;
+            this.unload = unload;
+        }
+
+        public TAsset Load(string path)
+        {
+            if (cache.TryGetValue(path, out var c))
+                return c;
+            
+            TAsset asset = load.Invoke(path);
+            cache.Add(path, asset);
+            
+            return asset;
+        }
+
+        public void UnloadAll()
+        {
+            foreach (TAsset asset in cache.Values)
+                unload?.Invoke(asset);
         }
     }
 
+    public static readonly CacheContainer<CachedTexture>       Textures;
+    public static readonly CacheContainer<AnimationsContainer> AnimationContainers;
+    public static readonly CacheContainer<Shader>              Shaders;
+    public static readonly CacheContainer<Sound>               Sounds;
+
+    private const string AseFileExtensions = ".ase";
+
+    static Assets()
+    {
+        Textures            = new(LoadRaylibTexture, UnloadRaylibTexture);
+        AnimationContainers = new(LoadAnimationsContainer, UnloadAnimationsContainer);
+        Shaders             = new(LoadShader, Raylib.UnloadShader);
+        Sounds              = new(Raylib.LoadSound, Raylib.UnloadSound);
+    }
+    
+    private static CachedTexture LoadRaylibTexture(string path)
+    {
+        if (Path.GetExtension(path) == AseFileExtensions)
+        {
+            return new AsepriteCachedTexture(SpriteSheetProcessor.Process(AsepriteFileLoader.FromFile(path), null).TextureAtlas.Texture);
+        }
+        
+        return new RaylibCachedTexture(path);
+    }
+
+    private static void UnloadRaylibTexture(CachedTexture t) 
+        => t.Dispose();
+
+    private static AnimationsContainer LoadAnimationsContainer(string path) 
+        => new(AsepriteImporter.ImportClips(path));
+    private static void UnloadAnimationsContainer(AnimationsContainer c)
+        => c.Dispose();
+
+    private static Shader LoadShader(string path) => Raylib.LoadShader(null, path);
+
     public static void UnloadAll()
     {
-        foreach (var path in cachedTextures.Keys)
-            UnloadTexture(path );
+        AnimationContainers.UnloadAll();
+        Textures.UnloadAll();
+        Shaders.UnloadAll();
+        Sounds.UnloadAll();
     }
 }

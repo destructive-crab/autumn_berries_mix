@@ -14,9 +14,9 @@ public struct PlayerUnitAbility
     {
         UnitId = unitId;
         
-        Icon = TextureFragment.FromZeroTo(Assets.LoadTexture(pathToIconsSheet), 
+        Icon = TextureFragment.FromZeroTo(Assets.Textures.Load(pathToIconsSheet), 
             Global.IconStandardSize, Global.IconStandardSize);
-        SelectedIcon = TextureFragment.WithRect(Assets.LoadTexture(pathToIconsSheet), 
+        SelectedIcon = TextureFragment.WithRect(Assets.Textures.Load(pathToIconsSheet), 
             Global.IconStandardSize, 0, Global.IconStandardSize, Global.IconStandardSize); 
     }
 }

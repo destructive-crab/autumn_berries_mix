@@ -74,7 +74,7 @@ public sealed class GUIStyle
     public GUIStyle ImportBorder(int tileSize, string assetPath)
     {
         BorderTileSize = tileSize;
-        Border = Assets.LoadTexture(assetPath);
+        Border = Assets.Textures.Load(assetPath);
         int t = tileSize;
         
         TLBorderCornerTile = new(0,   0, t, t);

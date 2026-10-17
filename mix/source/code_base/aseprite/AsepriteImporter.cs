@@ -13,11 +13,10 @@ public static class AsepriteImporter
     public static AnimationClip[] ImportClips(string assetPath)
     {
         AsepriteFile file = AsepriteFileLoader.FromFile(assetPath);
-
         SpriteSheet sheet = SpriteSheetProcessor.Process(file, null);
 
         CachedTexture texture 
-            = Assets.CreateTextureFromAsepriteTextureAndCache(assetPath, sheet.TextureAtlas.Texture);
+            = Assets.Textures.Load(assetPath);
 
         AnimationClip[] clips = new AnimationClip[file.Tags.Length];
 

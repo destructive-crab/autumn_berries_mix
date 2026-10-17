@@ -42,7 +42,6 @@ public sealed class Cursor : IGMModuleBoot, IGMModuleTick
     
     public void SetToMove()
     {
-        LGR.PM("MOVE");
         currentTexture = moveTexture;
     }
 

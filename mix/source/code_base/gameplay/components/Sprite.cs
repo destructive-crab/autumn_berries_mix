@@ -59,7 +59,7 @@ public struct Sprite
     {
         Sprite s = new();
         
-        s.Fragment = TextureFragment.Full(Assets.LoadTexture(assetPath));
+        s.Fragment = TextureFragment.Full(Assets.Textures.Load(assetPath));
         s.Hidden = false;
         return s;
     }
