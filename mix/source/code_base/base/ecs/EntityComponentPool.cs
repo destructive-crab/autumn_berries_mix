@@ -6,7 +6,8 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
     where TComponent : struct
 {
     public Type Type { get; }
-    
+    public int Count => componentsCount - freeComponents.Count;
+
     private TComponent[] components;
     private int[] entityToComponent;
     private readonly Queue<int> freeComponents = new();

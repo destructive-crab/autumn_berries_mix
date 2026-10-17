@@ -360,6 +360,9 @@ public static class deGUI
         bool overlap = IsOverlapped(new(x,y,w,h));
         bool click = Raylib.IsMouseButtonPressed(MouseButton.Left);
         bool pressed = overlap && click;
+
+        if (overlap) Game.G<Cursor>().SetToPointer();
+        if (Raylib.IsMouseButtonDown(MouseButton.Left)) Game.G<Cursor>().SetToPressedPointer();
         
         BeginContainer(containerX, containerY, w, h);
         {

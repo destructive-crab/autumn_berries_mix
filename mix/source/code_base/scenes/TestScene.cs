@@ -49,6 +49,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationCursorReactionSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new MoveAbilitySystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new PositionTweenSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CursorSystem(), Systems));
         
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new DebugHUDSystem(), Systems));

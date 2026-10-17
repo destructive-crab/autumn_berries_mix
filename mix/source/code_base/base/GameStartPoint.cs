@@ -24,6 +24,7 @@ public abstract partial class GameStartPoint
     {
         modulesStorage.AutoRegister<SceneSwitcher>(new SceneSwitcher());
         modulesStorage.AutoRegister<DIKernel>(new DIKernel());
+        modulesStorage.AutoRegister<Cursor>(new Cursor());
         //modulesStorage.AutoRegister<AudioSystem>(new AudioSystem());
         
         return Task.CompletedTask;
@@ -33,5 +34,4 @@ public abstract partial class GameStartPoint
     {
         Game.G<DIKernel>().RegisterDependenciesToCore(GetProviders());
     }
-
 }

@@ -24,9 +24,13 @@ public partial class Game
     
     public static async Task StartGame(bool allowDebug, GameStartPoint point)
     {
+        Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
+        Raylib.InitWindow(800, 600, "MIX");
+        
         AllowDebug = allowDebug;
         
         point.BuildModules(modulesStorage, debugModulesStorage);
+        
         string output = await modulesStorage.Boot();
         
         if (AllowDebug)
@@ -51,11 +55,9 @@ public partial class Game
         }
         
         LGR.PM(output);
+        
         IsBootstrapping = false;
         Awake = true;
-        
-        Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
-        Raylib.InitWindow(800, 600, "MIX");
         
         point.Complete();
         Loop();
@@ -64,10 +66,6 @@ public partial class Game
     public static async void QuitGame()
     {
         Awake = false;
-        foreach (IGMModuleQuit quit in modulesStorage.quits)
-        {
-            await quit.Quit();
-        }
     }
 
     public static void Loop()
@@ -81,7 +79,9 @@ public partial class Game
             Raylib.BeginDrawing();
             {
                 Raylib.ClearBackground(Color.Black);
+                Game.G<Cursor>().SetToDefault();
                 CurrentScene?.Tick();
+                modulesStorage.Tick();
             }
             Raylib.EndDrawing();
         }
@@ -126,5 +126,10 @@ public interface IGMModuleBoot
 public interface IGMModuleQuit
 {
     public Task Quit();
+}
+
+public interface IGMModuleTick
+{
+    public void Tick();
 }
     
