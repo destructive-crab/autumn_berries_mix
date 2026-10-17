@@ -1,5 +1,3 @@
-using destruct.Debug;
-
 namespace destruct.ecs;
 
 public sealed class ECSWorld
@@ -22,6 +20,11 @@ public sealed class ECSWorld
         {
             entities[i] = new();
         }
+    }
+
+    public int EntitiesCount()
+    {
+        return lastEntityId - freeEntities.Count + 1;
     }
 
     public Entity New()

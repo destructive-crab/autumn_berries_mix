@@ -1,3 +1,4 @@
+using System.Text;
 using destruct.DI;
 using destruct.scenes;
 using destruct.ServiceLocators;
@@ -32,8 +33,17 @@ public abstract class Scene
     
     protected abstract void OnSceneLoaded();
 
-    public virtual void Tick()
+    public virtual void Tick() { }
+
+    public string SystemNames()
     {
-        
+        StringBuilder sb = new();
+        foreach (var s in Systems.All)
+        {
+            sb.Append(s.DebugName());
+            sb.Append('\n');
+        }
+
+        return sb.ToString();
     }
 }

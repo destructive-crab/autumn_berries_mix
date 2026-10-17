@@ -15,9 +15,13 @@ using Raylib_cs;
 
 namespace mix.code_base;
 
-public sealed class TestScene : Scene, IDependenciesProvider
+public abstract class ECSScene : Scene
 {
-    private ECSWorld world;
+    public readonly ECSWorld World = new();
+}
+
+public sealed class TestScene : ECSScene, IDependenciesProvider
+{
     private Camera camera;
     
     private readonly UltimateInputService inputService = new();
@@ -34,7 +38,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
     protected override void OnSceneLoaded()
     {
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new BackgroundSystem(), Systems));
-        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SpriteRendererSystem(world), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SpriteRendererSystem(World), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new GameMapSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HoverSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSystem(), Systems));
@@ -54,7 +58,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
         camera.CurrentCamera = new Camera2D();
         camera.CurrentCamera.Zoom = 2;
 
-        world.BlockFiltersEvaluation();
+        World.BlockFiltersEvaluation();
         for (int x = 0; x < 10; x++)
         {
             for (int y = 0; y < 10; y++)
@@ -63,7 +67,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
             }
         }
 
-        world.UnblockFiltersEvaluationAndEvaluate();
+        World.UnblockFiltersEvaluationAndEvaluate();
 
         tileFactory.CreateTileFromID(TileIds.Chainy, 1, 1);
         tileFactory.CreateTileFromID(TileIds.Ghost, 1, 2);
@@ -109,14 +113,9 @@ public sealed class TestScene : Scene, IDependenciesProvider
         deGUI.EndGUI();
     }
 
-
     [Provide(true)]
-    private ECSWorld ProvideECSWorldForDI()
-    {
-        world = new ECSWorld();
-        return world;
-    }
-    
+    private ECSWorld ProvideECSWorldForDI() => World;
+
     [Provide(true)]
     private Camera ProvideCameraForDI()
     {

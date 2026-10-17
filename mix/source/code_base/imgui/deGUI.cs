@@ -1,6 +1,6 @@
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
-using destruct.Debug;
 using Raylib_cs;
 
 namespace destruct.imgui;
@@ -464,12 +464,18 @@ public static class deGUI
             
             ContainerBorder();
             
-            if (data.Selected) FillContainer(new Color(40, 40, 40, 255));
+            if (data.Selected) FillContainer(new Color(60, 60, 60, 255));
             else               FillContainer(Color.Black);
             
             BeginMarginContainerX(4);
             {
                 Text(text, 30, containerX, containerY, Color.White);
+
+                bool flick = MathF.Ceiling((float)Raylib.GetTime()) % 2 == 0;
+                if (data.Selected && flick)
+                {
+                    Raylib.DrawRectangle(ConX()+NextX(), ConY()+containerY+4, 10, 22, Color.White);
+                }
             }
             EndContainer();
         }

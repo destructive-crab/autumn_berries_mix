@@ -13,11 +13,17 @@ public sealed class ConsoleSystem : IGUISystem
     private bool showConsole;
     
     public const string SceneAlias = "scene";
+    public const string WorldAlias = "world";
     
     private InputFieldRuntimeData consoleInput;
     private string currentConsoleString = "";
 
     private readonly List<string> consoleOutput = new();
+    
+    private const BindingFlags BindingFlags =
+        System.Reflection.BindingFlags.Instance |
+        System.Reflection.BindingFlags.Public |
+        System.Reflection.BindingFlags.NonPublic;
 
     public void DrawGUI()
     {
@@ -64,26 +70,34 @@ public sealed class ConsoleSystem : IGUISystem
         if (tokens.Length == 2)
         {
             string methodName = tokens[1];
-            
-            if (tokens[0] == SceneAlias) InvokeMethodIn(Game.CurrentScene, methodName);
+
+            if (tokens[0] == SceneAlias)
+            {
+                InvokeMethod(Game.CurrentScene, methodName);
+            }
+
+            if (tokens[0] == WorldAlias && Game.CurrentScene is ECSScene ecsWorld)
+            {
+                InvokeMethod(ecsWorld.World, methodName);
+            }
             else
             {
                 foreach (ISystem system in Game.CurrentScene.Systems.All)
                 {
                     if (system.DebugName() == tokens[0])
                     {
-                        InvokeMethodIn(system, methodName);
+                        InvokeMethod(system, methodName);
                     }
                 }
             }
         }
     }
 
-    private void InvokeMethodIn(object o, string methodName)
+    private void InvokeMethod(object o, string methodName)
     {
         var sceneType = o.GetType();
                 
-        foreach (MethodInfo info in sceneType.GetMethods())
+        foreach (MethodInfo info in sceneType.GetMethods(BindingFlags))
         {
             if (info.Name == methodName)
             {
@@ -97,7 +111,7 @@ public sealed class ConsoleSystem : IGUISystem
         consoleOutput.Add("Invalid scene method");
     }
 
-    public void Hide()
+    private void Hide()
     {
         showConsole = false;
     }

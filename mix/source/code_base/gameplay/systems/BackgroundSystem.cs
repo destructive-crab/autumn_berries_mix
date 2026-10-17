@@ -91,13 +91,13 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
         backgroundShaderNoiseTexture = Raylib.LoadRenderTexture((int)(MathF.Ceiling(currentWindowSize.X/40f)+8), (int)(MathF.Ceiling(currentWindowSize.Y/40)+8));
     }
 
-    public string Enable()
+    private string Enable()
     {
         enabled = true;
         return "Background shader was enabled";
     }
 
-    public void Disable()
+    private void Disable()
     {
         enabled = false;
     }

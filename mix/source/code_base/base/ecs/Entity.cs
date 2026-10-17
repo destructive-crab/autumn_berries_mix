@@ -31,4 +31,9 @@ public struct Entity
         Owner.Pool<TComponent>().New(Id, (ref TComponent c) => c = component);
         return this;
     }
+
+    public override string ToString()
+    {
+        return $"Entity {Id}";
+    }
 }
