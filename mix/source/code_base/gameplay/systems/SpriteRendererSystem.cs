@@ -53,18 +53,21 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
             }
             if (sprite.Hidden) continue;
             
-            var position = positionPool.Get(entity);
+            Position position = positionPool.Get(entity);
             Vector2 origin = world.Pool<Origin>().Get(entity).ToV2();
 
             origin = new(origin.X * sprite.Fragment.Rect.Width, origin.Y * sprite.Fragment.Rect.Height);
+            Rectangle sourceRect = sprite.Fragment.Rect;
+
+            if (sprite.MirroredHorizontal)
+                sourceRect.Width *= -1;
             
-            Raylib.DrawTexturePro(
-                sprite.Fragment.Texture.Get(), 
-                sprite.Fragment.Rect,
-                new Rectangle(UTL.UnitsToPixels(position) + sprite.DrawOffsetInPixels, sprite.Fragment.Rect.Width, sprite.Fragment.Rect.Height),
-                origin, 
-                sprite.Rotation,
-                Color.White);
+            if (sprite.MirroredVertical)
+                sourceRect.Height *= -1;
+
+            Rectangle destinationRect = new(UTL.UnitsToPixels(position) + sprite.DrawOffsetInPixels, sprite.Fragment.Rect.Width, sprite.Fragment.Rect.Height);
+            
+            Raylib.DrawTexturePro(sprite.Fragment.Texture.Get(), sourceRect, destinationRect, origin, sprite.Rotation, Color.White);
 
             if (Raylib.IsKeyDown(KeyboardKey.A))
             {

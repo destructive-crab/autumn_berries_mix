@@ -7,8 +7,8 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
 {
     public string DebugName() => nameof(BackgroundSystem);
 
-    private Shader noiseShader;
-    private Shader cloudsShader;
+    private readonly Shader noiseShader;
+    private readonly Shader cloudsShader;
     
     private RenderTexture2D backgroundShaderNoiseTexture;
     private Vec2I currentWindowSize;
@@ -19,8 +19,8 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
 
     public BackgroundSystem()
     {
-        noiseShader = Raylib.LoadShader(null, "assets/shaders/background/noise.fs");
-        cloudsShader = Raylib.LoadShader(null, "assets/shaders/background/clouds.fs");
+        noiseShader = Assets.LoadShader("assets/shaders/background/noise.fs");
+        cloudsShader = Assets.LoadShader("assets/shaders/background/clouds.fs");
         
         timeLoc = Raylib.GetShaderLocation(noiseShader, "u_time");
         UpdateScreenSize();

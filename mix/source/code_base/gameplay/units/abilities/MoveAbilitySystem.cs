@@ -190,6 +190,12 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
     private void PerformMove(int abilityId, Vec2I destPosition)
     {
         int unit = UnitOf(abilityId);
+
+        if (World.HasIn<Sprite>(unit))
+        {
+            World.GetFrom<Sprite>(unit).MirroredHorizontal = World.GetFrom<Position>(unit).X > destPosition.X;
+        }
+        
         World.Pool<PositionTween>().New(unit, (ref PositionTween t) =>
         {
             t.Destination = destPosition;

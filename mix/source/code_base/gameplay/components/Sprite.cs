@@ -49,6 +49,9 @@ public struct Sprite
     
     public Vec2I DrawOffsetInPixels;
     public float Rotation;
+    
+    public bool MirroredHorizontal;
+    public bool MirroredVertical;
 
     public TextureFragment Fragment;
 

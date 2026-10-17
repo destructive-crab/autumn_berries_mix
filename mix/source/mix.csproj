@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="assets\cursors\" />
       <Folder Include="code_base\gameplay\units\chainy\" />
     </ItemGroup>
 </Project>

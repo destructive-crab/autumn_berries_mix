@@ -17,7 +17,7 @@ public struct TextureFragment
 {
     public CachedTexture Texture;
     public Rectangle Rect;
-
+    
     public TextureFragment(CachedTexture texture, Rectangle rect)
     {
         Texture = texture;
@@ -99,6 +99,7 @@ public static class Assets
 {
     private static readonly Dictionary<string, CachedTexture> cachedTextures = new();
     private static readonly Dictionary<string, AnimationsContainer> cachedAnimationContainers = new();
+    private static readonly Dictionary<string, Shader> cachedShaders = new();
     
     public static AnimationsContainer LoadAnimationsContainer(string pathToAseFile)
     {
@@ -128,7 +129,19 @@ public static class Assets
 
         RaylibCachedTexture texture = new RaylibCachedTexture(path);
         cachedTextures.Add(path, texture);
+        
         return texture;
+    }
+
+    public static Shader LoadShader(string path)
+    {
+        if (cachedShaders.TryGetValue(path, out var cache))
+            return cache;
+
+        Shader shader = Raylib.LoadShader(null, path);
+        cachedShaders.Add(path, shader);
+
+        return shader;
     }
 
     public static void UnloadTexture(string path)
