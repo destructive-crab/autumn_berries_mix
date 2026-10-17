@@ -10,10 +10,10 @@ using Raylib_cs;
 
 namespace mix.gameplay.systems;
 
-public sealed class HUDSystem : ISystem, IPostWorldRendererSystem 
+public sealed class HUDSystem : ISystem, IGUISystem
 {
     public string DebugName() => nameof(HUDSystem);
-
+    
     private ECSWorld world;
     private string PanelDescriptionText;
     private string PanelLabelText;
@@ -72,21 +72,16 @@ public sealed class HUDSystem : ISystem, IPostWorldRendererSystem
         }
     }
 
-    public void PostWorldRenderer()
+    public void DrawGUI()
     {
-        deGUI.BeginGUI();
+        if (turnState.CurrentTurn is PlayerTurn playerTurn)
         {
-            if (turnState.CurrentTurn is PlayerTurn playerTurn)
-            {
-                DrawPlayerTurnHUD(playerTurn);
-            }
-            else if (turnState.CurrentTurn is EnemyTurn enemyTurn)
-            {
-                DrawEnemyTurnHUD(enemyTurn);
-            }
+            DrawPlayerTurnHUD(playerTurn);
         }
-
-        deGUI.EndGUI();
+        else if (turnState.CurrentTurn is EnemyTurn enemyTurn)
+        {
+            DrawEnemyTurnHUD(enemyTurn);
+        }
     }
 
     private void DrawPlayerTurnHUD(PlayerTurn playerTurn)

@@ -24,8 +24,6 @@ public sealed class TestScene : Scene, IDependenciesProvider
     private TileFactory tileFactory;
     private GameMap gameMap;
 
-    private Shader backgroundShader;
-    private int timeLoc;
     private TurnState turnState;
 
     public override IDependenciesProvider[] GetProviders()
@@ -35,9 +33,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
     
     protected override void OnSceneLoaded()
     {
-        backgroundShader = Raylib.LoadShader(null, "assets/shaders/background.fs");
-        timeLoc = Raylib.GetShaderLocation(backgroundShader, "time");
-        
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new BackgroundSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SpriteRendererSystem(world), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new GameMapSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HoverSystem(), Systems));
@@ -52,6 +48,7 @@ public sealed class TestScene : Scene, IDependenciesProvider
         
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new DebugHUDSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new ConsoleSystem(), Systems));
 
         gameMap.Create(10,10);
         camera.CurrentCamera = new Camera2D();
@@ -87,7 +84,8 @@ public sealed class TestScene : Scene, IDependenciesProvider
             inputsProcessor.ProcessInputs(deGUI.GUIWasOverlapped());
         }
         
-        DrawBackgroundShader();
+        foreach (var preWorldRenderer in Systems.Filter<IPreWorldRendererSystem>())
+            preWorldRenderer.PreWorldRenderer();
         
         Raylib.BeginMode2D(camera.CurrentCamera);
         {
@@ -100,38 +98,17 @@ public sealed class TestScene : Scene, IDependenciesProvider
         {
             postRenderer.PostWorldRenderer();
         }
+        
+        deGUI.BeginGUI();
+        {
+            foreach (var guiSystem in Systems.Filter<IGUISystem>())
+            {
+                guiSystem.DrawGUI();
+            }
+        }
+        deGUI.EndGUI();
     }
 
-    private void DrawBackgroundShader()
-    {
-        float time = (float)Raylib.GetTime();
-        Raylib.SetShaderValue(backgroundShader, timeLoc, time, ShaderUniformDataType.Float);
-        Raylib.BeginShaderMode(backgroundShader);
-        {
-            Rlgl.Begin(DrawMode.Triangles);
-            {
-                Rlgl.TexCoord2f(0.0f, 0.0f);
-                Rlgl.Vertex2f(0.0f, 0.0f);
-        
-                Rlgl.TexCoord2f(0.0f, Raylib.GetScreenHeight());
-                Rlgl.Vertex2f(0.0f, Raylib.GetScreenHeight());
-        
-                Rlgl.TexCoord2f(Raylib.GetScreenWidth(), 0.0f);
-                Rlgl.Vertex2f(Raylib.GetScreenWidth(), 0.0f);
-        
-                Rlgl.TexCoord2f(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
-                Rlgl.Vertex2f(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
-        
-                Rlgl.TexCoord2f(Raylib.GetScreenWidth(), 0.0f);
-                Rlgl.Vertex2f(Raylib.GetScreenWidth(), 0.0f);
-        
-                Rlgl.TexCoord2f(0.0f, Raylib.GetScreenHeight());
-                Rlgl.Vertex2f(0.0f, Raylib.GetScreenHeight());
-            }
-            Rlgl.End();
-        }
-        Raylib.EndShaderMode();
-    }
 
     [Provide(true)]
     private ECSWorld ProvideECSWorldForDI()

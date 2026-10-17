@@ -231,10 +231,13 @@ public static class deGUI
         lastDrawnElementOfEachContainer[^1] = elementRect;
     }
 
+    public static void BeginMarginContainer(int margin)
+        => BeginContainerCenter(ConW()-margin*2, ConH()-margin*2);
+    
     public static void BeginMarginContainerX(int marginX) 
         => BeginContainerCenter(ConW()-marginX*2, ConH());
 
-    public static void BeginMarginTop(int margin) 
+    public static void BeginMarginContainerTop(int margin) 
         => BeginContainer(ConX(), ConY()+margin, ConW(), ConH() - margin);
     
     public static void YSpace(int space) => PushLastDrawnElement(new(LastRelative().X, NextY(), ConW(), space));

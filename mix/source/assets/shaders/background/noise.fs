@@ -1,33 +1,20 @@
 #version 330 core
 
-/*
-  Copyright 2026 stopmind
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
 float mod289(const in float x) { return x - floor(x * (1. / 289.)) * 289.; }
 vec2 mod289(const in vec2 x) { return x - floor(x * (1. / 289.)) * 289.; }
 vec3 mod289(const in vec3 x) { return x - floor(x * (1. / 289.)) * 289.; }
 vec4 mod289(const in vec4 x) { return x - floor(x * (1. / 289.)) * 289.; }
+
 float permute(const in float v) { return mod289(((v * 34.0) + 1.0) * v); }
 vec2 permute(const in vec2 v) { return mod289(((v * 34.0) + 1.0) * v); }
 vec3 permute(const in vec3 v) { return mod289(((v * 34.0) + 1.0) * v); }
 vec4 permute(const in vec4 v) { return mod289(((v * 34.0) + 1.0) * v); }
+
 float taylorInvSqrt(in float r) { return 1.79284291400159 - 0.85373472095314 * r; }
 vec2 taylorInvSqrt(in vec2 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 vec3 taylorInvSqrt(in vec3 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 vec4 taylorInvSqrt(in vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
 vec4 grad4(float j, vec4 ip) {
     const vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);
     vec4 p,s;
@@ -37,6 +24,7 @@ vec4 grad4(float j, vec4 ip) {
     p.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www;
     return p;
 }
+
 float snoise(in vec2 v) {
     const vec4 C = vec4(0.211324865405187,
                         0.366025403784439,
@@ -257,49 +245,11 @@ vec3 snoise3( vec4 x ){
 }
 
 in vec2 fragTexCoord;
-in vec4 fragColor;
-
 out vec4 finalColor;
 
-uniform float time;
+uniform float u_time;
 
-const float TIME_SCALE = 0.4f;
-const float GRID_SIZE = 40.f;
-const float FRAGMENT_SIZE = 15.f;
-
-
-vec2 get_tile(vec2 pos) {
-  return floor(pos / GRID_SIZE);
-}
-
-vec2 get_tile_center(vec2 tile) {
-  return tile * GRID_SIZE + vec2(GRID_SIZE / 2.);
-}
-
-float tile_effect(vec2 pos, vec2 tile) {
-  float radius = (snoise(vec3(tile, time * TIME_SCALE)) + 1.) * GRID_SIZE * 2.;
-  float dist = distance(pos, get_tile_center(tile));
-  return max(0.f, 1.f - dist/radius);
-}
-
-float clouds(vec2 pos) {
-  vec2 tile = get_tile(pos);
-
-  float value = 0.f;
-
-  for (int x = -4; x < 5; x++) {
-    for (int y = -4; y < 5; y++) {
-      value += tile_effect(pos, tile + vec2(x, y));
-    }
-  }
-
-  return value / 5.f;
-}
-
-void main(){
-  vec2 pos = fragTexCoord;
-  pos -= mod(pos, FRAGMENT_SIZE);
-
-  float value = clouds(pos);
-  finalColor = vec4(vec3(value - mod(value, 0.2f)) * 0.1f, 1.);
+void main() {
+    float v = (snoise(vec3(fragTexCoord, u_time)) + 1.) / 2.;
+    finalColor = vec4(v, v, v, 1.0);
 }
