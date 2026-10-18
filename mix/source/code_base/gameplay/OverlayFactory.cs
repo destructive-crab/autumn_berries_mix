@@ -62,4 +62,27 @@ public sealed class OverlayFactory
 
         return entityId;
     }
+
+    public int[] SpawnAttackPointers(IEnumerable<Vec2I> positions)
+    {
+        int i = 0;
+        int[] result = new int[positions.Count()];
+        foreach (Vec2I position in positions)
+        {
+            result[i] = SpawnAttackPointer(position.X, position.Y);
+        }
+
+        return result;
+    }
+
+    public int SpawnAttackPointer(int x, int y)
+    {
+        return world.New()
+            .With<Position>(new Position(x, y - 0.5f, 3))
+            .With<Scale>(new Scale(1, 1))
+            .With<Origin>(new Origin(0.5f, 0.5f))
+            .With<Hoverable>()
+            .With<Sprite>(Sprite.From("assets/overlay/attack_pointer.png"))
+            .Id;
+    }
 }

@@ -13,6 +13,12 @@ public struct Scale
     public float X;
     public float Y;
 
+    public Scale(float x, float y)
+    {
+        X = x;
+        Y = y;
+    }
+
     public void Set(int x, int y)
     {
         X = x;

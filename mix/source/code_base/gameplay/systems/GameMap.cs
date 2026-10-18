@@ -79,24 +79,6 @@ public sealed class GameMap
         }
         world.UnblockFiltersEvaluationAndEvaluate();
     }
-
-    public IEnumerable<Vec2I> GetExistingCellsAroundPositionThatHaveEntityWith<TComponent>(Vec2I position)
-        where TComponent : struct
-    {
-        List<Vec2I> result = new(8);
-        Vec2I[] offsets = UTL.GetAllOffsets();
-        
-        for (int i = 0; i < offsets.Length; i++)
-        {
-            var cellPosition = position + offsets[i];
-            if (Contains(cellPosition) && CellHasEntityWith<TComponent>(position))
-            {
-                result.Add(cellPosition);
-            }
-        }
-
-        return result;
-    }
     
     public bool Contains(Vec2I pos)
     {
@@ -132,28 +114,39 @@ public sealed class GameMap
 
         return false;
     }
-    
-    public IEnumerable<Vec2I> GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(int x, int y)
-        where TComponent : struct
-        => GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(new(x,y));
-    
-    public IEnumerable<Vec2I> GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(Vec2I position)
-        where TComponent : struct
+
+
+    public IEnumerable<Vec2I> GetExistingCellsAroundPositionThat(Vec2I position, Predicate<Vec2I> valid, int radius = 1)
     {
         List<Vec2I> result = new(8);
-        
-        Vec2I[] offsets = UTL.GetAllOffsets();
-        for (int i = 0; i < offsets.Length; i++)
+
+        for (int x = -radius; x <= radius; x++)
         {
-            var cellPosition = position + offsets[i];
-            if (Contains(cellPosition) && !CellHasEntityWith<TComponent>(cellPosition))
+            for (int y = -radius; y <= radius; y++)
             {
-                result.Add(cellPosition);
+                if (x == 0 && y == 0) continue;
+                Vec2I cellPosition = position + new Vec2I(x,y);
+                
+                if (Contains(cellPosition) && valid(cellPosition))
+                    result.Add(cellPosition);
             }
         }
 
         return result;
     }
+
+    public IEnumerable<Vec2I> GetExistingCellsAroundPositionThatHaveEntityWith<TComponent>(Vec2I position,
+        int radius = 1)
+        where TComponent : struct
+        => GetExistingCellsAroundPositionThat(position, CellHasEntityWith<TComponent>);
+    
+    public IEnumerable<Vec2I> GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(int x, int y)
+        where TComponent : struct
+        => GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(new(x,y));
+    
+    public IEnumerable<Vec2I> GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<TComponent>(Vec2I position, int radius = 1)
+        where TComponent : struct
+        => GetExistingCellsAroundPositionThat(position, c => !CellHasEntityWith<TComponent>(c), radius);
     
     private int CreateNewCellOn(Vec2I position)
     {

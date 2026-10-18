@@ -94,12 +94,12 @@ public sealed class HUDSystem : ISystem, IGUISystem
             deGUI.FillContainer(new Color(0, 0, 0, 100));
             if (playerUnitAbilities != null)
             {
-                selectedAbility = -1;
                 foreach (var ability in playerUnitAbilities)
                 {
                     PlayerUnitAbility abilityComponent = world.GetFrom<PlayerUnitAbility>(ability);
                     if (!world.Pool<Selected>().Has(ability))
                     {
+                        if (selectedAbility == ability) selectedAbility = -1;
                         if (deGUI.ImageButton(abilityComponent.Icon, 10 + deGUI.NextX(), 10, 60, 60))
                         {
                             if (selectedAbility != -1)

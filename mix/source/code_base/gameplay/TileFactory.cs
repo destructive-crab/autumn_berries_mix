@@ -93,14 +93,20 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Description>()
                     .New(tileEntity, (ref Description description) => description.Value = "text text text text text text sdkfsjdflksjdf text fkdsjf text dskfk text tkdkfj");
 
+                world.Pool<Health>().New(tileEntity, (ref Health h) => h.Set(5,5));
+                
                 world.Pool<PlayerUnit>().New(tileEntity, (ref PlayerUnit u) =>
                 {
                     Entity moveAbility = world.New()
                         .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/move_ability.png"))
                         .With(new MoveAbility());
 
+                    Entity chainsawAttack = world.New()
+                        .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/chainsaw_attack_ability.png"))
+                        .With(new BasicAttackAbility());
+                    
                     u.Default();
-                    u.Abilities = [ moveAbility.Id ];
+                    u.Abilities = [ moveAbility.Id, chainsawAttack.Id ];
                 });
                 return tileEntity.Id;
             }
@@ -115,6 +121,7 @@ public sealed class TileFactory : ITileFactory
                     s = Sprite.From("assets/units/enemies/ghost.png");
                 });
                 world.Pool<Tile>().New(tileId);
+                world.Pool<Health>().New(tileId, (ref Health h) => h.Set(5,5));
                 world.Pool<Name>().New(tileId, (ref Name name) => name.Value = "Ghost!!!");
                 world.Pool<BlockCell>().New(tileId);
                 world.Pool<Description>().New(tileId, (ref Description description) => description.Value = "!!!!!!!");
