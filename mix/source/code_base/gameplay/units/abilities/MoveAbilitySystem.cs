@@ -1,3 +1,4 @@
+using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
@@ -108,6 +109,11 @@ public abstract class PlayerAbilitySystem<TAbility> : ISystem, ISystemBasedOnCel
     }
 }
 
+public struct TileWalkSound
+{
+    public string SoundAssetPath;
+}
+
 public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
 {
     public override string DebugName() => nameof(MoveAbilitySystem);
@@ -198,13 +204,29 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
         
         World.Pool<PositionTween>().New(unit, (ref PositionTween t) =>
         {
+            List<AudioService.SoundLoopController> walkSounds = new(2);
+            foreach (int entity in map.GetEntities(destPosition))
+            {
+                if (World.HasIn<TileWalkSound>(entity))
+                {
+                    string soundAssetPath = World.GetFrom<TileWalkSound>(entity).SoundAssetPath;
+                    AudioService.SoundLoopController loopController = new AudioService.SoundLoopController();
+                    Game.AudioService.PlaySoundLoop(soundAssetPath, 0.4f, Random.Shared.Next(90, 101)/100f, loopController);
+                    walkSounds.Add(loopController);
+                }
+            }
             t.Destination = destPosition;
-            t.Speed = 10;
+            t.Speed = 2;
             
             if (World.HasIn<Animator>(unit) && World.GetFrom<Animator>(unit).AnimationsContainer.Contains("move"))
             {
                 World.GetFrom<Animator>(unit).Play("move");
-                t.Completed += () => World.GetFrom<Animator>(unit).Play("idle"); 
+                t.Completed += () =>
+                {
+                    World.GetFrom<Animator>(unit).Play("idle");
+                    foreach (var loop in walkSounds) loop.Stop();
+                    LGR.PM("FINISHED");
+                }; 
             }
         });
 

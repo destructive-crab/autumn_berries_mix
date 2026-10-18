@@ -50,6 +50,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new MoveAbilitySystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new PositionTweenSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CursorSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSoundSystem(), Systems));
         
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new DebugHUDSystem(), Systems));
@@ -74,6 +75,8 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         tileFactory.CreateTileFromID(TileIds.Ghost, 1, 2);
         
         turnState.StartTurnCycle(new PlayerTurn());
+        
+        Game.AudioService.PlayMusic("assets/audio/main_theme.ogg", 40);
     }
 
     public override Task DisposeScene()

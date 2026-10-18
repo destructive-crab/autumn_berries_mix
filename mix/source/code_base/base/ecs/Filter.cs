@@ -135,7 +135,7 @@ public sealed class Filter : IFilter
         where TComponent : struct
     {
         //todo unsubscribe
-        world.Pool<TComponent>().OnChanged += InformSubscribersAboutChanges<TComponent>;
+        world.Pool<TComponent>().OnComponentDataChanged += InformSubscribersAboutChanges<TComponent>;
         
         int index = EntityComponent<TComponent>.TypeIndex;
         dataChangesSubscribers.TryAdd(index, new());

@@ -18,6 +18,7 @@ public partial class Game
 
     public static readonly IServiceLocator[] ModulesLocators = [modulesStorage, debugModulesStorage];
 
+    public static AudioService AudioService { get; private set; }
     public static Scene CurrentScene => G<SceneSwitcher>().CurrentScene;
 
     public static float DeltaTime { get; private set; }
@@ -26,6 +27,9 @@ public partial class Game
     {
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(800, 600, "MIX");
+        Raylib.InitAudioDevice();
+
+        AudioService = new();
         
         AllowDebug = allowDebug;
         
@@ -82,11 +86,13 @@ public partial class Game
                 Game.G<Cursor>().SetToDefault();
                 CurrentScene?.Tick();
                 modulesStorage.Tick();
+                AudioService.UpdateAudio();
             }
             Raylib.EndDrawing();
         }
 
         Raylib.CloseWindow();
+        Raylib.CloseAudioDevice();
     }
     
     public static TModule G<TModule>()

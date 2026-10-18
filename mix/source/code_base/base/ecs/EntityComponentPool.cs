@@ -17,7 +17,7 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
 
     private int componentsCount = 0;
 
-    public event Action<int> OnChanged;
+    public event Action<int> OnComponentDataChanged;
     
     public event Action<EntityComponentPool<TComponent>, int> OnNew;
     public event Action<EntityComponentPool<TComponent>, int> OnRemoved;
@@ -70,7 +70,7 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
 
     public void Changed(int entityId)
     {
-        OnChanged?.Invoke(entityId);
+        OnComponentDataChanged?.Invoke(entityId);
     }
     
     public int New(int entityId)

@@ -69,6 +69,21 @@ public sealed class RaylibCachedTexture : CachedTexture
         => Raylib.UnloadTexture(texture);
 }
 
+public sealed class CachedMusic : IDisposable
+{
+    public readonly Music Music;
+
+    public CachedMusic(string assetPath)
+    {
+        Music = Raylib.LoadMusicStream(assetPath);
+    }
+
+    public void Dispose()
+    {
+        Raylib.UnloadMusicStream(Music);
+    }
+}
+
 public sealed class AsepriteCachedTexture : CachedTexture
 {
     private readonly Texture2D texture;
@@ -100,7 +115,7 @@ public sealed class AsepriteCachedTexture : CachedTexture
 
 public static class Assets
 {
-    public class CacheContainer<TAsset>
+    public sealed class CacheContainer<TAsset>
     {
         public delegate TAsset LoadFunction(string path);
         public delegate void UnloadFunction(TAsset path);
@@ -143,10 +158,10 @@ public static class Assets
 
     static Assets()
     {
-        Textures            = new(LoadRaylibTexture, UnloadRaylibTexture);
+        Textures            = new(LoadRaylibTexture,       UnloadRaylibTexture);
         AnimationContainers = new(LoadAnimationsContainer, UnloadAnimationsContainer);
-        Shaders             = new(LoadShader, Raylib.UnloadShader);
-        Sounds              = new(Raylib.LoadSound, Raylib.UnloadSound);
+        Shaders             = new(LoadShader,              Raylib.UnloadShader);
+        Sounds              = new(Raylib.LoadSound,        Raylib.UnloadSound);
     }
     
     private static CachedTexture LoadRaylibTexture(string path)
@@ -168,6 +183,13 @@ public static class Assets
         => c.Dispose();
 
     private static Shader LoadShader(string path) => Raylib.LoadShader(null, path);
+
+    public static void LoadMusic(string path, out Music music)
+    {
+        music = Raylib.LoadMusicStream(path);
+        music.Looping = true;
+    } 
+    public static void UnloadMusic(CachedMusic music) => music.Dispose(); 
 
     public static void UnloadAll()
     {

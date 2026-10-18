@@ -45,6 +45,7 @@ public sealed class TileFactory : ITileFactory
                     s.DrawOffsetInPixels = new(0, 3);
                 });
                 world.Pool<Tile>().New(tileId);
+                world.Pool<TileWalkSound>().New(tileId, (ref TileWalkSound s) => s.SoundAssetPath = "assets/audio/autumn_grass_tile_walk.ogg");
                 
                 world.Pool<Name>()
                     .New(tileId, (ref Name name) => name.Value = "Autumn Terrain");
