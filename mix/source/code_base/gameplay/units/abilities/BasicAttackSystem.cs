@@ -56,10 +56,9 @@ public sealed class BasicAttackSystem : PlayerAbilitySystem<BasicAttackAbility>
         if (World.HasIn<Animator>(attackerUnit))
         {
             ref Animator animator = ref World.GetFrom<Animator>(attackerUnit);
-            if (animator.AnimationsContainer.Contains("basic_attack"))
-            {
-                animator.Play("basic_attack");
-            }
+            
+            if (AnimatorUTL.AnimatorHasState(World, attackerUnit, "basic_attack"))
+                animator.Trigger("basic_attack");
         }
         
         World.RemoveFrom<Selected>(ability);

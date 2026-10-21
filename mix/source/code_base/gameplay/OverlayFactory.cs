@@ -45,10 +45,16 @@ public sealed class OverlayFactory
             {
                 s.Rotation = dir.Angle();
             });
+        world.Pool<SpriteAnimation>().New(entityId, (ref SpriteAnimation a) =>
+        {
+        });
         world.Pool<Animator>().New(entityId, (ref Animator a) =>
         {
-            a.InitializeFromAse("assets/overlay/arrow.ase");
-            a.Play("spawn");
+            a.WithAseAnimations("assets/overlay/arrow.ase");
+            AnimatorState state = AnimatorUTL.State("spawn");
+            state.NewTransition().TransitionDestination("idle");
+            a.AddState()
+            a.Trigger("spawn");
         });
         world.Pool<Position>().New(entityId, (ref Position p) => p.Set(x, y, 1));
         world.Pool<Scale>().New(entityId, (ref Scale s) => s.Set(1,1));

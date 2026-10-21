@@ -1,4 +1,3 @@
-using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
@@ -33,9 +32,9 @@ public class AnimationCursorReactionSystem : ISystem
         {
             foreach (int entity in currentHover)
             {
-                if (w.HasIn<Animator>(entity))
+                if (w.HasIn<SpriteAnimation>(entity))
                 {
-                    w.Pool<Animator>().Get(entity).Play(w.Pool<CursorAnimationReaction>().Get(entity).Idle);
+                    w.GetFrom<Animator>(entity).Trigger(w.GetFrom<CursorAnimationReaction>(entity).Idle);
                 }
             }
         }
@@ -43,7 +42,7 @@ public class AnimationCursorReactionSystem : ISystem
         currentHover = entities;
         foreach (int entity in currentHover)
         {
-            w.Pool<Animator>().Get(entity).Play(w.Pool<CursorAnimationReaction>().Get(entity).Hovered);
+            w.GetFrom<Animator>(entity).Trigger(w.GetFrom<CursorAnimationReaction>(entity).Hovered);
         }
     }
 }

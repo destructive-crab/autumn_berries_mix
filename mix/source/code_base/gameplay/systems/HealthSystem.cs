@@ -24,7 +24,7 @@ public sealed class HealthSystem : IGameLogicSystem
         {
             if (world.GetFrom<Health>(entity).Current <= 0)
             {
-                if (world.GetFrom<Animator>(entity).AnimationsContainer.Contains("death"))
+                if (AnimatorUTL.AnimatorHasState(world, entity, "death"))
                 {
                     PlayDeathAnimationAndDelete(entity);
                 }

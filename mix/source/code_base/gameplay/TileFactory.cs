@@ -82,7 +82,7 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Tile>().New(tileEntity);
                 world.Pool<BlockCell>().New(tileEntity);
                 
-                world.Pool<Animator>().New(tileEntity, (ref Animator animator) =>
+                world.Pool<SpriteAnimation>().New(tileEntity, (ref SpriteAnimation animator) =>
                 {
                     animator.InitializeFromAse("assets/units/player/chainy.ase");
                     animator.Play("idle");
@@ -125,7 +125,7 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Name>().New(tileId, (ref Name name) => name.Value = "Ghost!!!");
                 world.Pool<BlockCell>().New(tileId);
                 world.Pool<Description>().New(tileId, (ref Description description) => description.Value = "!!!!!!!");
-                world.Pool<Animator>().New(tileId, (ref Animator animator) =>
+                world.Pool<SpriteAnimation>().New(tileId, (ref SpriteAnimation animator) =>
                 {
                     animator.InitializeFromAse("assets/units/enemies/ghost.ase");
                     animator.Play("idle");
