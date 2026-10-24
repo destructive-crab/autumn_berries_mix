@@ -16,7 +16,7 @@ public class AnimationCursorReactionSystem : ISystem
         this.w = world;
         world
             .Filter()
-            .In<Animator>()
+            //.In<Animator>()
             .In<Hovered>()
             .In<CursorAnimationReaction>()
             .Subscribe(UpdateHover)
@@ -34,7 +34,7 @@ public class AnimationCursorReactionSystem : ISystem
             {
                 if (w.HasIn<SpriteAnimation>(entity))
                 {
-                    w.GetFrom<Animator>(entity).Trigger(w.GetFrom<CursorAnimationReaction>(entity).Idle);
+                    //w.GetFrom<Animator>(entity).HasTrigger(w.GetFrom<CursorAnimationReaction>(entity).Idle);
                 }
             }
         }
@@ -42,7 +42,7 @@ public class AnimationCursorReactionSystem : ISystem
         currentHover = entities;
         foreach (int entity in currentHover)
         {
-            w.GetFrom<Animator>(entity).Trigger(w.GetFrom<CursorAnimationReaction>(entity).Hovered);
+            //w.GetFrom<Animator>(entity).HasTrigger(w.GetFrom<CursorAnimationReaction>(entity).Hovered);
         }
     }
 }

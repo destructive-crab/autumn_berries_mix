@@ -48,14 +48,14 @@ public sealed class OverlayFactory
         world.Pool<SpriteAnimation>().New(entityId, (ref SpriteAnimation a) =>
         {
         });
-        world.Pool<Animator>().New(entityId, (ref Animator a) =>
-        {
-            a.WithAseAnimations("assets/overlay/arrow.ase");
-            AnimatorState state = AnimatorUTL.State("spawn");
-            state.NewTransition().TransitionDestination("idle");
-            a.AddState()
-            a.Trigger("spawn");
-        });
+        //world.Pool<Animator>().New(entityId, (ref Animator a) =>
+        //{
+        //    a.WithAseAnimations("assets/overlay/arrow.ase");
+        //    AnimatorState state = AnimatorUTL.State("spawn");
+        //    state.NewTransition().TransitionDestination("idle");
+        //    a.AddState()
+        //    a.HasTrigger("spawn");
+        //});
         world.Pool<Position>().New(entityId, (ref Position p) => p.Set(x, y, 1));
         world.Pool<Scale>().New(entityId, (ref Scale s) => s.Set(1,1));
         world.Pool<Origin>().New(entityId, (ref Origin o) => o.Set(0.5f, 0.5f));

@@ -87,15 +87,15 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
             t.Destination = destPosition;
             t.Speed = 2;
             
-            if (World.HasIn<Animator>(unit) && World.GetFrom<Animator>(unit).HasState("move"))
-            {
-                World.GetFrom<Animator>(unit).SetCondition("move", true);
-                t.Completed += () =>
-                {
-                    World.GetFrom<Animator>(unit).SetCondition("move", false);
-                    foreach (var loop in walkSounds) loop.Stop();
-                }; 
-            }
+            //if (World.HasIn<Animator>(unit) && World.GetFrom<Animator>(unit).HasState("move"))
+            //{
+            //    World.GetFrom<Animator>(unit).SetCondition("move", true);
+            //    t.Completed += () =>
+            //    {
+            //        World.GetFrom<Animator>(unit).SetCondition("move", false);
+            //        foreach (var loop in walkSounds) loop.Stop();
+            //    }; 
+            //}
         });
 
         Map.MoveTile(UnitOf(abilityId), destPosition);

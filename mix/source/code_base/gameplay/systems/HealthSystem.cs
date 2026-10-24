@@ -24,14 +24,16 @@ public sealed class HealthSystem : IGameLogicSystem
         {
             if (world.GetFrom<Health>(entity).Current <= 0)
             {
-                if (AnimatorUTL.AnimatorHasState(world, entity, "death"))
-                {
-                    PlayDeathAnimationAndDelete(entity);
-                }
-                else
-                {
-                    world.Delete(entity);
-                }
+                EventUtils.TryPushEventToEntity(world, entity, new Hit());
+                    
+                //if (AnimatorUTL.AnimatorHasState(world, entity, "death"))
+                //{
+                //    PlayDeathAnimationAndDelete(entity);
+                //}
+                //else
+                //{
+                //    world.Delete(entity);
+                //}
             }
         }
     }
@@ -41,4 +43,3 @@ public sealed class HealthSystem : IGameLogicSystem
         world.Delete(entity);
     }
 }
-

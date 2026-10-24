@@ -11,4 +11,10 @@ public struct SpriteAnimation
     public float TimeLeftToNextFrame;
 
     public bool IsEmpty() => string.IsNullOrEmpty(Clip.Name);
+
+    public void SetClip(AnimationClip clip)
+    {
+        Clip = clip;
+        ClipFrame = -1;
+    }
 }

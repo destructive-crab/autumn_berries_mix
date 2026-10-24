@@ -53,13 +53,13 @@ public sealed class BasicAttackSystem : PlayerAbilitySystem<BasicAttackAbility>
             }
         }
 
-        if (World.HasIn<Animator>(attackerUnit))
-        {
-            ref Animator animator = ref World.GetFrom<Animator>(attackerUnit);
-            
-            if (AnimatorUTL.AnimatorHasState(World, attackerUnit, "basic_attack"))
-                animator.Trigger("basic_attack");
-        }
+        //if (World.HasIn<Animator>(attackerUnit))
+        //{
+        //    ref Animator animator = ref World.GetFrom<Animator>(attackerUnit);
+        //    
+        //    if (AnimatorUTL.AnimatorHasState(World, attackerUnit, "basic_attack"))
+        //        animator.HasTrigger("basic_attack");
+        //}
         
         World.RemoveFrom<Selected>(ability);
         CurrentTurn.RemovePoints(1);
