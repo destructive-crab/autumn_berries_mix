@@ -39,23 +39,24 @@ public sealed class OverlayFactory
 
     public int SpawnArrow(int x, int y, Vec2I dir)
     {
-        int entityId = world.New().Id;
+        Entity entity = world.New();
+        int entityId = entity.Id;
         world.Pool<Sprite>().New(entityId,
             (ref Sprite s) =>
             {
                 s.Rotation = dir.Angle();
             });
-        world.Pool<SpriteAnimation>().New(entityId, (ref SpriteAnimation a) =>
-        {
-        });
-        //world.Pool<Animator>().New(entityId, (ref Animator a) =>
-        //{
-        //    a.WithAseAnimations("assets/overlay/arrow.ase");
-        //    AnimatorState state = AnimatorUTL.State("spawn");
-        //    state.NewTransition().TransitionDestination("idle");
-        //    a.AddState()
-        //    a.HasTrigger("spawn");
-        //});
+        world.Pool<SpriteAnimation>().New(entityId);
+
+        entity.With(new Animator("assets/overlay/arrow.ase", 
+            ["idle", "hovered"], 
+            new([], [new("idle", true)], "idle"), 
+            new([], [new("hovered", true)], "hovered"),
+            new(["spawn"], [], "spawn")
+        ));
+        
+        world.GetFrom<Animator>(entityId).Trigger("spawn");
+        
         world.Pool<Position>().New(entityId, (ref Position p) => p.Set(x, y, 1));
         world.Pool<Scale>().New(entityId, (ref Scale s) => s.Set(1,1));
         world.Pool<Origin>().New(entityId, (ref Origin o) => o.Set(0.5f, 0.5f));

@@ -1,5 +1,4 @@
 using destruct;
-using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.imgui;
@@ -43,6 +42,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HoverSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CameraControlsSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimatorSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new AnimationSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CellSelectionSystemsRoot(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CellSelectionRedirector(), Systems));

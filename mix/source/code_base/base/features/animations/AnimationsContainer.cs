@@ -28,6 +28,7 @@ public sealed class AnimationsContainer : IDisposable
         if (!clips.ContainsKey(clipName))
         {
             LGR.PW($"No clip with name {clipName} found in container");
+            return new();
         }
 
         return clips[clipName];

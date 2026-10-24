@@ -88,6 +88,14 @@ public sealed class TileFactory : ITileFactory
                     //animator.Play("idle");
                 });
                 
+                tileEntity.With(new Animator("assets/units/player/chainy.ase", 
+                    ["move"],
+                    new AnimatorState(["hit"], [], "hit"),
+                    new AnimatorState(["basic_attack"], [], "basic_attack"),
+                    new AnimatorState([], [new("move", true)], "move"),
+                    new AnimatorState("idle")
+                ));
+                
                 world.Pool<Name>()
                     .New(tileEntity, (ref Name name) => name.Value = "Chainy");
                 world.Pool<Description>()
@@ -112,26 +120,32 @@ public sealed class TileFactory : ITileFactory
             }
             case TileIds.Ghost:
             {
-                var tileId = world.New();
-                world.Pool<Position>().New(tileId, (ref Position p) => p.Set(x, y, 2));
-                world.Pool<Origin>().New(tileId, (ref Origin o) => o.Set(0.5f,1f));
-                world.Pool<Scale>().New(tileId, (ref Scale s) => s.Set(1,1));
-                world.Pool<Sprite>().New(tileId, (ref Sprite s) =>
-                {
-                    s = Sprite.From("assets/units/enemies/ghost.png");
-                });
-                world.Pool<Tile>().New(tileId);
-                world.Pool<Health>().New(tileId, (ref Health h) => h.Set(5,5));
-                world.Pool<Name>().New(tileId, (ref Name name) => name.Value = "Ghost!!!");
-                world.Pool<BlockCell>().New(tileId);
-                world.Pool<Description>().New(tileId, (ref Description description) => description.Value = "!!!!!!!");
-                world.Pool<SpriteAnimation>().New(tileId, (ref SpriteAnimation animator) =>
+                var tileEntity = world.New();
+                world.Pool<Position>().New(tileEntity, (ref Position p) => p.Set(x, y, 2));
+                world.Pool<Origin>().New(tileEntity, (ref Origin o) => o.Set(0.5f,1f));
+                world.Pool<Scale>().New(tileEntity, (ref Scale s) => s.Set(1,1));
+                world.Pool<Sprite>().New(tileEntity);
+                
+                tileEntity.With(new Animator("assets/units/enemies/ghost.ase", 
+                    ["move"],
+                    new AnimatorState(["hit"], [], "hit"),
+                    new AnimatorState(["basic_attack"], [], "basic_attack"),
+                    new AnimatorState([], [new("move", true)], "move"),
+                    new AnimatorState("idle")
+                ));
+                
+                world.Pool<Tile>().New(tileEntity);
+                world.Pool<Health>().New(tileEntity, (ref Health h) => h.Set(5,5));
+                world.Pool<Name>().New(tileEntity, (ref Name name) => name.Value = "Ghost!!!");
+                world.Pool<BlockCell>().New(tileEntity);
+                world.Pool<Description>().New(tileEntity, (ref Description description) => description.Value = "!!!!!!!");
+                world.Pool<SpriteAnimation>().New(tileEntity, (ref SpriteAnimation animator) =>
                 {
                     //animator.InitializeFromAse("assets/units/enemies/ghost.ase");
                     //animator.Play("idle");
                 });
 
-                return tileId.Id;
+                return tileEntity.Id;
             }
         }
 
