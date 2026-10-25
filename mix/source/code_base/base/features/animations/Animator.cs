@@ -54,6 +54,11 @@ public struct Animator
         
         return Conditions[key];
     }
+
+    public bool HasCondition(string condition)
+    {
+        return Conditions.ContainsKey(condition);
+    }
 }
 
 public struct AnimatorCondition

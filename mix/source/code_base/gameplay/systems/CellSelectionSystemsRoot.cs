@@ -1,6 +1,7 @@
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
+using mix.gameplay.overlay;
 using mix.gameplay.systems;
 
 namespace mix.code_base.gameplay.systems;
@@ -28,19 +29,13 @@ public sealed class CellSelectionSystemsRoot : ISystem
     private int selectedCell;
     
     [Inject]
-    protected void Inject(ECSWorld world)
+    protected void Inject(ECSWorld world, OverlayFactory overlayFactory)
     {
         this.World = world;
         
-        pointedCellOverlayEntity = world.New()
-            .With(new Position(0,0,1))
-            .With(new Origin(0.5f, 0.5f))
-            .With(Sprite.From(AssetsPath.PointedCellBorder)).Id;
+        pointedCellOverlayEntity = overlayFactory.CreatePointedCellOverlay(world);
         
-        selectedCellOverlayEntity = world.New()
-            .With(new Position(0,0,1))
-            .With(new Origin(0.5f, 0.5f))
-            .With(Sprite.From(AssetsPath.SelectedCellBorder)).Id;
+        selectedCellOverlayEntity = overlayFactory.CreateSelectedCellOverlay(world);
         
         world.Filter()
             .In<Selected>()

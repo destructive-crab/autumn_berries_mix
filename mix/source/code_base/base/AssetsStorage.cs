@@ -1,9 +1,6 @@
-using AsepriteDotNet;
 using AsepriteDotNet.Common;
 using AsepriteDotNet.IO;
 using AsepriteDotNet.Processors;
-using destruct.Debug;
-using destruct.imgui;
 using mix.aseprite;
 using mix.gameplay.systems;
 using Raylib_cs;
@@ -11,9 +8,9 @@ using Rectangle = Raylib_cs.Rectangle;
 
 public struct AssetsPath
 {
-    public const string AutumnTerrain      = "assets/tiles/autumn_terrain.png";
-    public const string PointedCellBorder  = "assets/overlay/cell_pointed.png";
-    public const string SelectedCellBorder = "assets/overlay/cell_selected.png";
+    public const string AutumnTerrain      = "assets/tiles/autumn_terrain_by_mivioon.png";
+    public const string PointedCellBorder  = "assets/overlay/cell_pointed_by_mivioon.png";
+    public const string SelectedCellBorder = "assets/overlay/cell_selected_by_mivioon.png";
 }
 
 public struct TextureFragment

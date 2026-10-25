@@ -24,6 +24,11 @@ public struct Scale
         X = x;
         Y = y;
     }
+
+    public Vector2 ToV2()
+    {
+        return new(X, Y);
+    }
 }
 
 public struct Origin

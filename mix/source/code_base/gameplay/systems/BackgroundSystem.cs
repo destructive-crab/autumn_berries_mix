@@ -15,7 +15,7 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
     
     private int timeLoc;
     
-    private bool enabled = false;
+    private bool enabled = true;
 
     public BackgroundSystem()
     {
@@ -58,6 +58,8 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
             Rlgl.DisableTexture();
         }
         Raylib.EndShaderMode();
+        
+        Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), new Color(160, 35, 75, 140));
     }
 
     private void F(float w, float h)

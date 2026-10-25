@@ -28,6 +28,7 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
             .In<Sprite>()
             .In<Position>()
             .In<Origin>()
+            .In<Scale>()
             .Subscribe(UpdateEntitiesToRender)
             .Evaluate();
     }
@@ -48,17 +49,17 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
 
             if (sprite.Fragment.Texture == null)
             {
-                LGR.PW($"Null texture on sprite of {entity}");
+                //LGR.PW($"Null texture on sprite of {entity}");
                 continue;
             }
             if (sprite.Hidden) continue;
             
             Position position = positionPool.Get(entity);
             Vector2 origin = world.Pool<Origin>().Get(entity).ToV2();
+            Vector2 scale = world.Pool<Scale>().Get(entity).ToV2();
 
-            origin = new(origin.X * sprite.Fragment.Rect.Width, origin.Y * sprite.Fragment.Rect.Height);
+            origin = new(origin.X * sprite.Fragment.Rect.Width * scale.X, origin.Y * sprite.Fragment.Rect.Height * scale.Y);
             Rectangle sourceRect = sprite.Fragment.Rect;
-
             if (sprite.MirroredHorizontal)
                 sourceRect.Width *= -1;
             
@@ -66,7 +67,9 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
                 sourceRect.Height *= -1;
 
             Rectangle destinationRect = new(UTL.UnitsToPixels(position) + sprite.DrawOffsetInPixels, sprite.Fragment.Rect.Width, sprite.Fragment.Rect.Height);
-            
+            destinationRect.Width *= world.GetFrom<Scale>(entity).X;
+            destinationRect.Height *= world.GetFrom<Scale>(entity).Y;
+
             Raylib.DrawTexturePro(sprite.Fragment.Texture.Get(), sourceRect, destinationRect, origin, sprite.Rotation, Color.White);
 
             if (Raylib.IsKeyDown(KeyboardKey.A))

@@ -30,6 +30,8 @@ public sealed class DebugHUDSystem : IGUISystem
     
     public void DrawGUI()
     {
+        deGUI.Text((1f / Game.DeltaTime).ToString() + "fps", 20, 10, 10, Color.White);
+        return;
         if (selectedCellFilter.Entities.Count() != 0)
         {
             deGUI.BeginContainer(deGUI.ConW() - 300, 0, 300, 120);

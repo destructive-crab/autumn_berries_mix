@@ -28,15 +28,20 @@ public sealed class AnimatorSystem : IPreWorldRendererSystem
             ref Animator animator = ref world.GetFrom<Animator>(entity);
             foreach (AnimatorState state in animator.States)
             {
-                if (animator.CurrentState != state.Id && state.Validate(ref animator))
+                if (state.Validate(ref animator))
                 {
-                    world.GetFrom<SpriteAnimation>(entity)
-                         .SetClip(animator.Container.Get(state.ClipName));
-                    
-                    animator.CurrentState = state.Id;
+                    if (animator.CurrentState != state.Id)
+                    {
+                        world.GetFrom<SpriteAnimation>(entity)
+                             .SetClip(animator.Container.Get(state.ClipName));
+                        
+                        animator.CurrentState = state.Id;
+    
+                        foreach (string trigger in state.Triggers)
+                            animator.Triggers.Remove(trigger);
+                    }
 
-                    foreach (string trigger in state.Triggers)
-                        animator.Triggers.Remove(trigger);
+                    break;
                 }
             }
         }

@@ -38,6 +38,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
     {
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new BackgroundSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SpriteRendererSystem(World), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SinScaleTweenSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new GameMapSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HoverSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSystem(), Systems));
@@ -58,24 +59,28 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new ConsoleSystem(), Systems));
 
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HealthSystem(), Systems));
-        
+       
         gameMap.Create(10,10);
         camera.CurrentCamera = new Camera2D();
-        camera.CurrentCamera.Zoom = 2;
+        camera.CurrentCamera.Zoom = 0.5f;
 
         World.BlockFiltersEvaluation();
-        for (int x = 0; x < 10; x++)
+        for (int x = 0; x < 8; x++)
         {
-            for (int y = 0; y < 10; y++)
+            for (int y = 0; y < 4; y++)
             {
                 tileFactory.CreateTileFromID(TileIds.AutumnTerrain, x, y);
+                if (x == 0 || y == 0 || y == 3 || x == 7 || Random.Shared.Next(0, 3) == 1)
+                {
+                    tileFactory.CreateTileFromID(TileIds.AutumnTree, x, y);
+                }
             }
         }
 
         World.UnblockFiltersEvaluationAndEvaluate();
 
         tileFactory.CreateTileFromID(TileIds.Chainy, 1, 1);
-        tileFactory.CreateTileFromID(TileIds.Ghost, 1, 2);
+        //tileFactory.CreateTileFromID(TileIds.Ghost, 1, 2);
         
         turnState.StartTurnCycle(new PlayerTurn());
         

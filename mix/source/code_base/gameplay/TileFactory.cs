@@ -2,6 +2,7 @@ using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using mix.code_base;
+using mix.gameplay.overlay.tweens;
 using mix.gameplay.overlay.units.abilities;
 using mix.gameplay.systems;
 
@@ -41,8 +42,8 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Scale>().New(tileId, (ref Scale s) => s.Set(1,1));
                 world.Pool<Sprite>().New(tileId, (ref Sprite s) =>
                 {
-                    s = Sprite.From("assets/tiles/autumn_terrain.png");
-                    s.DrawOffsetInPixels = new(0, 3);
+                    s = Sprite.From("assets/tiles/autumn_terrain_by_mivioon.png");
+                    s.DrawOffsetInPixels = new(0, 43);
                 });
                 world.Pool<Tile>().New(tileId);
                 world.Pool<TileWalkSound>().New(tileId, (ref TileWalkSound s) => s.SoundAssetPath = "assets/audio/autumn_grass_tile_walk.ogg");
@@ -56,25 +57,28 @@ public sealed class TileFactory : ITileFactory
             }
             case TileIds.AutumnTree:
             {
-                int tileId = world.New().Id;
-                world.Pool<Position>().New(tileId, (ref Position p) => p.Set(x, y));
-                world.Pool<Origin>().New(tileId, (ref Origin o) => o.Set(0.5f,0.5f));
-                world.Pool<Scale>().New(tileId, (ref Scale s) => s.Set(1,1));
-                world.Pool<Sprite>().New(tileId,
-                    (ref Sprite s) => { s = Sprite.From("assets/tiles/autumn_tree.png"); });
-                world.Pool<Tile>().New(tileId);
-                world.Pool<Name>().New(tileId, (ref Name name) => name.Value = "Autumn Terrain");
-                world.Pool<Description>().New(tileId,
-                    (ref Description description) => description.Value = "Walkable terrain");
+                Entity tile = world.New();
+                var a = Sprite.From("assets/tiles/autumn_tree_by_mivioon.png");
+                a.DrawOffsetInPixels = new(0, 40);
+                tile.With(new Position(x, y, 2))
+                    .With(new Origin(0.5f, 1f))
+                    .With(new Scale(1, 1))
+                    .With(a)
+                    .With(new Name("Autumn Tree"))
+                    .With(new Description("Tree"))
+                    .With<Tile>()
+                    .With<BlockCell>()
+                    .With(new SinScaleTween(Random.Shared.Next(70, 90) / 10f));
 
-                return tileId;
+                return tile.Id;
             }
             case TileIds.Chainy:
             {
                 var tileEntity= world.New();
                 world.Pool<Position>().New(tileEntity, (ref Position p) => p.Set(x, y, 2));
-                world.Pool<Origin>().New(tileEntity, (ref Origin o) => o.Set(0.5f,0.8f));
+                world.Pool<Origin>().New(tileEntity, (ref Origin o) => o.Set(0.5f,0.9f));
                 world.Pool<Scale>().New(tileEntity, (ref Scale s) => s.Set(1,1));
+                //world.Pool<SinScaleTween>().New(tileEntity);
                 world.Pool<Sprite>().New(tileEntity, (ref Sprite s) =>
                 {
                     s = Sprite.From("assets/units/player/chainy.png");
@@ -88,7 +92,7 @@ public sealed class TileFactory : ITileFactory
                     //animator.Play("idle");
                 });
                 
-                tileEntity.With(new Animator("assets/units/player/chainy.ase", 
+                tileEntity.With(new Animator("assets/units/player/chainy_by_mivioon.ase", 
                     ["move"],
                     new AnimatorState(["hit"], [], "hit"),
                     new AnimatorState(["basic_attack"], [], "basic_attack"),
@@ -126,13 +130,12 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Scale>().New(tileEntity, (ref Scale s) => s.Set(1,1));
                 world.Pool<Sprite>().New(tileEntity);
                 
-                tileEntity.With(new Animator("assets/units/enemies/ghost.ase", 
-                    ["move"],
-                    new AnimatorState(["hit"], [], "hit"),
-                    new AnimatorState(["basic_attack"], [], "basic_attack"),
-                    new AnimatorState([], [new("move", true)], "move"),
-                    new AnimatorState("idle")
-                ));
+                //tileEntity.With(new Animator("assets/units/enemies/ghost.ase", 
+                //    ["move"],
+                //    new AnimatorState(["hit"], [], "hit"),
+                //    new AnimatorState([], [new("move", true)], "move"),
+                //    new AnimatorState("idle")
+                //));
                 
                 world.Pool<Tile>().New(tileEntity);
                 world.Pool<Health>().New(tileEntity, (ref Health h) => h.Set(5,5));

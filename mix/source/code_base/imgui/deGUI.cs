@@ -179,6 +179,7 @@ public static class deGUI
     public static void EndGUI()
     {
         containers.Clear();
+        lastDrawnElementOfEachContainer.Clear();
     }
 
     public static bool GUIWasOverlapped() 

@@ -18,7 +18,7 @@ public sealed class CameraControlsSystem : ISystem, IInputsProcessSystem
         if (guiWasOverlapped) return;
         
         camera.CurrentCamera.Target -= inputService.GetCameraPositionDelta()/camera.CurrentCamera.Zoom;
-        camera.CurrentCamera.Zoom += inputService.GetCameraZoomDelta()/10;
+        camera.CurrentCamera.Zoom += inputService.GetCameraZoomDelta()/100;
         camera.CurrentCamera.Offset = new(Raylib.GetScreenWidth() / 2f, Raylib.GetScreenHeight() / 2f);
     }
 }

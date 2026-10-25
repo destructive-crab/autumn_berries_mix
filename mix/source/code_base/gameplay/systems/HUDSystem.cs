@@ -87,7 +87,24 @@ public sealed class HUDSystem : ISystem, IGUISystem
     private void DrawPlayerTurnHUD(PlayerTurn playerTurn)
     {
         deGUI.TextXCenter($"Points left {playerTurn.PointsLeft}", 30, 30, Color.White);
-        deGUI.Text((1f / Game.DeltaTime).ToString() + "fps", 20, 10, 10, Color.White);
+        ActionsPanel();
+        DescriptionsPanel();
+    }
+
+    private void DescriptionsPanel()
+    {
+        deGUI.BeginContainer(370, deGUI.ConH() - 100, 400, 100);
+        {
+            deGUI.ContainerBorder();
+            deGUI.FillContainer(new Color(0, 0, 0, 100));
+            deGUI.TextXCenter(PanelLabelText, 10, 30, Color.White);
+            deGUI.TextCenter(PanelDescriptionText, 20, Color.White);
+        }
+        deGUI.EndContainer();
+    }
+
+    private void ActionsPanel()
+    {
         deGUI.BeginContainer(0, deGUI.ConH() - 140, 350, 140);
         {
             deGUI.ContainerBorder();
@@ -122,16 +139,6 @@ public sealed class HUDSystem : ISystem, IGUISystem
                     }
                 }
             }
-        }
-        deGUI.EndContainer();
-        
-        //description panel
-        deGUI.BeginContainer(370, deGUI.ConH() - 100, 400, 100);
-        {
-            deGUI.ContainerBorder();
-            deGUI.FillContainer(new Color(0, 0, 0, 100));
-            deGUI.TextXCenter(PanelLabelText, 10, 30, Color.White);
-            deGUI.TextCenter(PanelDescriptionText, 20, Color.White);
         }
         deGUI.EndContainer();
     }

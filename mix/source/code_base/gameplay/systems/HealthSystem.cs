@@ -1,6 +1,5 @@
 using destruct.DI;
 using destruct.ecs;
-using mix.gameplay.systems;
 
 namespace mix.code_base.gameplay.systems;
 
@@ -11,6 +10,8 @@ public sealed class HealthSystem : IGameLogicSystem
     private IFilter healthFilter;
     private ECSWorld world;
 
+    private readonly Dictionary<int, int> healthLastFrame = new();
+    
     [Inject]
     private void Inject(ECSWorld world)
     {
@@ -24,8 +25,6 @@ public sealed class HealthSystem : IGameLogicSystem
         {
             if (world.GetFrom<Health>(entity).Current <= 0)
             {
-                EventUtils.TryPushEventToEntity(world, entity, new Hit());
-                    
                 //if (AnimatorUTL.AnimatorHasState(world, entity, "death"))
                 //{
                 //    PlayDeathAnimationAndDelete(entity);
@@ -35,6 +34,8 @@ public sealed class HealthSystem : IGameLogicSystem
                 //    world.Delete(entity);
                 //}
             }
+            
+            //healthLastFrame.Add(entity, world.GetFrom<Health>(entity).Current);
         }
     }
 
