@@ -86,13 +86,17 @@ public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
             }
             t.Destination = destPosition;
             t.Speed = 2;
-            
-            if (World.HasIn<Animator>(unit) && World.GetFrom<Animator>(unit).HasCondition("move"))
+
+            if (World.HasIn<SinScaleTween>(unit))
             {
-                World.GetFrom<Animator>(unit).SetCondition("move", true);
+                World.GetFrom<SinScaleTween>(unit).Speed += 2;
+                World.AddComponentFor(unit, new SinRotationTween(10, 20));
+                    
                 t.Completed += () =>
                 {
-                    World.GetFrom<Animator>(unit).SetCondition("move", false);
+                    World.RemoveFrom<SinRotationTween>(unit);
+                    World.GetFrom<Rotation>(unit).Angle = 0;
+                    World.GetFrom<SinScaleTween>(unit).Speed -= 2;
                     foreach (var loop in walkSounds) loop.Stop();
                 }; 
             }

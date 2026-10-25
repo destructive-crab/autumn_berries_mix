@@ -1,5 +1,6 @@
 using System.Numerics;
 using destruct;
+using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
@@ -19,7 +20,7 @@ public sealed class CursorSystem : ISystem, IInputsProcessSystem
     {
         if (!guiWasOverlapped)
         {
-            if (inputService.GetCameraPositionDelta() != Vector2.Zero)
+            if (Raylib.IsMouseButtonDown(MouseButton.Right))
             {
                 Game.G<Cursor>().SetToMove();
                 return;

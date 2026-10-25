@@ -57,6 +57,9 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
             Position position = positionPool.Get(entity);
             Vector2 origin = world.Pool<Origin>().Get(entity).ToV2();
             Vector2 scale = world.Pool<Scale>().Get(entity).ToV2();
+            
+            float rotation = 0;
+            if (world.HasIn<Rotation>(entity)) rotation = world.GetFrom<Rotation>(entity).Angle;
 
             origin = new(origin.X * sprite.Fragment.Rect.Width * scale.X, origin.Y * sprite.Fragment.Rect.Height * scale.Y);
             Rectangle sourceRect = sprite.Fragment.Rect;
@@ -70,7 +73,7 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
             destinationRect.Width *= world.GetFrom<Scale>(entity).X;
             destinationRect.Height *= world.GetFrom<Scale>(entity).Y;
 
-            Raylib.DrawTexturePro(sprite.Fragment.Texture.Get(), sourceRect, destinationRect, origin, sprite.Rotation, Color.White);
+            Raylib.DrawTexturePro(sprite.Fragment.Texture.Get(), sourceRect, destinationRect, origin, rotation, Color.White);
 
             if (Raylib.IsKeyDown(KeyboardKey.A))
             {

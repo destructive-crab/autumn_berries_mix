@@ -62,13 +62,15 @@ public sealed class TileFactory : ITileFactory
                 a.DrawOffsetInPixels = new(0, 40);
                 tile.With(new Position(x, y, 2))
                     .With(new Origin(0.5f, 1f))
+                    .With(new Rotation())
                     .With(new Scale(1, 1))
                     .With(a)
                     .With(new Name("Autumn Tree"))
                     .With(new Description("Tree"))
                     .With<Tile>()
                     .With<BlockCell>()
-                    .With(new SinScaleTween(Random.Shared.Next(70, 90) / 10f));
+                    .With(new SinScaleTween(Random.Shared.Next(70, 90) / 10f))
+                    .With(new SinRotationTween(5, Random.Shared.Next(20, 30) / 10f));
 
                 return tile.Id;
             }
@@ -76,9 +78,10 @@ public sealed class TileFactory : ITileFactory
             {
                 var tileEntity= world.New();
                 world.Pool<Position>().New(tileEntity, (ref Position p) => p.Set(x, y, 2));
-                world.Pool<Origin>().New(tileEntity, (ref Origin o) => o.Set(0.5f,0.9f));
+                world.Pool<Origin>().New(tileEntity, (ref Origin o) => o.Set(0.5f, 1f));
                 world.Pool<Scale>().New(tileEntity, (ref Scale s) => s.Set(1,1));
-                //world.Pool<SinScaleTween>().New(tileEntity);
+                tileEntity.With<Rotation>();
+                tileEntity.With(new SinScaleTween(3));
                 world.Pool<Sprite>().New(tileEntity, (ref Sprite s) =>
                 {
                     s = Sprite.From("assets/units/player/chainy.png");
@@ -86,6 +89,7 @@ public sealed class TileFactory : ITileFactory
                 world.Pool<Tile>().New(tileEntity);
                 world.Pool<BlockCell>().New(tileEntity);
                 
+                /*
                 world.Pool<SpriteAnimation>().New(tileEntity, (ref SpriteAnimation animator) =>
                 {
                     //animator.InitializeFromAse("assets/units/player/chainy.ase");
@@ -99,6 +103,7 @@ public sealed class TileFactory : ITileFactory
                     new AnimatorState([], [new("move", true)], "move"),
                     new AnimatorState("idle")
                 ));
+                */
                 
                 world.Pool<Name>()
                     .New(tileEntity, (ref Name name) => name.Value = "Chainy");

@@ -41,11 +41,8 @@ public sealed class OverlayFactory
     {
         Entity entity = world.New();
         int entityId = entity.Id;
-        world.Pool<Sprite>().New(entityId,
-            (ref Sprite s) =>
-            {
-                s.Rotation = dir.Angle();
-            });
+        world.Pool<Sprite>().New(entityId);
+        entity.With(new Rotation(dir.Angle()));
         world.Pool<SpriteAnimation>().New(entityId);
 
         entity.With(new Animator("assets/overlay/arrow.ase", 

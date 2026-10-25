@@ -41,10 +41,9 @@ public sealed class SinScaleTweenSystem : IPreWorldRendererSystem
             world.GetFrom<Scale>(entity).Y = 1 + MathF.Sin(world.GetFrom<SinScaleTween>(entity).CurrentSinAngle)/20;
             ref SinScaleTween tween = ref world.GetFrom<SinScaleTween>(entity);
             tween.CurrentSinAngle += Game.DeltaTime*tween.Speed;
+            
             if (world.GetFrom<SinScaleTween>(entity).CurrentSinAngle >= 360)
-            {
                 world.GetFrom<SinScaleTween>(entity).CurrentSinAngle = 0;
-            }
         }
     }
 }

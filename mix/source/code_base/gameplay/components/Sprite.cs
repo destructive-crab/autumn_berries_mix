@@ -6,6 +6,11 @@ namespace mix.code_base;
 public struct Rotation
 {
     public float Angle;
+
+    public Rotation(float angle)
+    {
+        Angle = angle;
+    }
 }
 
 public struct Scale
@@ -59,7 +64,6 @@ public struct Sprite
     public bool Hidden;
     
     public Vec2I DrawOffsetInPixels;
-    public float Rotation;
     
     public bool MirroredHorizontal;
     public bool MirroredVertical;

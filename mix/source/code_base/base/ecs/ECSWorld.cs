@@ -131,6 +131,18 @@ public sealed class ECSWorld
         return ref entities[entity.Id];
     }
 
+    public void AddComponentFor<TComponent>(int entityId) 
+        where TComponent : struct
+    {
+        Pool<TComponent>().New(entityId);
+    }
+    
+    public void AddComponentFor<TComponent>(int entityId, TComponent component) 
+        where TComponent : struct
+    {
+        Pool<TComponent>().New(entityId, (ref TComponent c) => c = component);
+    }
+    
     public void AddComponentFor(int entityId, int componentIndex)
     {
         GetData(entityId).Components.Add(componentIndex);

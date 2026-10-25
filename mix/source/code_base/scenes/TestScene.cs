@@ -39,6 +39,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new BackgroundSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SpriteRendererSystem(World), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SinScaleTweenSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SinRotationTweenSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new GameMapSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HoverSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSystem(), Systems));
@@ -70,7 +71,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
             for (int y = 0; y < 4; y++)
             {
                 tileFactory.CreateTileFromID(TileIds.AutumnTerrain, x, y);
-                if (x == 0 || y == 0 || y == 3 || x == 7 || Random.Shared.Next(0, 3) == 1)
+                if ((x != 1 && y != 1) && (x == 0 || y == 0 || y == 3 || x == 7 || Random.Shared.Next(0, 3) == 1))
                 {
                     tileFactory.CreateTileFromID(TileIds.AutumnTree, x, y);
                 }
