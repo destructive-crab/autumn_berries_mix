@@ -20,7 +20,7 @@ public struct SinRotationTween
     }
 }
 
-public sealed class SinRotationTweenSystem : IPreWorldRendererSystem
+public sealed class SinRotationTweenSystem : IPreRendererSystem
 {
     public string DebugName() => nameof(SinRotationTweenSystem);
 
@@ -37,7 +37,7 @@ public sealed class SinRotationTweenSystem : IPreWorldRendererSystem
             .Evaluate();
     }
     
-    public void PreWorldRenderer()
+    public void PreRenderer()
     {
         foreach (int entity in filter.Entities)
         {

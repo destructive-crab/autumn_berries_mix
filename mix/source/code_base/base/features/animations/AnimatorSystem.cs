@@ -5,7 +5,7 @@ using destruct.scenes;
 
 namespace mix.gameplay.systems;
 
-public sealed class AnimatorSystem : IPreWorldRendererSystem
+public sealed class AnimatorSystem : IPreRendererSystem
 {
     public string DebugName() => nameof(AnimatorSystem);
     
@@ -21,7 +21,7 @@ public sealed class AnimatorSystem : IPreWorldRendererSystem
             .In<SpriteAnimation>();
     } 
     
-    public void PreWorldRenderer()
+    public void PreRenderer()
     {
         foreach (int entity in filter.Entities)
         {

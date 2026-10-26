@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using destruct.Debug;
 using destruct.ServiceLocators;
+using mix.gameplay.systems;
 using Raylib_cs;
 
 namespace destruct;
@@ -72,27 +73,86 @@ public partial class Game
         Awake = false;
     }
 
+    private static readonly HashSet<PostprocessingOverride> postprocessingOverrides = new();
+
+    public static TOverride NewPostProcessingOverride<TOverride>()
+        where TOverride : PostprocessingOverride, new()
+    {
+        TOverride newOverride = new();
+
+        newOverride.Load();
+        newOverride.Defaults();
+
+        postprocessingOverrides.Add(newOverride);
+            
+        return newOverride;
+    }
+
+    public static void RemovePostprocessingShader(PostprocessingOverride postprocessingOverride)
+    {
+        if (!postprocessingOverrides.Remove(postprocessingOverride))
+        {
+            postprocessingOverride.Unload();
+            LGR.PERR($"Override was not presented in renderer");
+        }
+    }
+    
     public static void Loop()
     {
         Stopwatch stopwatch = new();
         stopwatch.Start();
         
+        RenderTexture2D rendererLayer = Raylib.LoadRenderTexture(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+       
         while (Awake && !Raylib.WindowShouldClose())
         {
+            if (rendererLayer.Texture.Width != Raylib.GetScreenWidth() ||
+                rendererLayer.Texture.Height != Raylib.GetScreenHeight())
+            {
+                rendererLayer = Raylib.LoadRenderTexture(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+            }
+            
             DeltaTime = Raylib.GetFrameTime();
+            
+            CurrentScene?.PrepareRenderer();
+            
+            Raylib.BeginTextureMode(rendererLayer);
+            {
+                Raylib.ClearBackground(Color.Black);
+                
+                G<Cursor>().SetToDefault();
+                CurrentScene?.Renderer();
+                modulesStorage.Tick();
+            }
+            Raylib.EndTextureMode();
+            
             Raylib.BeginDrawing();
             {
                 Raylib.ClearBackground(Color.Black);
-                Game.G<Cursor>().SetToDefault();
-                CurrentScene?.Tick();
-                modulesStorage.Tick();
-                AudioService.UpdateAudio();
+
+                if (postprocessingOverrides.Count > 0)
+                {
+                    RenderTexture2D result = rendererLayer;
+                    foreach (var postprocessingOverride in postprocessingOverrides)
+                        result = postprocessingOverride.PerformRaylibDrawing(ref result);
+                    
+                    Raylib.DrawTextureRec(result.Texture, new(0,0,result.Texture.Width, -result.Texture.Height), new(0,0), Color.White);
+                }
+                else
+                {
+                    Raylib.DrawTextureRec(rendererLayer.Texture, new(0,0,rendererLayer.Texture.Width, -rendererLayer.Texture.Height), new(0,0), Color.White);
+                }
             }
             Raylib.EndDrawing();
+            
+            AudioService.UpdateAudio();
         }
 
         Raylib.CloseWindow();
         Raylib.CloseAudioDevice();
+        
+        Raylib.UnloadTexture(rendererLayer.Texture);
+        Assets.UnloadAll();
     }
     
     public static TModule G<TModule>()

@@ -20,7 +20,7 @@ public sealed class StartScreen : Scene, IDependenciesProvider
             .SetDefaultButtonPressedColor(Color.Gray);
     }
 
-    public override async void Tick()
+    public override async void Renderer()
     {
         deGUI.BeginGUI();
         {

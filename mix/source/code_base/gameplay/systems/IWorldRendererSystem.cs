@@ -1,9 +1,15 @@
 namespace destruct.scenes;
 
-public interface IPreWorldRendererSystem : ISystem
+public interface IPreRendererSystem : ISystem
 {
-    void PreWorldRenderer();
+    void PreRenderer();
 }
+
+public interface IRendererSystem : ISystem
+{
+    void Render();
+}
+
 public interface IWorldRendererSystem : ISystem
 {
     void RenderWorld();

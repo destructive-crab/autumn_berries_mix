@@ -13,6 +13,66 @@
         <None Update="assets\**\*.*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="assets\shaders\postprocessing\ascii.fs">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\bilateral_filter.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\blur.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\brcosa.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\channels.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\deform.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\edges.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\fruit-stand.jpg">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\halftone.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\halftone_cmyk.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\hue.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\invert.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\modcolor.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\neon.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\paris.jpg">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\patches.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\pixelate.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\pixelrolls.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\threshold.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="assets\shaders\postprocessing\genekogan\textures\wrap.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

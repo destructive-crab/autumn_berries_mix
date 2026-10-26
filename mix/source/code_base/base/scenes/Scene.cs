@@ -33,7 +33,8 @@ public abstract class Scene
     
     protected abstract void OnSceneLoaded();
 
-    public virtual void Tick() { }
+    public virtual void PrepareRenderer() { }
+    public virtual void Renderer() { }
 
     public string SystemNames()
     {

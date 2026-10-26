@@ -36,6 +36,17 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
     
     protected override void OnSceneLoaded()
     {
+        Game.NewPostProcessingOverride<ChannelMixer>()
+            .SetRed  (0.5f, 0.5f, 0)
+            .SetGreen(0,    1,    0)
+            .SetBlue (0,    0,    1);
+
+        Game.NewPostProcessingOverride<Vignette>()
+            .SetColor(Color.Black)
+            .SetIntensity(0.8f)
+            .SetSmoothness(1)
+            .SetRoundness(1);
+        
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new BackgroundSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SpriteRendererSystem(World), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SinScaleTweenSystem(), Systems));
@@ -94,7 +105,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         return base.DisposeScene();
     }
 
-    public override void Tick()
+    public override void PrepareRenderer()
     {
         foreach (var inputsProcessor in Systems.Filter<IInputsProcessSystem>())
         {
@@ -104,8 +115,14 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         foreach (var gameLogic in Systems.Filter<IGameLogicSystem>())
             gameLogic.Process();
         
-        foreach (var preWorldRenderer in Systems.Filter<IPreWorldRendererSystem>())
-            preWorldRenderer.PreWorldRenderer();
+        foreach (var preWorldRenderer in Systems.Filter<IPreRendererSystem>())
+            preWorldRenderer.PreRenderer();
+    }
+
+    public override void Renderer()
+    {
+        foreach (var renderer in Systems.Filter<IRendererSystem>())
+            renderer.Render();
         
         Raylib.BeginMode2D(camera.CurrentCamera);
         {

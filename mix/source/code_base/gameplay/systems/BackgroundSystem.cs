@@ -3,10 +3,10 @@ using Raylib_cs;
 
 namespace mix.code_base.gameplay.systems;
 
-public sealed class BackgroundSystem : IPreWorldRendererSystem
+public sealed class BackgroundSystem : IPreRendererSystem, IRendererSystem
 {
     public string DebugName() => nameof(BackgroundSystem);
-
+    
     private readonly Shader noiseShader;
     private readonly Shader cloudsShader;
     
@@ -15,7 +15,7 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
     
     private int timeLoc;
     
-    private bool enabled = true;
+    private bool enabled = false;
 
     public BackgroundSystem()
     {
@@ -26,7 +26,7 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
         UpdateScreenSize();
     }
 
-    public void PreWorldRenderer()
+    public void PreRenderer()
     {
         if (!enabled) return;
         
@@ -48,6 +48,12 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
             Raylib.EndTextureMode();
         }
         Raylib.EndShaderMode();
+    }
+
+    private int mode = 0;
+    public void Render()
+    {
+        if (!enabled) return;
         
         Raylib.BeginShaderMode(cloudsShader);
         {
@@ -59,7 +65,10 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
         }
         Raylib.EndShaderMode();
         
-        Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), new Color(160, 35, 75, 140));
+        if (mode == 0) Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), new Color(160, 35, 75, 140));
+        if (mode == 1) Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), new Color(9, 2, 51, 140));
+        if (mode == 2) Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), new Color(18, 1, 117, 140));
+        if (mode == 3) return;
     }
 
     private void F(float w, float h)
@@ -102,5 +111,11 @@ public sealed class BackgroundSystem : IPreWorldRendererSystem
     private void Disable()
     {
         enabled = false;
+    }
+
+    private void NextMode()
+    {
+        mode++;
+        if (mode > 2) mode = 0;
     }
 }

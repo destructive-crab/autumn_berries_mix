@@ -1,6 +1,7 @@
 using AsepriteDotNet.Common;
 using AsepriteDotNet.IO;
 using AsepriteDotNet.Processors;
+using destruct.Debug;
 using mix.aseprite;
 using mix.gameplay.systems;
 using Raylib_cs;
@@ -126,6 +127,16 @@ public static class Assets
         {
             this.load = load;
             this.unload = unload;
+
+            if (load == null)
+            {
+                throw new Exception($"Provided null load function to cache container of {typeof(TAsset).Name}");
+            }
+
+            if (unload == null)
+            {
+                throw new Exception($"Provided null load function to cache container of {typeof(TAsset).Name}");
+            }
         }
 
         public TAsset Load(string path)
@@ -142,7 +153,17 @@ public static class Assets
         public void UnloadAll()
         {
             foreach (TAsset asset in cache.Values)
-                unload?.Invoke(asset);
+                unload.Invoke(asset);
+        }
+
+        public void Unload(string path)
+        {
+            if (cache.ContainsKey(path))
+            {
+                LGR.PERR($"Cannot unload asset {typeof(TAsset).Name} from path {path}. No asset found in cache");
+                return;
+            }
+            unload.Invoke(cache[path]);
         }
     }
 

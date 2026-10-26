@@ -17,7 +17,7 @@ public struct SinScaleTween
     }
 }
 
-public sealed class SinScaleTweenSystem : IPreWorldRendererSystem
+public sealed class SinScaleTweenSystem : IPreRendererSystem
 {
     public string DebugName() => nameof(SinScaleTweenSystem);
 
@@ -34,7 +34,7 @@ public sealed class SinScaleTweenSystem : IPreWorldRendererSystem
             .Evaluate();
     }
 
-    public void PreWorldRenderer()
+    public void PreRenderer()
     {
         foreach (int entity in filter.Entities)
         {

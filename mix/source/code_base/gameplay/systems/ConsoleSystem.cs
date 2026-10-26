@@ -17,6 +17,7 @@ public sealed class ConsoleSystem : IGUISystem
     
     private InputFieldRuntimeData consoleInput;
     private string currentConsoleString = "";
+    private string previousConsoleString = "";
 
     private readonly List<string> consoleOutput = new();
     
@@ -32,6 +33,9 @@ public sealed class ConsoleSystem : IGUISystem
         
         if (showConsole)
         {
+            if (Raylib.IsKeyPressed(KeyboardKey.Up))
+                currentConsoleString = previousConsoleString;
+            
             deGUI.BeginContainer(0, 0, deGUI.ConW(), deGUI.ConH());
             {
                 deGUI.FillContainer(new(0,0,0,140));
@@ -42,6 +46,7 @@ public sealed class ConsoleSystem : IGUISystem
                             out currentConsoleString))
                     {
                         ProcessCommand(currentConsoleString);
+                        previousConsoleString = currentConsoleString;
                         currentConsoleString = "";
                     }
 
@@ -63,7 +68,6 @@ public sealed class ConsoleSystem : IGUISystem
         }
     }
 
-    
     private void ProcessCommand(string command)
     {
         string[] tokens = command.Split('.');
