@@ -54,7 +54,7 @@ public sealed class OverlayFactory
         
         world.GetFrom<Animator>(entityId).Trigger("spawn");
         
-        world.Pool<Position>().New(entityId, (ref Position p) => p.Set(x, y, 1));
+        world.Pool<Position>().New(entityId, (ref Position p) => p.Set(x, y, Const.TerrainOverlayZ));
         world.Pool<Scale>().New(entityId, (ref Scale s) => s.Set(1,1));
         world.Pool<Origin>().New(entityId, (ref Origin o) => o.Set(0.5f, 0.5f));
         world.Pool<Hoverable>().New(entityId);
@@ -70,7 +70,7 @@ public sealed class OverlayFactory
     public int CreateSelectedCellOverlay(ECSWorld world)
     {
         return world.New()
-            .With(new Position(0,0,1))
+            .With(new Position(0,0,Const.TerrainOverlayZ))
             .With(new Scale(1,1))
             .With(new Origin(0.5f, 0.5f))
             .With(Sprite.From(AssetsPath.SelectedCellBorder)).Id;
@@ -79,7 +79,7 @@ public sealed class OverlayFactory
     public int CreatePointedCellOverlay(ECSWorld world)
     {
         return world.New()
-            .With(new Position(0,0,1))
+            .With(new Position(0, 0, Const.TerrainOverlayZ))
             .With(new Scale(1,1))
             .With(new Origin(0.5f, 0.5f))
             .With(Sprite.From(AssetsPath.PointedCellBorder)).Id;
@@ -100,7 +100,7 @@ public sealed class OverlayFactory
     public int SpawnAttackPointer(int x, int y)
     {
         return world.New()
-            .With<Position>(new Position(x, y - 0.5f, 3))
+            .With<Position>(new Position(x, y - 0.5f, Const.EntitiesOverlayZ))
             .With<Scale>(new Scale(1, 1))
             .With<Origin>(new Origin(0.5f, 0.5f))
             .With<Hoverable>()

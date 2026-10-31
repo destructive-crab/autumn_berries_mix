@@ -8,3 +8,11 @@ public struct Global
     public const int PixelsPerUnit = 256;
     public const int IconStandardSize = 36;
 }
+
+public struct Const
+{
+    public const int TerrainZ = 1;
+    public const int TerrainOverlayZ = 2;
+    public const int EntitiesZ = 3;
+    public const int EntitiesOverlayZ = 3;
+}

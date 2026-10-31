@@ -147,9 +147,6 @@ public sealed class HUDSystem : ISystem, IGUISystem
     {
         deGUI.BeginContainerCenter(200, 60);
         {
-            deGUI.FillContainer(Color.Pink);
-            deGUI.ContainerBorder();
-            deGUI.TextCenter("WAIT " + enemyTurn.TimeLeft.ToString(), 50, Color.DarkBlue);
         }
         deGUI.EndContainer();
     }

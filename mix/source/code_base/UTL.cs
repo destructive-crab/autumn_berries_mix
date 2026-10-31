@@ -28,6 +28,19 @@ public static class UTL
         ];
     }
 
+    public static bool TryGetCellPosition(ECSWorld world, int entity, out Vec2I position)
+    {
+        position = Vec2I.Zero;
+
+        if (world.HasIn<Tile>(entity))
+        {
+            position = world.GetFrom<Cell>(world.GetFrom<Tile>(entity).CellId).Position;
+            return true;
+        }
+
+        return false;
+    }
+
     public static Vector2 TranslatePositionInPixelsToUnits(Vector2 pixels)
     {
         return new Vector2(pixels.X / Global.PixelsPerUnit, pixels.Y / Global.PixelsPerUnit);
@@ -75,12 +88,27 @@ public static class UTL
         return 0;
     }
     
-    public static Vector2 UnitsToPixels(in Position position)
+    public static Vector2 UnitsToPixels(float x, float y)
     {
-        int x = (int)Math.Round(position.X * Global.PixelsPerUnit);
-        int y = (int)Math.Round(position.Y * Global.PixelsPerUnit);
+        x = (int)Math.Round(x * Global.PixelsPerUnit);
+        y = (int)Math.Round(y * Global.PixelsPerUnit);
 
         return new(x,y);
+    }
+
+    public static Vector2 UnitsToPixels(Vec2I p)
+    {
+        return UnitsToPixels(p.X, p.Y);
+    }
+
+    public static Vector2 UnitsToPixels(int x, int y)
+    {
+        return UnitsToPixels((float)x, (float)y);
+    }
+    
+    public static Vector2 UnitsToPixels(in Position position)
+    {
+        return UnitsToPixels(position.X, position.Y);
     }
     
     public static Vector2 PixelsToUnits(in Position position)

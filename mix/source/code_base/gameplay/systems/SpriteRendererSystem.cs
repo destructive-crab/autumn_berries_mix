@@ -7,6 +7,19 @@ using Raylib_cs;
 
 namespace mix.code_base;
 
+public static class RendererUTL
+{
+    public static Vector2 GetRendererPosition(ECSWorld w, int entity)
+    {
+        if (w.HasIn<DrawOffset>(entity))
+        {
+            return w.GetFrom<Position>(entity).ToV2() * Global.PixelsPerUnit + w.GetFrom<DrawOffset>(entity).OffsetInPixels;
+        }
+        
+        return w.GetFrom<Position>(entity).ToV2() * Global.PixelsPerUnit;
+    }
+}
+
 public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
 {
     public string DebugName() => nameof(SpriteRendererSystem);
@@ -69,32 +82,11 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
             if (sprite.MirroredVertical)
                 sourceRect.Height *= -1;
 
-            Rectangle destinationRect = new(UTL.UnitsToPixels(position) + sprite.DrawOffsetInPixels, sprite.Fragment.Rect.Width, sprite.Fragment.Rect.Height);
+            Rectangle destinationRect = new(RendererUTL.GetRendererPosition(world, entity), sprite.Fragment.Rect.Width, sprite.Fragment.Rect.Height);
             destinationRect.Width *= world.GetFrom<Scale>(entity).X;
             destinationRect.Height *= world.GetFrom<Scale>(entity).Y;
 
             Raylib.DrawTexturePro(sprite.Fragment.Texture.Get(), sourceRect, destinationRect, origin, rotation, Color.White);
-
-            if (Raylib.IsKeyDown(KeyboardKey.A))
-            {
-                var originColor = Color.Red;
-                var originRadius = 3 - position.ZZZ;
-                if (originRadius == 3) originRadius = 0;
-                if (position.ZZZ > 1)
-                {
-                    originColor = Color.Blue;
-                }
-
-                if (position.ZZZ == 1) originColor = Color.Green;
-
-                Raylib.DrawCircle((int)UTL.UnitsToPixels(position).X - (int)world.Pool<Origin>().Get(entity).ToV2().X,
-                    (int)UTL.UnitsToPixels(position).Y - (int)world.Pool<Origin>().Get(entity).ToV2().Y, originRadius,
-                    originColor);
-                Raylib.DrawRectangleLinesEx(new(
-                    (int)UTL.UnitsToPixels(position).X + sprite.DrawOffsetInPixels.X - (int)origin.X,
-                    (int)UTL.UnitsToPixels(position).Y + sprite.DrawOffsetInPixels.Y - (int)origin.Y,
-                    (int)sprite.Fragment.Rect.Width, (int)sprite.Fragment.Rect.Height), 1, originColor);
-            }
         }
     }
 }

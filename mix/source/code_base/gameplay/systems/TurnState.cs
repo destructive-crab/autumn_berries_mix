@@ -1,4 +1,6 @@
 using destruct;
+using destruct.DI;
+using destruct.ecs;
 
 namespace mix.code_base.gameplay.systems;
 
@@ -21,7 +23,7 @@ public sealed class TurnState
             if (CurrentTurn is PlayerTurn)
             {
                 await CurrentTurn.Perform();
-                CurrentTurn = new EnemyTurn();
+                CurrentTurn = Game.G<DIKernel>().InjectWithBase(new EnemyTurn());
             }
             else if (CurrentTurn is EnemyTurn)
             {
@@ -57,14 +59,14 @@ public sealed class PlayerTurn : Turn
 
 public sealed class EnemyTurn : Turn
 {
-    public int TimeLeft;
+    [Inject] private ECSWorld world;
+    [Inject] private GameplayFilters filters;
+    
     public override async Task Perform()
     {
-        TimeLeft = 3;
-        await Task.Delay(1000);
-        TimeLeft = 2;
-        await Task.Delay(1000);
-        TimeLeft = 1;
-        await Task.Delay(1000);
+        foreach (int entity in filters.EnemyUnits.Entities)
+        {
+            
+        }
     }
 }

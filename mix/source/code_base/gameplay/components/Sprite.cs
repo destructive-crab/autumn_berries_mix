@@ -1,4 +1,5 @@
 using System.Numerics;
+using destruct.Debug;
 using Raylib_cs;
 
 namespace mix.code_base;
@@ -34,6 +35,11 @@ public struct Scale
     {
         return new(X, Y);
     }
+
+    public static Scale One()
+    {
+        return new Scale(1, 1);
+    }
 }
 
 public struct Origin
@@ -57,13 +63,36 @@ public struct Origin
     {
         return new(X, Y);
     }
+
+    public static Origin Center()
+    {
+        return new(0.5f, 0.5f);
+    }
+    
+    public static Origin CenterBottom()
+    {
+        return new(0.5f, 1f);
+    }
+}
+
+public struct DrawOffset
+{
+    public Vec2I OffsetInPixels;
+
+    public DrawOffset(int x, int y)
+    {
+        OffsetInPixels = new(x, y);
+    }
+
+    public static DrawOffset FromUnits(float x, float y)
+    {
+        return new DrawOffset((int)MathF.Ceiling(Global.PixelsPerUnit * x), (int)MathF.Ceiling(Global.PixelsPerUnit * y));
+    }
 }
 
 public struct Sprite
 {
     public bool Hidden;
-    
-    public Vec2I DrawOffsetInPixels;
     
     public bool MirroredHorizontal;
     public bool MirroredVertical;

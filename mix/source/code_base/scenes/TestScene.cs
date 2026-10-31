@@ -1,8 +1,12 @@
+using autumn_berries_mix;
 using destruct;
+using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.imgui;
 using destruct.scenes;
+using Microsoft.VisualBasic.CompilerServices;
+using mix.code_base.gameplay;
 using mix.code_base.gameplay.systems;
 using mix.gameplay.overlay;
 using mix.gameplay.overlay.models;
@@ -28,6 +32,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
     private GameMap gameMap;
 
     private TurnState turnState;
+    private List<Vec2I> path;
 
     public override IDependenciesProvider[] GetProviders()
     {
@@ -92,11 +97,17 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         World.UnblockFiltersEvaluationAndEvaluate();
 
         tileFactory.CreateTileFromID(TileIds.Chainy, 1, 1);
-        //tileFactory.CreateTileFromID(TileIds.Ghost, 1, 2);
+        tileFactory.CreateTileFromID(TileIds.Ghost, 1, 2);
         
         turnState.StartTurnCycle(new PlayerTurn());
         
         Game.AudioService.PlayMusic("assets/audio/main_theme.ogg", 40);
+
+        path = Pathfinder.FindPath(gameMap, new(1, 1), new(6, 2));
+        if (path == null)
+        {
+            LGR.PERR("Failed to find path");
+        }
     }
 
     public override Task DisposeScene()
@@ -144,6 +155,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
             }
         }
         deGUI.EndGUI();
+        
     }
 
     [Provide(true)]
@@ -176,6 +188,13 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
     {
         turnState = new TurnState();
         return turnState;
+    }
+
+    [Provide(true)]
+    private GameplayFilters ProvideGameplayFiltersForDI()
+    {
+        var a = new GameplayFilters(World);
+        return a;
     }
 
     [Provide(true)]

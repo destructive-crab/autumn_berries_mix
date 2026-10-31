@@ -113,14 +113,14 @@ public partial class Game
             }
             
             DeltaTime = Raylib.GetFrameTime();
+                
+            G<Cursor>().SetToDefault();
             
             CurrentScene?.PrepareRenderer();
             
             Raylib.BeginTextureMode(rendererLayer);
             {
                 Raylib.ClearBackground(Color.Black);
-                
-                G<Cursor>().SetToDefault();
                 CurrentScene?.Renderer();
                 modulesStorage.Tick();
             }

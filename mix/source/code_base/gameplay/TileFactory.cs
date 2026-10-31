@@ -34,37 +34,31 @@ public sealed class TileFactory : ITileFactory
     {
         switch (id)
         {
+
             case TileIds.AutumnTerrain:
             {
-                int tileId = world.New().Id;
-                world.Pool<Position>().New(tileId, (ref Position p) => p.Set(x, y));
-                world.Pool<Origin>().New(tileId, (ref Origin o) => o.Set(0.5f,0.5f));
-                world.Pool<Scale>().New(tileId, (ref Scale s) => s.Set(1,1));
-                world.Pool<Sprite>().New(tileId, (ref Sprite s) =>
-                {
-                    s = Sprite.From("assets/tiles/autumn_terrain_by_mivioon.png");
-                    s.DrawOffsetInPixels = new(0, 43);
-                });
-                world.Pool<Tile>().New(tileId);
-                world.Pool<TileWalkSound>().New(tileId, (ref TileWalkSound s) => s.SoundAssetPath = "assets/audio/autumn_grass_tile_walk.ogg");
-                
-                world.Pool<Name>()
-                    .New(tileId, (ref Name name) => name.Value = "Autumn Terrain");
-                world.Pool<Description>()
-                    .New(tileId, (ref Description description) => description.Value = "Walkable terrain");
+                Entity e = world.New()
+                    .With(new Position(x, y, Const.TerrainZ))
+                    .With(Origin.Center())
+                    .With(new DrawOffset(0, 50))
+                    .With(Scale.One())
+                    .With(Sprite.From("assets/tiles/autumn_terrain.png"))
+                    .With<Tile>()
+                    .With(new TileWalkSound("assets/audio/autumn_grass_tile_walk.ogg"))
+                    .With(new Name("Autumn Terrain"))
+                    .With(new Description("Walkable terrain"));
 
-                return tileId;
+                return e.Id;
             }
             case TileIds.AutumnTree:
             {
-                Entity tile = world.New();
-                var a = Sprite.From("assets/tiles/autumn_tree_by_mivioon.png");
-                a.DrawOffsetInPixels = new(0, 40);
-                tile.With(new Position(x, y, 2))
-                    .With(new Origin(0.5f, 1f))
+                Entity e = world.New()
+                    .With(new Position(x, y, 2))
+                    .With(Origin.CenterBottom())
                     .With(new Rotation())
-                    .With(new Scale(1, 1))
-                    .With(a)
+                    .With(Scale.One())
+                    .With(Sprite.From("assets/tiles/autumn_tree.png"))
+                    .With(new DrawOffset(0, 40))
                     .With(new Name("Autumn Tree"))
                     .With(new Description("Tree"))
                     .With<Tile>()
@@ -72,22 +66,36 @@ public sealed class TileFactory : ITileFactory
                     .With(new SinScaleTween(Random.Shared.Next(70, 90) / 10f))
                     .With(new SinRotationTween(5, Random.Shared.Next(20, 30) / 10f));
 
-                return tile.Id;
+                return e.Id;
             }
             case TileIds.Chainy:
             {
-                var tileEntity= world.New();
-                world.Pool<Position>().New(tileEntity, (ref Position p) => p.Set(x, y, 2));
-                world.Pool<Origin>().New(tileEntity, (ref Origin o) => o.Set(0.5f, 1f));
-                world.Pool<Scale>().New(tileEntity, (ref Scale s) => s.Set(1,1));
-                tileEntity.With<Rotation>();
-                tileEntity.With(new SinScaleTween(3));
-                world.Pool<Sprite>().New(tileEntity, (ref Sprite s) =>
-                {
-                    s = Sprite.From("assets/units/player/chainy.png");
-                });
-                world.Pool<Tile>().New(tileEntity);
-                world.Pool<BlockCell>().New(tileEntity);
+                Entity tileEntity = world.New();
+                
+                tileEntity
+                    .With(new Position(x, y, Const.EntitiesZ))
+                    .With(Origin.CenterBottom())
+                    .With(Scale.One())
+                    .With<Rotation>()
+                    .With(new SinScaleTween(3))
+                    .With(Sprite.From("assets/units/player/chainy.png"))
+                    .With<Tile>()
+                    .With<BlockCell>()
+                    .With(new Health(5,5))
+                    .With(new Name("Chainy"))
+                    .With(new Description("chain chain chain swag"))
+                    .With((ref PlayerUnit u) =>
+                         {
+                             Entity moveAbility = world.New()
+                                 .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/move_ability.png"))
+                                 .With(new MoveAbility());
+                                  Entity chainsawAttack = world.New()
+                                 .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/chainsaw_attack_ability.png"))
+                                 .With(new BasicAttackAbility());
+                             
+                             u.Default();
+                             u.Abilities = [ moveAbility.Id, chainsawAttack.Id ];
+                         });
                 
                 /*
                 world.Pool<SpriteAnimation>().New(tileEntity, (ref SpriteAnimation animator) =>
@@ -104,55 +112,25 @@ public sealed class TileFactory : ITileFactory
                     new AnimatorState("idle")
                 ));
                 */
-                
-                world.Pool<Name>()
-                    .New(tileEntity, (ref Name name) => name.Value = "Chainy");
-                world.Pool<Description>()
-                    .New(tileEntity, (ref Description description) => description.Value = "text text text text text text sdkfsjdflksjdf text fkdsjf text dskfk text tkdkfj");
-
-                world.Pool<Health>().New(tileEntity, (ref Health h) => h.Set(5,5));
-                
-                world.Pool<PlayerUnit>().New(tileEntity, (ref PlayerUnit u) =>
-                {
-                    Entity moveAbility = world.New()
-                        .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/move_ability.png"))
-                        .With(new MoveAbility());
-
-                    Entity chainsawAttack = world.New()
-                        .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/chainsaw_attack_ability.png"))
-                        .With(new BasicAttackAbility());
-                    
-                    u.Default();
-                    u.Abilities = [ moveAbility.Id, chainsawAttack.Id ];
-                });
                 return tileEntity.Id;
             }
             case TileIds.Ghost:
             {
-                var tileEntity = world.New();
-                world.Pool<Position>().New(tileEntity, (ref Position p) => p.Set(x, y, 2));
-                world.Pool<Origin>().New(tileEntity, (ref Origin o) => o.Set(0.5f,1f));
-                world.Pool<Scale>().New(tileEntity, (ref Scale s) => s.Set(1,1));
-                world.Pool<Sprite>().New(tileEntity);
-                
-                //tileEntity.With(new Animator("assets/units/enemies/ghost.ase", 
-                //    ["move"],
-                //    new AnimatorState(["hit"], [], "hit"),
-                //    new AnimatorState([], [new("move", true)], "move"),
-                //    new AnimatorState("idle")
-                //));
-                
-                world.Pool<Tile>().New(tileEntity);
-                world.Pool<Health>().New(tileEntity, (ref Health h) => h.Set(5,5));
-                world.Pool<Name>().New(tileEntity, (ref Name name) => name.Value = "Ghost!!!");
-                world.Pool<BlockCell>().New(tileEntity);
-                world.Pool<Description>().New(tileEntity, (ref Description description) => description.Value = "!!!!!!!");
-                world.Pool<SpriteAnimation>().New(tileEntity, (ref SpriteAnimation animator) =>
-                {
-                    //animator.InitializeFromAse("assets/units/enemies/ghost.ase");
-                    //animator.Play("idle");
-                });
+                Entity tileEntity = world.New();
 
+                tileEntity
+                    .With(new Position(x, y, Const.EntitiesZ))
+                    .With(Origin.CenterBottom())
+                    .With(Scale.One())
+                    .With<Rotation>()
+                    .With(new SinScaleTween(3))
+                    .With(Sprite.From("assets/units/enemies/ghost_by_mivioon.png"))
+                    .With<Tile>()
+                    .With<BlockCell>()
+                    .With(new Health(5, 5))
+                    .With(new Name("Chainy"))
+                    .With(new Description("chain chain chain swag"));
+                
                 return tileEntity.Id;
             }
         }

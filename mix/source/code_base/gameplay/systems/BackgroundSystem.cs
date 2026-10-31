@@ -15,7 +15,7 @@ public sealed class BackgroundSystem : IPreRendererSystem, IRendererSystem
     
     private int timeLoc;
     
-    private bool enabled = false;
+    private bool enabled = true;
 
     public BackgroundSystem()
     {
