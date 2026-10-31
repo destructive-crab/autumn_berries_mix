@@ -404,8 +404,12 @@ public static class deGUI
 
     public static void FillContainer(Color color)
     {
-        var c = Container().Rect;
-        Raylib.DrawRectangle(c.X, c.Y, c.W, c.H, color);
+        Rectangle(0, 0, ConW(), ConH(), color);
+    }
+
+    public static void Rectangle(int containerX, int containerY, int w, int h, Color color)
+    {
+        Raylib.DrawRectangle(ConX()+containerX, ConY()+containerY, w, h, color);
     }
 
     public static string WrapText(string text, int width, int fontSize)

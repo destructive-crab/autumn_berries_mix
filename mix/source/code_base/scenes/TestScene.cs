@@ -73,6 +73,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSoundSystem(), Systems));
         
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HUDSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HealthBarsSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new DebugHUDSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new ConsoleSystem(), Systems));
 
