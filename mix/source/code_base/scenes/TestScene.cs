@@ -141,12 +141,6 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         {
             foreach (var renderer in Systems.Filter<IWorldRendererSystem>())
                 renderer.RenderWorld();
-            
-            foreach (Vec2I p in path)
-            {
-                Raylib.DrawRectangle((int)UTL.UnitsToPixels(p).X - Global.TILE_SIZE / 2, (int)UTL.UnitsToPixels(p).Y - Global.TILE_SIZE / 2, Global.TILE_SIZE, Global.TILE_SIZE, new(100, 100, 100, 100) );
-                ;
-            }
         }
         Raylib.EndMode2D();
         
