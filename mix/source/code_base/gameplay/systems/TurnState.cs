@@ -1,6 +1,8 @@
 using destruct;
+using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
+using mix.code_base.gameplay.units;
 
 namespace mix.code_base.gameplay.systems;
 
@@ -9,7 +11,7 @@ public interface IPlayerTurnSystem
     void Begin(PlayerTurn turn);
     void End(PlayerTurn turn);
 }
-    
+   
 public sealed class TurnState 
 {
     public Turn CurrentTurn { get; private set; }
@@ -66,7 +68,12 @@ public sealed class EnemyTurn : Turn
     {
         foreach (int entity in filters.EnemyUnits.Entities)
         {
-            
+            LGR.PM($"ENEMY {entity} IS TAKING TURN");
+            world.GetFrom<EnemyUnit>(entity).ReadyToTakeTurn = true;
+            while (world.GetFrom<EnemyUnit>(entity).ReadyToTakeTurn)
+            {
+                await Task.Yield();
+            }
         }
     }
 }

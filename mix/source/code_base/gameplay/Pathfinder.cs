@@ -66,16 +66,17 @@ namespace autumn_berries_mix
         }
         
         private static int Heuristic(PathNode first, PathNode second) => (int)(MathF.Abs(first.X - second.X) + MathF.Abs(first.Y - second.Y));
+        
         private static bool IsCollider(GameMap map, Vec2I position)
         {
-            return map.CellHasEntityWith<BlockCell>(position);
+            return map.CellHasEntityWith<BlockCell>(position) && position != currentTarget;
         }
         
         private static List<PathNode> GetNeighbourPoints(GameMap map, PathNode pathNode, List<PathNode> ignoredPoints)
         {
             List<PathNode> neighbourPoints = new List<PathNode>();
 
-            var cellsAround = map.GetExistingCellsAroundPositionThatDoesNotHaveEntitiesWith<BlockCell>(pathNode.X, pathNode.Y);
+            var cellsAround = map.GetExistingCellsAroundPositionThat(new(pathNode.X, pathNode.Y), (cell) => !IsCollider(map, cell) && !ignoredPoints.Contains(new(cell.X, cell.Y)));
             
             foreach (Vec2I p in cellsAround)
                 neighbourPoints.Add(new (p.X, p.Y));
@@ -126,7 +127,7 @@ namespace autumn_berries_mix
                 currentPathNode = nextPoints[0];
                 nextPoints.Remove(currentPathNode);
             }
-
+            
             return null;
         }
         private static List<Vec2I> RestorePath(PathNode endPathNode)

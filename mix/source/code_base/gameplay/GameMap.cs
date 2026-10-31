@@ -17,7 +17,8 @@ public sealed class GameMap
 {
     public int LayerWidth { get; private set; }
     public int LayerHeight { get; private set; }
-    
+    public int CellsCount => LayerWidth * LayerHeight;
+
     private int[] cells = [];
 
     [Inject] private ECSWorld world;
@@ -99,6 +100,18 @@ public sealed class GameMap
     public IEnumerable<int> GetEntities(Vec2I pos)
     {
         return GetCell(pos).Entities;
+    }
+    
+    public IEnumerable<int> GetEntitiesWith<TComponent>(Vec2I pos)
+        where TComponent : struct
+    {
+        List<int> result = new();
+
+        foreach (int entity in GetEntities(pos))
+            if (world.HasIn<TComponent>(entity))
+                result.Add(entity);
+
+        return result;
     }
 
     public bool CellHasEntityWith<TComponent>(Vec2I position) 

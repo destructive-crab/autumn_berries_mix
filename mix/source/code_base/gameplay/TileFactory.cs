@@ -2,6 +2,8 @@ using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using mix.code_base;
+using mix.code_base.gameplay.units;
+using mix.code_base.gameplay.units.ghost;
 using mix.gameplay.overlay.tweens;
 using mix.gameplay.overlay.units.abilities;
 using mix.gameplay.systems;
@@ -53,7 +55,7 @@ public sealed class TileFactory : ITileFactory
             case TileIds.AutumnTree:
             {
                 Entity e = world.New()
-                    .With(new Position(x, y, 2))
+                    .With(new Position(x, y, Const.EntitiesZ))
                     .With(Origin.CenterBottom())
                     .With(new Rotation())
                     .With(Scale.One())
@@ -126,6 +128,8 @@ public sealed class TileFactory : ITileFactory
                     .With(new SinScaleTween(3))
                     .With(Sprite.From("assets/units/enemies/ghost_by_mivioon.png"))
                     .With<Tile>()
+                    .With<EnemyUnit>()
+                    .With<Ghost>()
                     .With<BlockCell>()
                     .With(new Health(5, 5))
                     .With(new Name("Chainy"))

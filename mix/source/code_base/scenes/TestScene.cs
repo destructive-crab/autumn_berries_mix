@@ -8,6 +8,7 @@ using destruct.scenes;
 using Microsoft.VisualBasic.CompilerServices;
 using mix.code_base.gameplay;
 using mix.code_base.gameplay.systems;
+using mix.code_base.gameplay.units.ghost;
 using mix.gameplay.overlay;
 using mix.gameplay.overlay.models;
 using mix.gameplay.overlay.tweens;
@@ -48,7 +49,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
 
         Game.NewPostProcessingOverride<Vignette>()
             .SetColor(Color.Black)
-            .SetIntensity(0.8f)
+            .SetIntensity(0.3f)
             .SetSmoothness(1)
             .SetRoundness(1);
         
@@ -76,18 +77,19 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new ConsoleSystem(), Systems));
 
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new HealthSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new GhostSystem(), Systems));
        
         gameMap.Create(10,10);
         camera.CurrentCamera = new Camera2D();
         camera.CurrentCamera.Zoom = 0.5f;
 
         World.BlockFiltersEvaluation();
-        for (int x = 0; x < 8; x++)
+        for (int x = 0; x < gameMap.LayerWidth; x++)
         {
-            for (int y = 0; y < 4; y++)
+            for (int y = 0; y < gameMap.LayerHeight; y++)
             {
                 tileFactory.CreateTileFromID(TileIds.AutumnTerrain, x, y);
-                if ((x != 1 && y != 1) && (x == 0 || y == 0 || y == 3 || x == 7 || Random.Shared.Next(0, 3) == 1))
+                if ((x != 1 && y != 1) && (x == 0 || y == 0 || y == 5 || x == 7 || Random.Shared.Next(0, 3) == 1))
                 {
                     tileFactory.CreateTileFromID(TileIds.AutumnTree, x, y);
                 }
@@ -103,7 +105,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         
         Game.AudioService.PlayMusic("assets/audio/main_theme.ogg", 40);
 
-        path = Pathfinder.FindPath(gameMap, new(1, 1), new(6, 2));
+        path = Pathfinder.FindPath(gameMap, new(1, 1), new(7, 2));
         if (path == null)
         {
             LGR.PERR("Failed to find path");
@@ -139,6 +141,12 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         {
             foreach (var renderer in Systems.Filter<IWorldRendererSystem>())
                 renderer.RenderWorld();
+            
+            foreach (Vec2I p in path)
+            {
+                Raylib.DrawRectangle((int)UTL.UnitsToPixels(p).X - Global.TILE_SIZE / 2, (int)UTL.UnitsToPixels(p).Y - Global.TILE_SIZE / 2, Global.TILE_SIZE, Global.TILE_SIZE, new(100, 100, 100, 100) );
+                ;
+            }
         }
         Raylib.EndMode2D();
         

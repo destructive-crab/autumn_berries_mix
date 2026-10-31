@@ -56,6 +56,7 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
 
     public void RenderWorld()
     {
+        this.entities.Sort((a, b) => UTL.CompareSpritesRendererOrder(a, b, world));
         foreach (int entity in entities)
         {
             Sprite sprite = texturesPool.Get(entity);
