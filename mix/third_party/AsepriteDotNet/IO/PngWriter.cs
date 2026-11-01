@@ -5,7 +5,6 @@
 using System.Buffers.Binary;
 using System.IO.Compression;
 using System.Text;
-using AsepriteDotNet.Aseprite;
 using AsepriteDotNet.Common;
 using AsepriteDotNet.Compression;
 

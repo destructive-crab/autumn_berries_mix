@@ -5,7 +5,6 @@
 using AsepriteDotNet.Aseprite;
 using AsepriteDotNet.Aseprite.Types;
 using AsepriteDotNet.Common;
-using AsepriteDotNet.Compression;
 
 namespace AsepriteDotNet;
 

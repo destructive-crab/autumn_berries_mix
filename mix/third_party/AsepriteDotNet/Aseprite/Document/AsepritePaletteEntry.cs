@@ -3,7 +3,6 @@
 //  See LICENSE file in the project root for full license information
 
 using System.Runtime.InteropServices;
-using AsepriteDotNet.Aseprite;
 using AsepriteDotNet.Common;
 
 namespace AsepriteDotNet.Aseprite.Document;

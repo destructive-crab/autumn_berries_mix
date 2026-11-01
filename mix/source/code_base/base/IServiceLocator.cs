@@ -1,5 +1,3 @@
-using System;
-
 namespace destruct.ServiceLocators
 {
     public interface IServiceLocator

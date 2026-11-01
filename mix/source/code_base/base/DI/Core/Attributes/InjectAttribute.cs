@@ -1,5 +1,3 @@
-using System;
-
 namespace destruct.DI
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method | AttributeTargets.Property)]

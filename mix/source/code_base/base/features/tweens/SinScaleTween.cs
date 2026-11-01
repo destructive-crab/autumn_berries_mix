@@ -1,25 +1,22 @@
-using destruct;
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
 using mix.code_base;
 
-namespace mix.gameplay.overlay.tweens;
+namespace destruct.tweens;
 
-public struct SinYPositionTween
+public struct SinScaleTween
 {
     public float CurrentSinAngle;
     public float Speed;
 
-    public int Radius;
-
-    public SinYPositionTween(float speed)
+    public SinScaleTween(float speed)
     {
         Speed = speed;
     }
 }
 
-public sealed class SinYPositionTweenSystem : IPreRendererSystem
+public sealed class SinScaleTweenSystem : IPreRendererSystem
 {
     public string DebugName() => nameof(SinScaleTweenSystem);
 
@@ -31,7 +28,7 @@ public sealed class SinYPositionTweenSystem : IPreRendererSystem
     {
         this.world = world;
         filter = world.Filter()
-            .In<SinYPositionTween>()
+            .In<SinScaleTween>()
             .In<Scale>()
             .Evaluate();
     }
@@ -40,12 +37,12 @@ public sealed class SinYPositionTweenSystem : IPreRendererSystem
     {
         foreach (int entity in filter.Entities)
         {
-            world.GetFrom<Scale>(entity).Y = 1 + MathF.Sin(world.GetFrom<SinYPositionTween>(entity).CurrentSinAngle)/20;
-            ref SinYPositionTween tween = ref world.GetFrom<SinYPositionTween>(entity);
+            world.GetFrom<Scale>(entity).Y = 1 + MathF.Sin(world.GetFrom<SinScaleTween>(entity).CurrentSinAngle)/20;
+            ref SinScaleTween tween = ref world.GetFrom<SinScaleTween>(entity);
             tween.CurrentSinAngle += Game.DeltaTime*tween.Speed;
             
-            if (world.GetFrom<SinYPositionTween>(entity).CurrentSinAngle >= 360)
-                world.GetFrom<SinYPositionTween>(entity).CurrentSinAngle = 0;
+            if (world.GetFrom<SinScaleTween>(entity).CurrentSinAngle >= 360)
+                world.GetFrom<SinScaleTween>(entity).CurrentSinAngle = 0;
         }
     }
 }

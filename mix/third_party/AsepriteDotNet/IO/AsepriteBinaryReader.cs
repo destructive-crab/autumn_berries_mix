@@ -3,8 +3,6 @@
 //  See LICENSE file in the project root for full license information
 
 using System.Buffers.Binary;
-using System.IO.Compression;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using AsepriteDotNet.Compression;

@@ -13,6 +13,14 @@ public struct Cell
     public List<int> Entities;
 }
 
+public static class GameMapUTL
+{
+    public static bool IsCellWalkable(this GameMap map, Vec2I cell)
+    {
+        return map.Contains(cell) && !map.CellHasEntityWith<BlockCell>(cell);
+    }
+}
+
 public sealed class GameMap
 {
     public int LayerWidth { get; private set; }
@@ -118,7 +126,7 @@ public sealed class GameMap
         where TComponent : struct
     {
         if (!Contains(position))
-            throw new Exception("No cell with position {position] found in map");
+            throw new Exception($"No cell with position {position} found in map");
 
         EntityComponentPool<TComponent> pool = world.Pool<TComponent>();
         
@@ -186,9 +194,66 @@ public sealed class GameMap
         return posComponent.ToRoundedV2I();
     }
 
+    public void QuitMap(int tileId)
+    {
+        ref Cell cell = ref world.GetFrom<Cell>(world.GetFrom<Tile>(tileId).CellId);
+        
+        cell.Entities.Remove(tileId);
+
+        world.GetFrom<Tile>(tileId).CellId = -1;
+    }
+
+    public bool IsTileAttachedToCell(int tileId)
+    {
+        return world.GetFrom<Tile>(tileId).CellId != -1;
+    }
+
+    public void TryMoveTileOrAddToCell(int tileId, Vec2I cellPosition)
+    {
+        if (!Contains(cellPosition))
+        {
+            DropCellPositionOutOfBoundsError(cellPosition);
+            return;
+        }
+        
+        if (IsTileAttachedToCell(tileId))
+        {
+            MoveTile(tileId, cellPosition);
+        }
+        else
+        {
+            GetCell(cellPosition).Entities.Add(tileId);
+            
+            world.GetFrom<Tile>(tileId).CellId = GetCellId(cellPosition);
+        }
+    }
+
+    public void AddTileToCell(int tileId, Vec2I cellPosition)
+    {
+        if (!Contains(cellPosition))
+        {
+            DropCellPositionOutOfBoundsError(cellPosition);
+            return;
+        }
+        
+        if (IsTileAttachedToCell(tileId))
+        {
+            LGR.PERR($"Cannot add tile to cell {cellPosition} because {tileId} already attached to cell. Use MoveTile");
+            return;
+        }
+        
+        GetCell(cellPosition).Entities.Add(tileId);
+        
+        world.GetFrom<Tile>(tileId).CellId = GetCellId(cellPosition);
+    }
+    
     public void MoveTile(int tileId, Vec2I newPosition)
     {
-        if (!Contains(newPosition)) return;
+        if (!Contains(newPosition))
+        {
+            DropCellPositionOutOfBoundsError(newPosition);
+            return;
+        }
 
         ref Cell cell = ref world.GetFrom<Cell>(world.GetFrom<Tile>(tileId).CellId);
         
@@ -197,5 +262,10 @@ public sealed class GameMap
         GetCell(newPosition).Entities.Add(tileId);
         
         world.GetFrom<Tile>(tileId).CellId = GetCellId(newPosition);
+    }
+
+    private void DropCellPositionOutOfBoundsError(Vec2I position)
+    {
+        LGR.PERR($"Cell position is out of bounds of map {position}. Map bounds ({LayerHeight}x{LayerWidth}");
     }
 }

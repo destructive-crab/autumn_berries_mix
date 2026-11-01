@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace mix.gameplay.overlay.tweens;
+namespace destruct.tweens;
 
 public struct PositionTween
 {

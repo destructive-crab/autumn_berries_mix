@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace destruct.DI
+﻿namespace destruct.DI
 {
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class InjectRegionAttribute : Attribute

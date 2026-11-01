@@ -36,7 +36,6 @@ public sealed class HealthBarsSystem : IGUISystem
         enemyUnitsHealthFilter  = w.Filter().In<Health>().In<EnemyUnit>();
     }
     
-
     public void DrawGUI()
     {
         deGUI.BeginContainer(PaddingFromSideOfTheScreen, 0, HealthBarWidth, -1);
@@ -76,6 +75,7 @@ public sealed class HealthBarsSystem : IGUISystem
             deGUI.BeginContainer(5, deGUI.NextY(), (int)MathF.Ceiling(health.Current / (float)health.Maximum * (HealthBarWidth-10)), BarHeight);
             {
                 deGUI.FillContainer(Color.Red);
+                deGUI.TextCenter($"{health.Current}/{health.Maximum}", FontSize, Color.White);
             }
             deGUI.EndContainer();
         }

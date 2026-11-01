@@ -4,7 +4,7 @@ using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using mix.code_base.gameplay.systems;
-using mix.gameplay.overlay.tweens;
+using destruct.tweens;
 
 namespace mix.code_base.gameplay.units.ghost;
 
@@ -22,6 +22,8 @@ public sealed class GhostSystem : IGameLogicSystem
 
     private GameplayFilters filters;
     private GameMap map;
+
+    private const int GhostMoveRecursionLimit = 3;
 
     [Inject]
     private void Inject(ECSWorld world, GameplayFilters filters, GameMap map)
@@ -46,7 +48,14 @@ public sealed class GhostSystem : IGameLogicSystem
             if (ghostUnit.ReadyToTakeTurn)
             {
                 ghostUnit.ReadyToTakeTurn = false;
-                MakeMove(entity);
+                try
+                {
+                    MakeMove(entity);
+                }
+                catch (Exception e)
+                {
+                    LGR.PM(e);
+                }
             }
 
             if (ghostUnit.ShowTurnPlan)
@@ -88,41 +97,65 @@ public sealed class GhostSystem : IGameLogicSystem
         }
 
         Vec2I moveDir = bestPath[0] - pStart;
-        Vec2I currentCell = pStart;
+        await MakeMove(entity, pStart, moveDir);
+    }
+
+    private async Task MakeMove(int entity, Vec2I start, Vec2I moveDir, int howManyTimesAlreadyWasRepeated = 0)
+    {
+        try
+        {
+
+        if (howManyTimesAlreadyWasRepeated == 0) map.QuitMap(entity);
+        
+        Vec2I currentCell = start;
         
         for (int i = 0; i < map.CellsCount; i++)
         {
             Vec2I nextCell = currentCell + moveDir;
 
-            if (map.CellHasEntityWith<BlockCell>(nextCell))
-                if (!map.CellHasEntityWith<Health>(nextCell)) break;
+            if (howManyTimesAlreadyWasRepeated > GhostMoveRecursionLimit)
+            {
+                if (map.IsCellWalkable(nextCell)) await PerformMoveTween(nextCell);
+
+                break;
+            }
             
-            foreach (var entityToHit in map.GetEntitiesWith<Health>(nextCell))
+            bool hasEntityToHit = map.Contains(nextCell) && map.CellHasEntityWith<Health>(nextCell);
+            
+            if (!map.IsCellWalkable(nextCell) && !hasEntityToHit) break;
+            
+            currentCell = await PerformMoveTween(nextCell);
+            
+            if (hasEntityToHit)
             {
-                world.GetFrom<Health>(entityToHit).Current -= 1;
-            }
+                foreach (var entityToHit in map.GetEntitiesWith<Health>(nextCell))
+                    world.GetFrom<Health>(entityToHit).Current -= 1;
 
-            bool completed = false;
-            world.Pool<PositionTween>().New(entity, (ref PositionTween t) =>
-            {
-                t.Destination = nextCell;
-                t.Speed = 2;
-    
-                t.Completed += () =>
+                if (!map.IsCellWalkable(currentCell + moveDir) && 
+                    !map.CellHasEntityWith<Health>(currentCell + moveDir))
                 {
-                    completed = true;
-                }; 
-            });
-
-            while (!completed)
-            {
-                await Task.Yield();
+                    await MakeMove(entity, currentCell, -moveDir, howManyTimesAlreadyWasRepeated+1);
+                    return;
+                }
             }
-
-            currentCell = nextCell;
         }
         
-        map.MoveTile(entity, currentCell);
+        map.AddTileToCell(entity, currentCell);
         world.GetFrom<EnemyUnit>(entity).ReadyToTakeTurn = false;
+        LGR.PM("FINISHED");
+
+        async Task<Vec2I> PerformMoveTween(Vec2I nextCell)
+        {
+            await Tweens.MoveTween(world, entity, nextCell, 2);
+
+            currentCell = nextCell;
+            return currentCell;
+        }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

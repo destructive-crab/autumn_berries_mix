@@ -1,10 +1,9 @@
-using destruct;
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
 using mix.code_base;
 
-namespace mix.gameplay.overlay.tweens;
+namespace destruct.tweens;
 
 public struct SinRotationTween
 {

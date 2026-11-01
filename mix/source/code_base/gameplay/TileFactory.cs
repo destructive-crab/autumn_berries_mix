@@ -4,9 +4,8 @@ using destruct.ecs;
 using mix.code_base;
 using mix.code_base.gameplay.units;
 using mix.code_base.gameplay.units.ghost;
-using mix.gameplay.overlay.tweens;
+using destruct.tweens;
 using mix.gameplay.overlay.units.abilities;
-using mix.gameplay.systems;
 
 namespace mix.gameplay.overlay;
 
@@ -132,8 +131,8 @@ public sealed class TileFactory : ITileFactory
                     .With<Ghost>()
                     .With<BlockCell>()
                     .With(new Health(5, 5))
-                    .With(new Name("Chainy"))
-                    .With(new Description("chain chain chain swag"));
+                    .With(new Name("Ghost"))
+                    .With(new Description("oOooOooooooO"));
                 
                 return tileEntity.Id;
             }
