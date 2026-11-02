@@ -68,6 +68,8 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new MoveAbilitySystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new BasicAttackSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new PositionTweenSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new RotationTweenSystem(), Systems));
+
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CursorSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSoundSystem(), Systems));
         

@@ -188,6 +188,14 @@ public static class UTL
         builder.Append("]");
         return builder.ToString();
     }
+    
+    public static float MoveTowards(float current, float target, float maxDelta)
+    {
+        if (Math.Abs(target - current) <= maxDelta)
+            return target; 
+    
+        return current + Math.Sign(target - current) * maxDelta;
+    }
 }
 
 public enum GameDirection

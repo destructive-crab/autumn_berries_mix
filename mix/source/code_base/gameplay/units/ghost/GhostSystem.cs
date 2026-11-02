@@ -104,10 +104,19 @@ public sealed class GhostSystem : IGameLogicSystem
     {
         try
         {
-
-        if (howManyTimesAlreadyWasRepeated == 0) map.QuitMap(entity);
+            if (howManyTimesAlreadyWasRepeated == 0) map.QuitMap(entity);
         
+        world.GetOrAdd(entity, (ref RotationTween t) => 
+        {
+            t.Speed = 80;
+            int sign = Math.Sign(moveDir.X);
+            if (sign == 0) sign = 1;
+            t.DestinationValue =  sign * 10;
+        });
+            
         Vec2I currentCell = start;
+
+        world.GetFrom<Sprite>(entity).MirroredHorizontal = moveDir.X < 0;
         
         for (int i = 0; i < map.CellsCount; i++)
         {
@@ -131,26 +140,40 @@ public sealed class GhostSystem : IGameLogicSystem
                 foreach (var entityToHit in map.GetEntitiesWith<Health>(nextCell))
                     world.GetFrom<Health>(entityToHit).Current -= 1;
 
-                if (!map.IsCellWalkable(currentCell + moveDir) && 
-                    !map.CellHasEntityWith<Health>(currentCell + moveDir))
+                Vec2I nextNextCell = currentCell + moveDir;
+                if (!map.Contains(nextNextCell) ||
+                   (!map.IsCellWalkable(nextNextCell) && 
+                    !map.CellHasEntityWith<Health>(nextNextCell)))
                 {
                     await MakeMove(entity, currentCell, -moveDir, howManyTimesAlreadyWasRepeated+1);
                     return;
                 }
             }
         }
-        
+
+        if (world.HasIn<RotationTween>(entity))
+        {
+            world.GetFrom<RotationTween>(entity).DestinationValue = 0;
+        }
+        else
+        {
+            world.Pool<RotationTween>().New(entity, (ref RotationTween t) =>
+            {
+                t.Speed = 80;
+                t.DestinationValue = 0;
+            });
+        }
         map.AddTileToCell(entity, currentCell);
         world.GetFrom<EnemyUnit>(entity).ReadyToTakeTurn = false;
-        LGR.PM("FINISHED");
 
         async Task<Vec2I> PerformMoveTween(Vec2I nextCell)
         {
-            await Tweens.MoveTween(world, entity, nextCell, 2);
+            await Tweens.MoveTween(world, entity, nextCell, 3);
 
             currentCell = nextCell;
             return currentCell;
         }
+        
         }
         catch (Exception e)
         {

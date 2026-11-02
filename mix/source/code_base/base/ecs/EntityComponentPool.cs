@@ -92,7 +92,7 @@ public sealed class EntityComponentPool<TComponent> : IEntityComponentPool
 
     public bool Has(int entityId)
     {
-        return entityToComponent.Length > entityId && entityToComponent[entityId] != 0;
+        return entityToComponent.Length > entityId && entityId >= 0 && entityToComponent[entityId] != 0;
     }
     
     public void Remove(int entityId)

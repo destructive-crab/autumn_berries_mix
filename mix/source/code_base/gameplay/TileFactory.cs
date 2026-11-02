@@ -121,7 +121,7 @@ public sealed class TileFactory : ITileFactory
 
                 tileEntity
                     .With(new Position(x, y, Const.EntitiesZ))
-                    .With(Origin.CenterBottom())
+                    .With(new Origin(0.5f, 0.7f))
                     .With(Scale.One())
                     .With<Rotation>()
                     .With(new SinScaleTween(3))

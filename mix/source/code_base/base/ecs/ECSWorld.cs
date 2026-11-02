@@ -74,6 +74,22 @@ public sealed class ECSWorld
         where TComponent : struct 
         => ref Pool<TComponent>().Get(entityId);
 
+    public ref TComponent GetOrAdd<TComponent>(int entityId)
+        where TComponent : struct
+    {
+        if (!HasIn<TComponent>(entityId)) Pool<TComponent>().New(entityId);
+
+        return ref GetFrom<TComponent>(entityId);
+    }
+    
+    public void GetOrAdd<TComponent>(int entityId, ComponentConfiguration<TComponent> configurator)
+        where TComponent : struct
+    {
+        if (!HasIn<TComponent>(entityId)) Pool<TComponent>().New(entityId);
+
+        configurator.Invoke(ref GetFrom<TComponent>(entityId));
+    }
+    
     public bool HasIn<TComponent>(int entityId)
         where TComponent : struct
     {
