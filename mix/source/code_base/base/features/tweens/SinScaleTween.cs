@@ -1,14 +1,14 @@
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
-using mix.code_base;
+using destruct;
 
 namespace destruct.tweens;
 
-public struct SinScaleTween
+public struct SinScaleTween : ISinAngleComponent
 {
-    public float CurrentSinAngle;
-    public float Speed;
+    public float Speed { get; set; }
+    public float CurrentSinAngle { get; set; }
 
     public SinScaleTween(float speed)
     {
@@ -38,11 +38,8 @@ public sealed class SinScaleTweenSystem : IPreRendererSystem
         foreach (int entity in filter.Entities)
         {
             world.GetFrom<Scale>(entity).Y = 1 + MathF.Sin(world.GetFrom<SinScaleTween>(entity).CurrentSinAngle)/20;
-            ref SinScaleTween tween = ref world.GetFrom<SinScaleTween>(entity);
-            tween.CurrentSinAngle += Game.DeltaTime*tween.Speed;
             
-            if (world.GetFrom<SinScaleTween>(entity).CurrentSinAngle >= 360)
-                world.GetFrom<SinScaleTween>(entity).CurrentSinAngle = 0;
+            SinAngleUpdateUTL.UpdateAngle(ref world.GetFrom<SinScaleTween>(entity));
         }
     }
 }

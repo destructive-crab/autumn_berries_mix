@@ -1,6 +1,6 @@
 using destruct.scenes;
 
-namespace mix.code_base.gameplay.systems;
+namespace destruct.gameplay.systems;
 
 public interface IFrameBeginningSystem : ISystem
 {

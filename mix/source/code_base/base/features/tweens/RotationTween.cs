@@ -1,8 +1,8 @@
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
-using mix.code_base;
-using mix.code_base.gameplay.systems;
+using destruct;
+using destruct.gameplay.systems;
 
 namespace destruct.tweens;
 

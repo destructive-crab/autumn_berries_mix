@@ -5,7 +5,7 @@ using destruct.scenes;
 using mix.gameplay.systems;
 using mix.inputs;
 
-namespace mix.code_base.gameplay.systems;
+namespace destruct.gameplay.systems;
 
 public struct Selected { }
 public struct Selectable { }

@@ -5,7 +5,7 @@ using destruct.ecs;
 using destruct.scenes;
 using Raylib_cs;
 
-namespace mix.code_base;
+namespace destruct;
 
 public static class RendererUTL
 {
@@ -72,6 +72,9 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
             Vector2 origin = world.Pool<Origin>().Get(entity).ToV2();
             Vector2 scale = world.Pool<Scale>().Get(entity).ToV2();
             
+            Color color = Color.White;
+            if (world.HasIn<RendererColor>(entity)) color = world.GetFrom<RendererColor>(entity).Value;
+            
             float rotation = 0;
             if (world.HasIn<Rotation>(entity)) rotation = world.GetFrom<Rotation>(entity).Angle;
 
@@ -87,7 +90,7 @@ public sealed class SpriteRendererSystem : ISystem, IWorldRendererSystem
             destinationRect.Width *= world.GetFrom<Scale>(entity).X;
             destinationRect.Height *= world.GetFrom<Scale>(entity).Y;
 
-            Raylib.DrawTexturePro(sprite.Fragment.Texture.Get(), sourceRect, destinationRect, origin, rotation, Color.White);
+            Raylib.DrawTexturePro(sprite.Fragment.Texture.Get(), sourceRect, destinationRect, origin, rotation, color);
         }
     }
 }

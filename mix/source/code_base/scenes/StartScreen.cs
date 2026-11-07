@@ -3,7 +3,7 @@ using destruct.DI;
 using destruct.imgui;
 using Raylib_cs;
 
-namespace mix.code_base;
+namespace destruct;
 
 public sealed class StartScreen : Scene, IDependenciesProvider
 {

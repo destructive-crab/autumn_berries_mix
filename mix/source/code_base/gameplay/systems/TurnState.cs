@@ -2,9 +2,9 @@ using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
-using mix.code_base.gameplay.units;
+using destruct.gameplay.units;
 
-namespace mix.code_base.gameplay.systems;
+namespace destruct.gameplay.systems;
 
 public interface IPlayerTurnSystem
 {

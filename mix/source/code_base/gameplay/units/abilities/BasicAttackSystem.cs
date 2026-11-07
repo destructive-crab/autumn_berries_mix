@@ -1,7 +1,9 @@
 using destruct;
+using destruct.Debug;
 using destruct.DI;
-using mix.code_base;
-using mix.code_base.gameplay.systems;
+using destruct.gameplay.systems;
+using destruct.tweens;
+using Raylib_cs;
 
 namespace mix.gameplay.overlay.units.abilities;
 
@@ -49,6 +51,7 @@ public sealed class BasicAttackSystem : PlayerAbilitySystem<BasicAttackAbility>
             if (World.HasIn<Health>(entity))
             {
                 World.GetFrom<Health>(entity).Current -= AbilityComponent(ability).Damage;
+                Tweens.PingPongColorTween(World, entity, new(255, 0, 0, 200), 1200);
             }
         }
 

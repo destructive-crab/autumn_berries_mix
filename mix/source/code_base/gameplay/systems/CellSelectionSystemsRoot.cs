@@ -4,7 +4,7 @@ using destruct.scenes;
 using mix.gameplay.overlay;
 using mix.gameplay.systems;
 
-namespace mix.code_base.gameplay.systems;
+namespace destruct.gameplay.systems;
 
 public interface ISystemBasedOnCellSelection : ISystem
 {

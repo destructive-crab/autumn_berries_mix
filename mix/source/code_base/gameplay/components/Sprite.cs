@@ -1,7 +1,19 @@
 using System.Numerics;
 using destruct.Debug;
+using Raylib_cs;
 
-namespace mix.code_base;
+namespace destruct;
+
+public struct RendererColor
+{
+    public Color Value;
+
+    public RendererColor(Color value)
+    {
+        Value = value;
+        LGR.PM("DKFsdjflksdjf " + Value);
+    }
+}
 
 public struct Rotation
 {

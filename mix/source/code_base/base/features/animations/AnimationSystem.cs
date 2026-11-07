@@ -2,7 +2,7 @@ using destruct;
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
-using Sprite = mix.code_base.Sprite;
+using Sprite = destruct.Sprite;
 
 namespace mix.gameplay.systems;
 

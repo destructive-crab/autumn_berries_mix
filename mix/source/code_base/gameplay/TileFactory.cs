@@ -1,11 +1,12 @@
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
-using mix.code_base;
-using mix.code_base.gameplay.units;
-using mix.code_base.gameplay.units.ghost;
+using destruct;
+using destruct.gameplay.units;
+using destruct.gameplay.units.ghost;
 using destruct.tweens;
 using mix.gameplay.overlay.units.abilities;
+using Raylib_cs;
 
 namespace mix.gameplay.overlay;
 
@@ -121,11 +122,12 @@ public sealed class TileFactory : ITileFactory
 
                 tileEntity
                     .With(new Position(x, y, Const.EntitiesZ))
-                    .With(new Origin(0.5f, 0.7f))
+                    .With(new Origin(0.5f, 1f))
+                    .With(new RendererColor(Color.White))
                     .With(Scale.One())
                     .With<Rotation>()
                     .With(new SinScaleTween(3))
-                    .With(Sprite.From("assets/units/enemies/ghost_by_mivioon.png"))
+                    .With(Sprite.From("assets/units/enemies/ghost.png"))
                     .With<Tile>()
                     .With<EnemyUnit>()
                     .With<Ghost>()

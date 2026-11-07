@@ -5,7 +5,7 @@ using destruct.imgui;
 using destruct.scenes;
 using Raylib_cs;
 
-namespace mix.code_base.gameplay.systems;
+namespace destruct.gameplay.systems;
 
 public sealed class DebugHUDSystem : IGUISystem
 {

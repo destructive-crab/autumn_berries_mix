@@ -1,7 +1,7 @@
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
-using mix.code_base;
+using destruct;
 
 namespace destruct.tweens;
 

@@ -3,10 +3,10 @@ using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
-using mix.code_base.gameplay.systems;
+using destruct.gameplay.systems;
 using destruct.tweens;
 
-namespace mix.code_base.gameplay.units.ghost;
+namespace destruct.gameplay.units.ghost;
 
 public struct Ghost
 {

@@ -3,7 +3,7 @@ using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
 
-namespace mix.code_base.gameplay.systems;
+namespace destruct.gameplay.systems;
 
 public class SelectionSoundSystem : ISystem
 {

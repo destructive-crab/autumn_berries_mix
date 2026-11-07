@@ -1,7 +1,7 @@
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
-using mix.code_base;
+using destruct;
 using mix.gameplay.systems;
 
 namespace mix.gameplay.overlay;

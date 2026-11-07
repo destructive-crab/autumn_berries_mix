@@ -2,7 +2,7 @@
 using System.Text;
 using destruct.Debug;
 using destruct.ecs;
-using mix.code_base;
+using destruct;
 
 namespace destruct;
 
@@ -192,8 +192,10 @@ public static class UTL
     public static float MoveTowards(float current, float target, float maxDelta)
     {
         if (Math.Abs(target - current) <= maxDelta)
-            return target; 
-    
+            return target;
+
+        LGR.PM($"MOVE TOWARDS {target} {current} {Math.Sign(target - current) * maxDelta}");
+        
         return current + Math.Sign(target - current) * maxDelta;
     }
 }

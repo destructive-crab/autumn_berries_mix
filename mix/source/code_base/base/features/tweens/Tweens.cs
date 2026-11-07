@@ -1,5 +1,7 @@
 using System.Numerics;
+using destruct.Debug;
 using destruct.ecs;
+using Raylib_cs;
 
 namespace destruct.tweens;
 
@@ -28,6 +30,23 @@ public static class Tweens
             t.Destination = destPosition;
             t.Speed = speed;
             t.Completed += onCompleted;
+        });
+    }
+    
+    public static void PingPongColorTween(ECSWorld world, int entity, Color destination, float speed)
+    {
+        if (world.HasIn<Color>(entity))
+        {
+            LGR.PERR("Cannot add color tween to entity without color component");
+            return;
+        }
+        
+        world.Pool<ColorTween>().New(entity, (ref ColorTween color) =>
+        {
+            color.Destination = destination;
+            color.Speed       = speed;
+            color.Initial     = world.GetFrom<RendererColor>(entity).Value;
+            color.PingPong    = true;
         });
     }
 }

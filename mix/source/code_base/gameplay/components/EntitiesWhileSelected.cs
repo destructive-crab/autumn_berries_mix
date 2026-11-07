@@ -1,4 +1,4 @@
-namespace mix.code_base;
+namespace destruct;
 
 public struct EntitiesWhileSelected
 {

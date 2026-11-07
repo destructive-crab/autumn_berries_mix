@@ -3,11 +3,11 @@ using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
+using destruct.gameplay;
+using destruct.gameplay.systems;
+using destruct.gameplay.units.ghost;
 using destruct.imgui;
 using destruct.scenes;
-using mix.code_base.gameplay;
-using mix.code_base.gameplay.systems;
-using mix.code_base.gameplay.units.ghost;
 using mix.gameplay.overlay;
 using mix.gameplay.overlay.models;
 using destruct.tweens;
@@ -16,7 +16,7 @@ using mix.gameplay.systems;
 using mix.inputs;
 using Raylib_cs;
 
-namespace mix.code_base;
+namespace destruct;
 
 public abstract class ECSScene : Scene
 {
@@ -69,6 +69,7 @@ public sealed class TestScene : ECSScene, IDependenciesProvider
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new BasicAttackSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new PositionTweenSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new RotationTweenSystem(), Systems));
+        Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new ColorTweenSystem(), Systems));
 
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new CursorSystem(), Systems));
         Systems.Register(Game.G<DIKernel>().InjectWithBaseAnd(new SelectionSoundSystem(), Systems));

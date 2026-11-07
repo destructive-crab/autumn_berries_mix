@@ -6,7 +6,7 @@ using mix.gameplay.systems;
 using mix.inputs;
 using Raylib_cs;
 
-namespace mix.code_base.gameplay.systems;
+namespace destruct.gameplay.systems;
 
 public sealed class CursorSystem : ISystem, IInputsProcessSystem 
 {

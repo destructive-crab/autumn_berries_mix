@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace mix.code_base;
+namespace destruct;
 
 public struct Position
 {

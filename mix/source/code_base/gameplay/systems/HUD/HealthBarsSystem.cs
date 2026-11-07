@@ -2,8 +2,8 @@ using destruct.DI;
 using destruct.ecs;
 using destruct.imgui;
 using destruct.scenes;
-using mix.code_base;
-using mix.code_base.gameplay.units;
+using destruct;
+using destruct.gameplay.units;
 using Raylib_cs;
 
 namespace mix.gameplay.systems;

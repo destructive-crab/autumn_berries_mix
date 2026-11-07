@@ -1,8 +1,8 @@
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
-using mix.code_base;
-using mix.code_base.gameplay.systems;
+using destruct;
+using destruct.gameplay.systems;
 
 namespace mix.gameplay.overlay.units.abilities;
 

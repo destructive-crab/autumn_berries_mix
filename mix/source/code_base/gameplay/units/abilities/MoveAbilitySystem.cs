@@ -1,7 +1,6 @@
 using destruct;
 using destruct.DI;
-using mix.code_base;
-using mix.code_base.gameplay.systems;
+using destruct.gameplay.systems;
 using destruct.tweens;
 
 namespace mix.gameplay.overlay.units.abilities;

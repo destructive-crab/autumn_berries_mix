@@ -1,7 +1,7 @@
 using destruct.ecs;
-using mix.code_base.gameplay.units;
+using destruct.gameplay.units;
 
-namespace mix.code_base.gameplay;
+namespace destruct.gameplay;
 
 public sealed class GameplayFilters
 {

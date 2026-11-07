@@ -2,10 +2,10 @@ using destruct;
 using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
-using mix.code_base.gameplay.systems;
+using destruct.gameplay.systems;
 using mix.gameplay.systems;
 
-namespace mix.code_base;
+namespace destruct;
 
 public struct Cell
 {

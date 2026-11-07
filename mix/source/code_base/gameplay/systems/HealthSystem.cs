@@ -1,7 +1,7 @@
 using destruct.DI;
 using destruct.ecs;
 
-namespace mix.code_base.gameplay.systems;
+namespace destruct.gameplay.systems;
 
 public sealed class HealthSystem : IGameLogicSystem
 {

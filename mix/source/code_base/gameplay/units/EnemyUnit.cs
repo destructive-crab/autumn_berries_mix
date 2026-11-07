@@ -1,4 +1,4 @@
-namespace mix.code_base.gameplay.units;
+namespace destruct.gameplay.units;
 
 public struct EnemyUnit
 {
