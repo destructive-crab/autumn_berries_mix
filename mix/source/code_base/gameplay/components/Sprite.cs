@@ -11,7 +11,6 @@ public struct RendererColor
     public RendererColor(Color value)
     {
         Value = value;
-        LGR.PM("DKFsdjflksdjf " + Value);
     }
 }
 

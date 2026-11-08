@@ -44,14 +44,12 @@ public sealed class BasicAttackSystem : PlayerAbilitySystem<BasicAttackAbility>
 
     private void PerformHit(int ability, Vec2I cellPosition)
     {
-        int attackerUnit = UnitOf(ability);
-        
         foreach (int entity in Map.GetEntities(cellPosition))
         {
             if (World.HasIn<Health>(entity))
             {
-                World.GetFrom<Health>(entity).Current -= AbilityComponent(ability).Damage;
-                Tweens.PingPongColorTween(World, entity, new(255, 0, 0, 200), 1200);
+                Game.AudioService.PlaySound(AbilityComponent(ability).SoundPath, 0.8f, UTL.RandomPitchForSound());
+                HealthUTL.Hit(World, entity, AbilityComponent(ability).Damage);
             }
         }
 

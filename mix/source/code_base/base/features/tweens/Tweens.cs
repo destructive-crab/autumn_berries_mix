@@ -35,7 +35,7 @@ public static class Tweens
     
     public static void PingPongColorTween(ECSWorld world, int entity, Color destination, float speed)
     {
-        if (world.HasIn<Color>(entity))
+        if (!world.HasIn<RendererColor>(entity))
         {
             LGR.PERR("Cannot add color tween to entity without color component");
             return;

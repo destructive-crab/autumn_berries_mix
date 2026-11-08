@@ -1,4 +1,3 @@
-using destruct.Debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.gameplay.systems;
@@ -36,7 +35,6 @@ public sealed class ColorTweenSystem : IGameLogicSystem
         filter = world.Filter()
             .In<RendererColor>()
             .In<ColorTween>();
-        
     }
 
     public void Process()
@@ -44,7 +42,7 @@ public sealed class ColorTweenSystem : IGameLogicSystem
         foreach (int entity in filter.Entities)
         {
             ref RendererColor entityColor = ref world.GetFrom<RendererColor>(entity);
-            ref ColorTween tween = ref world.GetFrom<ColorTween>(entity);
+            ref ColorTween    tween       = ref world.GetFrom<ColorTween>(entity);
 
             byte r = (byte)UTL.MoveTowards(entityColor.Value.R, tween.Destination.R, Game.DeltaTime * tween.Speed);
             byte g = (byte)UTL.MoveTowards(entityColor.Value.G, tween.Destination.G, Game.DeltaTime * tween.Speed);
@@ -55,17 +53,14 @@ public sealed class ColorTweenSystem : IGameLogicSystem
             
             if (entityColor.Value == tween.Destination)
             {
-                LGR.PM("ENDED");
                 if (tween.PingPong)
                 {
                     tween.Destination = tween.Initial;
                     tween.PingPong = false;
-                    LGR.PM($"DOING PING PONG for {tween.Initial} {entityColor.Value} {tween.Destination}");
                 }
                 else
                 {
                     world.RemoveFrom<ColorTween>(entity);
-                    LGR.PM($"DeLETEd");
                 }
             }
         }

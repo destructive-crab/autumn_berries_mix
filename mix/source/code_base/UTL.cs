@@ -194,9 +194,12 @@ public static class UTL
         if (Math.Abs(target - current) <= maxDelta)
             return target;
 
-        LGR.PM($"MOVE TOWARDS {target} {current} {Math.Sign(target - current) * maxDelta}");
-        
         return current + Math.Sign(target - current) * maxDelta;
+    }
+
+    public static float RandomPitchForSound()
+    {
+        return Random.Shared.Next(90, 100) / 100;
     }
 }
 

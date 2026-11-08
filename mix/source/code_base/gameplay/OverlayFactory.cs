@@ -73,7 +73,7 @@ public sealed class OverlayFactory
             .With(new Position(0,0,Const.TerrainOverlayZ))
             .With(new Scale(1,1))
             .With(new Origin(0.5f, 0.5f))
-            .With(Sprite.From(AssetsPath.SelectedCellBorder)).Id;
+            .With(Sprite.From(OverlayAssets.SelectedCellBorder)).Id;
     }
 
     public int CreatePointedCellOverlay(ECSWorld world)
@@ -82,7 +82,7 @@ public sealed class OverlayFactory
             .With(new Position(0, 0, Const.TerrainOverlayZ))
             .With(new Scale(1,1))
             .With(new Origin(0.5f, 0.5f))
-            .With(Sprite.From(AssetsPath.PointedCellBorder)).Id;
+            .With(Sprite.From(OverlayAssets.PointedCellBorder)).Id;
     }
 
     public int[] SpawnAttackPointers(IEnumerable<Vec2I> positions)

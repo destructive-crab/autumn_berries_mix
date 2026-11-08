@@ -53,8 +53,6 @@ public sealed class RotationTweenSystem : IGameLogicSystem
     {
         if (filter == null || filter.Entities == null) return;
 
-        if (filter.Entities.Count() != 0) LGR.PM(filter.Entities.Count());
-        
         foreach (int entity in filter.Entities)
         {
             ref RotationTween tween    = ref world.GetFrom<RotationTween>(entity);

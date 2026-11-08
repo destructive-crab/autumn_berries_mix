@@ -44,7 +44,7 @@ public sealed class TileFactory : ITileFactory
                     .With(Origin.Center())
                     .With(new DrawOffset(0, 50))
                     .With(Scale.One())
-                    .With(Sprite.From("assets/tiles/autumn_terrain.png"))
+                    .With(Sprite.From(SpriteAssets.AutumnTerrain))
                     .With<Tile>()
                     .With(new TileWalkSound("assets/audio/autumn_grass_tile_walk.ogg"))
                     .With(new Name("Autumn Terrain"))
@@ -59,7 +59,7 @@ public sealed class TileFactory : ITileFactory
                     .With(Origin.CenterBottom())
                     .With(new Rotation())
                     .With(Scale.One())
-                    .With(Sprite.From("assets/tiles/autumn_tree.png"))
+                    .With(Sprite.From(SpriteAssets.AutumnTree))
                     .With(new DrawOffset(0, 40))
                     .With(new Name("Autumn Tree"))
                     .With(new Description("Tree"))
@@ -80,9 +80,11 @@ public sealed class TileFactory : ITileFactory
                     .With(Scale.One())
                     .With<Rotation>()
                     .With(new SinScaleTween(3))
-                    .With(Sprite.From("assets/units/player/chainy.png"))
+                    .With(Sprite.From(SpriteAssets.Chainy))
                     .With<Tile>()
+                    .With<RendererColor>(new RendererColor(Color.White))
                     .With<BlockCell>()
+                    .With<HitSound>(new HitSound(SFX.ChainyHit, 1))
                     .With(new Health(5,5))
                     .With(new Name("Chainy"))
                     .With(new Description("chain chain chain swag"))
@@ -91,9 +93,10 @@ public sealed class TileFactory : ITileFactory
                              Entity moveAbility = world.New()
                                  .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/move_ability.png"))
                                  .With(new MoveAbility());
-                                  Entity chainsawAttack = world.New()
+                             
+                             Entity chainsawAttack = world.New()
                                  .With(new PlayerUnitAbility(tileEntity.Id, "assets/units/player/chainsaw_attack_ability.png"))
-                                 .With(new BasicAttackAbility());
+                                 .With(new BasicAttackAbility(1, SFX.Chainsaw));
                              
                              u.Default();
                              u.Abilities = [ moveAbility.Id, chainsawAttack.Id ];
@@ -127,10 +130,11 @@ public sealed class TileFactory : ITileFactory
                     .With(Scale.One())
                     .With<Rotation>()
                     .With(new SinScaleTween(3))
-                    .With(Sprite.From("assets/units/enemies/ghost.png"))
+                    .With(Sprite.From(SpriteAssets.Ghost))
                     .With<Tile>()
                     .With<EnemyUnit>()
                     .With<Ghost>()
+                    .With<HitSound>(new HitSound(SFX.GhostHit, 0.8f))
                     .With<BlockCell>()
                     .With(new Health(5, 5))
                     .With(new Name("Ghost"))

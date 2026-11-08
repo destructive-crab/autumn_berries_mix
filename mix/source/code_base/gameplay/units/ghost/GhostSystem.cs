@@ -10,7 +10,7 @@ namespace destruct.gameplay.units.ghost;
 
 public struct Ghost
 {
-    
+    public int Damage;
 }
 
 public sealed class GhostSystem : IGameLogicSystem
@@ -48,14 +48,7 @@ public sealed class GhostSystem : IGameLogicSystem
             if (ghostUnit.ReadyToTakeTurn)
             {
                 ghostUnit.ReadyToTakeTurn = false;
-                try
-                {
-                    MakeMove(entity);
-                }
-                catch (Exception e)
-                {
-                    LGR.PM(e);
-                }
+                MakeMove(entity);
             }
 
             if (ghostUnit.ShowTurnPlan)
@@ -104,7 +97,8 @@ public sealed class GhostSystem : IGameLogicSystem
     {
         try
         {
-            if (howManyTimesAlreadyWasRepeated == 0) map.QuitMap(entity);
+
+        if (howManyTimesAlreadyWasRepeated == 0) map.QuitMap(entity);
         
         world.GetOrAdd(entity, (ref RotationTween t) => 
         {
@@ -138,7 +132,9 @@ public sealed class GhostSystem : IGameLogicSystem
             if (hasEntityToHit)
             {
                 foreach (var entityToHit in map.GetEntitiesWith<Health>(nextCell))
-                    world.GetFrom<Health>(entityToHit).Current -= 1;
+                {
+                    HealthUTL.Hit(world, entityToHit, world.GetFrom<Ghost>(entity).Damage);
+                }
 
                 Vec2I nextNextCell = currentCell + moveDir;
                 if (!map.Contains(nextNextCell) ||
@@ -165,7 +161,7 @@ public sealed class GhostSystem : IGameLogicSystem
         }
         map.AddTileToCell(entity, currentCell);
         world.GetFrom<EnemyUnit>(entity).ReadyToTakeTurn = false;
-
+            
         async Task<Vec2I> PerformMoveTween(Vec2I nextCell)
         {
             await Tweens.MoveTween(world, entity, nextCell, 3);
@@ -173,12 +169,12 @@ public sealed class GhostSystem : IGameLogicSystem
             currentCell = nextCell;
             return currentCell;
         }
-        
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
+
     }
 }
