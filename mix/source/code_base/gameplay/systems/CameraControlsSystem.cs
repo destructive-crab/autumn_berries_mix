@@ -4,7 +4,7 @@ using mix.gameplay.overlay;
 using mix.inputs;
 using Raylib_cs;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public sealed class CameraControlsSystem : ISystem, IInputsProcessSystem 
 {

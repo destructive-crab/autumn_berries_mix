@@ -1,9 +1,10 @@
 using destruct;
-using destruct.Debug;
+using destruct.debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.gameplay.systems;
-using mix.gameplay.systems;
+using destruct.postprocessing;
+using destruct.renderer;
 
 namespace destruct;
 

@@ -1,11 +1,9 @@
 using System.Numerics;
-using destruct;
-using destruct.Debug;
 using destruct.ecs;
 using destruct.scenes;
 using Raylib_cs;
 
-namespace destruct;
+namespace destruct.renderer;
 
 public static class RendererUTL
 {

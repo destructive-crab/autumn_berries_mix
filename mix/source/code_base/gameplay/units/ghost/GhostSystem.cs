@@ -1,9 +1,10 @@
 using autumn_berries_mix;
 using destruct;
-using destruct.Debug;
+using destruct.debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.gameplay.systems;
+using destruct.renderer;
 using destruct.tweens;
 
 namespace destruct.gameplay.units.ghost;

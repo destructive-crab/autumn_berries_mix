@@ -2,7 +2,7 @@ using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public sealed class AnimatorSystem : IPreRendererSystem
 {

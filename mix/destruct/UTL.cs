@@ -1,8 +1,9 @@
 ﻿using System.Numerics;
 using System.Text;
-using destruct.Debug;
+using destruct.debug;
 using destruct.ecs;
 using destruct;
+using destruct.renderer;
 
 namespace destruct;
 

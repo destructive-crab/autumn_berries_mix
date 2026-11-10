@@ -1,6 +1,8 @@
-using destruct.Debug;
 
-namespace mix.gameplay.overlay.units.abilities;
+using destruct;
+using destruct.assets;
+
+namespace mix.gameplay.abilities;
 
 public struct PlayerUnitAbility
 {

@@ -1,6 +1,6 @@
 public struct AssetsPath
 {
-    public const string AutumnTerrain      = "assets/tiles/autumn_terrain_by_mivioon.png";
+    public const string AutumnTerrain = "assets/tiles/autumn_terrain_by_mivioon.png";
 }
 
 public struct SFX
@@ -17,4 +17,10 @@ public struct SpriteAssets
     public const string Chainy        = "assets/units/player/chainy.png";
     public const string AutumnTerrain = "assets/tiles/autumn_terrain.png";
     public const string AutumnTree    = "assets/tiles/autumn_tree.png";
+}
+
+public struct OverlayAssets
+{
+    public const string PointedCellBorder  = "assets/overlay/cell_pointed_by_mivioon.png";
+    public const string SelectedCellBorder = "assets/overlay/cell_selected_by_mivioon.png";
 }

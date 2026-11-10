@@ -1,7 +1,8 @@
+using destruct.assets;
 using destruct.scenes;
 using Raylib_cs;
 
-namespace destruct.gameplay.systems;
+namespace destruct.graphics;
 
 public sealed class BackgroundSystem : IPreRendererSystem, IRendererSystem
 {

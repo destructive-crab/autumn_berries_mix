@@ -4,7 +4,7 @@ using destruct.imgui;
 using destruct.scenes;
 using Raylib_cs;
 
-namespace destruct.gameplay.systems;
+namespace destruct.developer_tools;
 
 public sealed class ConsoleSystem : IGUISystem
 {

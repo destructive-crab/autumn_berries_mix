@@ -2,6 +2,7 @@ using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
 using destruct;
+using destruct.renderer;
 
 namespace destruct.tweens;
 

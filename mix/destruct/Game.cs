@@ -1,7 +1,8 @@
 using System.Diagnostics;
-using destruct.Debug;
+using destruct.assets;
+using destruct.debug;
 using destruct.ServiceLocators;
-using mix.gameplay.systems;
+using destruct.postprocessing;
 using Raylib_cs;
 
 namespace destruct;
@@ -24,7 +25,7 @@ public partial class Game
 
     public static float DeltaTime { get; private set; }
     
-    public static async Task StartGame(bool allowDebug, GameStartPoint point)
+    internal static async Task StartGame(bool allowDebug, GameStartPoint point)
     {
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(800, 600, "MIX");
@@ -97,7 +98,7 @@ public partial class Game
         }
     }
     
-    public static void Loop()
+    private static void Loop()
     {
         Stopwatch stopwatch = new();
         stopwatch.Start();

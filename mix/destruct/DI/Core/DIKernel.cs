@@ -1,5 +1,5 @@
 using System.Reflection;
-using destruct.Debug;
+using destruct.debug;
 using destruct.ServiceLocators;
 
 namespace destruct.DI

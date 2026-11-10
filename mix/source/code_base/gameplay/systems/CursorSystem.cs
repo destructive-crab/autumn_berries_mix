@@ -1,8 +1,7 @@
-using destruct;
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
-using mix.gameplay.systems;
+using destruct.postprocessing;
 using mix.inputs;
 using Raylib_cs;
 

@@ -1,8 +1,9 @@
-using destruct.Debug;
+using destruct.debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct;
 using destruct.gameplay.systems;
+using destruct.renderer;
 
 namespace destruct.tweens;
 

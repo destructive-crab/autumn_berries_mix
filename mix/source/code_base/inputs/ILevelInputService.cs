@@ -1,10 +1,7 @@
-﻿using System.Numerics;
-using destruct;
+using System.Numerics;
+using destruct.inputs;
 
-public enum InputMode
-{
-    Main
-}
+namespace mix.inputs;
 
 public interface ILevelInputService : IInputService
 {

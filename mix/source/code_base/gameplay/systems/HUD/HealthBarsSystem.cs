@@ -6,7 +6,7 @@ using destruct;
 using destruct.gameplay.units;
 using Raylib_cs;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public sealed class HealthBarsSystem : IGUISystem
 {

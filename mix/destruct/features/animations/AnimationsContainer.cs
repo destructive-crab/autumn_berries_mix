@@ -1,6 +1,6 @@
-using destruct.Debug;
+using destruct.debug;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public sealed class AnimationsContainer : IDisposable
 {

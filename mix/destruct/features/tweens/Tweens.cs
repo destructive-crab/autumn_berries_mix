@@ -1,6 +1,7 @@
 using System.Numerics;
-using destruct.Debug;
+using destruct.debug;
 using destruct.ecs;
+using destruct.renderer;
 using Raylib_cs;
 
 namespace destruct.tweens;

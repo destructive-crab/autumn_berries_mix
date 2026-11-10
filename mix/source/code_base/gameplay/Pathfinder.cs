@@ -1,5 +1,5 @@
 using System.Numerics;
-using destruct.Debug;
+using destruct.debug;
 using destruct;
 
 namespace autumn_berries_mix

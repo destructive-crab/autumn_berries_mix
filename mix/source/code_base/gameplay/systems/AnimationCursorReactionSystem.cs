@@ -2,7 +2,7 @@ using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
 using mix.gameplay.overlay;
-using mix.gameplay.systems;
+using destruct.postprocessing;
 
 namespace destruct.gameplay.systems;
 

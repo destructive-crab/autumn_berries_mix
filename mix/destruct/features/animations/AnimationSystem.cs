@@ -1,10 +1,9 @@
-using destruct;
 using destruct.DI;
 using destruct.ecs;
 using destruct.scenes;
-using Sprite = destruct.Sprite;
+using Sprite = destruct.renderer.Sprite;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public sealed class AnimationSystem : ISystem, IWorldRendererSystem
 {

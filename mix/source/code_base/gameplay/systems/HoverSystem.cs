@@ -2,10 +2,11 @@ using System.Numerics;
 using destruct;
 using destruct.DI;
 using destruct.ecs;
+using destruct.renderer;
 using destruct.scenes;
 using mix.inputs;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public struct Hovered {}
 public struct Hoverable {}

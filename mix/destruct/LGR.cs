@@ -1,4 +1,4 @@
-﻿namespace destruct.Debug
+﻿namespace destruct.debug
 {
     public static class LGR
     {

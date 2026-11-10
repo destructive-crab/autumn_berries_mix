@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace destruct;
+namespace destruct.inputs;
 
 public interface IInputService
 {

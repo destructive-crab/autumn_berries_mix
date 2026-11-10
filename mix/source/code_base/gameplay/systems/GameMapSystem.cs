@@ -3,7 +3,7 @@ using destruct.ecs;
 using destruct.scenes;
 using destruct;
 
-namespace mix.gameplay.overlay.models;
+namespace mix.gameplay.map;
 
 public sealed class GameMapSystem : ISystem
 {

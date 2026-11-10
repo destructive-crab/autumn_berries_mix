@@ -1,6 +1,7 @@
 using destruct.DI;
 using destruct.ecs;
 using destruct.gameplay.systems;
+using destruct.renderer;
 using Raylib_cs;
 
 namespace destruct.tweens;

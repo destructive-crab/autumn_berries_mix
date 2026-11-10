@@ -1,6 +1,7 @@
-using destruct.Debug;
+using destruct.assets;
+using destruct.debug;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public struct Animator
 {

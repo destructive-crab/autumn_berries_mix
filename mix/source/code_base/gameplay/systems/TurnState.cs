@@ -1,5 +1,5 @@
 using destruct;
-using destruct.Debug;
+using destruct.debug;
 using destruct.DI;
 using destruct.ecs;
 using destruct.gameplay.units;

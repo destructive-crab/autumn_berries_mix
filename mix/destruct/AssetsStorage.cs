@@ -1,17 +1,12 @@
 using AsepriteDotNet.Common;
 using AsepriteDotNet.IO;
 using AsepriteDotNet.Processors;
-using destruct.Debug;
-using mix.gameplay.systems;
+using destruct.debug;
+using destruct.postprocessing;
 using Raylib_cs;
 using Rectangle = Raylib_cs.Rectangle;
 
-
-public struct OverlayAssets
-{
-    public const string PointedCellBorder  = "assets/overlay/cell_pointed_by_mivioon.png";
-    public const string SelectedCellBorder = "assets/overlay/cell_selected_by_mivioon.png";
-}
+namespace destruct.assets;
 
 public struct TextureFragment
 {

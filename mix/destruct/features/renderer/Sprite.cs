@@ -1,8 +1,8 @@
 using System.Numerics;
-using destruct.Debug;
+using destruct.assets;
 using Raylib_cs;
 
-namespace destruct;
+namespace destruct.renderer;
 
 public struct RendererColor
 {

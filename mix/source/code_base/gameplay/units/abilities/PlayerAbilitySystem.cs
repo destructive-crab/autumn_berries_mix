@@ -4,7 +4,7 @@ using destruct.scenes;
 using destruct;
 using destruct.gameplay.systems;
 
-namespace mix.gameplay.overlay.units.abilities;
+namespace mix.gameplay.abilities;
 
 public abstract class PlayerAbilitySystem<TAbility> : ISystem, ISystemBasedOnCellSelection, IPlayerTurnSystem
     where TAbility : struct 

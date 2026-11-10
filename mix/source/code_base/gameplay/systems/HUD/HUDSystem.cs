@@ -4,10 +4,10 @@ using destruct.imgui;
 using destruct.scenes;
 using destruct;
 using destruct.gameplay.systems;
-using mix.gameplay.overlay.units.abilities;
+using mix.gameplay.abilities;
 using Raylib_cs;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public sealed class HUDSystem : ISystem, IGUISystem
 {

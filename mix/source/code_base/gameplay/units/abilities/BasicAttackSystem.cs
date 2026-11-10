@@ -1,11 +1,12 @@
 using destruct;
-using destruct.Debug;
+using destruct.debug;
 using destruct.DI;
 using destruct.gameplay.systems;
 using destruct.tweens;
+using mix.gameplay.overlay;
 using Raylib_cs;
 
-namespace mix.gameplay.overlay.units.abilities;
+namespace mix.gameplay.abilities;
 
 public sealed class BasicAttackSystem : PlayerAbilitySystem<BasicAttackAbility>
 {

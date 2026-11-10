@@ -1,4 +1,4 @@
-using destruct.Debug;
+using destruct.debug;
 
 namespace destruct.ServiceLocators
 {

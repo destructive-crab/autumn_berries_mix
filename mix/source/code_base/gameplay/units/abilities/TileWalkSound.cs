@@ -1,4 +1,4 @@
-namespace mix.gameplay.overlay.units.abilities;
+namespace mix.gameplay.abilities;
 
 public struct MoveSound
 {

@@ -1,9 +1,11 @@
 using destruct;
 using destruct.DI;
 using destruct.gameplay.systems;
+using destruct.renderer;
 using destruct.tweens;
+using mix.gameplay.overlay;
 
-namespace mix.gameplay.overlay.units.abilities;
+namespace mix.gameplay.abilities;
 
 public sealed class MoveAbilitySystem : PlayerAbilitySystem<MoveAbility>
 {

@@ -1,6 +1,6 @@
 using Raylib_cs;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public abstract class PostprocessingOverride
 {

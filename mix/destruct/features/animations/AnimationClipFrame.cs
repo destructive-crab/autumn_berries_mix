@@ -1,6 +1,7 @@
+using destruct.assets;
 using Raylib_cs;
 
-namespace mix.gameplay.systems;
+namespace destruct.postprocessing;
 
 public struct AnimationClipFrame
 {
