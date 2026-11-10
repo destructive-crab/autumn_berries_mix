@@ -1,5 +1,15 @@
 namespace mix.gameplay.overlay.units.abilities;
 
+public struct MoveSound
+{
+    public string SoundAssetPath;
+
+    public MoveSound(string soundAssetPath)
+    {
+        SoundAssetPath = soundAssetPath;
+    }
+}
+
 public struct TileWalkSound
 {
     public string SoundAssetPath;

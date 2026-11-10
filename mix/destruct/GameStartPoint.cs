@@ -1,7 +1,7 @@
 using destruct;
 using destruct.DI;
 
-public abstract partial class GameStartPoint 
+public abstract class GameStartPoint 
 {
     public abstract bool AllowDebug();
     public virtual IDependenciesProvider[] GetProviders()

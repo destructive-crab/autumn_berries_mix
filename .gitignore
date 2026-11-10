@@ -5,3 +5,5 @@
 /mix/source/obj
 /mix/third_party/AsepriteDotNet/obj
 /mix/third_party/AsepriteDotNet/bin
+/mix/destruct/bin
+/mix/destruct/obj

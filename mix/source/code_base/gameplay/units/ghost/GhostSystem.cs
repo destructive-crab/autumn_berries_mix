@@ -11,6 +11,11 @@ namespace destruct.gameplay.units.ghost;
 public struct Ghost
 {
     public int Damage;
+
+    public Ghost(int damage)
+    {
+        Damage = damage;
+    }
 }
 
 public sealed class GhostSystem : IGameLogicSystem
@@ -61,8 +66,11 @@ public sealed class GhostSystem : IGameLogicSystem
     private async Task MakeMove(int entity)
     {
         List<Vec2I> bestPath = null;
+
+        AudioService.SoundLoopController loop = new();
+        Game.AudioService.PlaySoundLoop(SFX.GhostIdle, 0.9f, UTL.RandomPitchForSound(), loop);
         
-        if (!UTL.TryGetCellPosition(world, entity, out var pStart))
+        if (!GameMap.TryGetCellPosition(world, entity, out var pStart))
         {
             LGR.PERR($"Failed getting cell position from ghost with id {entity}");
             return;
@@ -71,7 +79,7 @@ public sealed class GhostSystem : IGameLogicSystem
         foreach (int playerUnit in filters.PlayerUnits.Entities)
         {
             LGR.PM($"TRYING PLAYER UNIT {playerUnit} FOR GHOST");
-            if (UTL.TryGetCellPosition(world, playerUnit, out var pEnd))
+            if (GameMap.TryGetCellPosition(world, playerUnit, out var pEnd))
             {
                 List<Vec2I> path = Pathfinder.FindPath(map, pStart, pEnd);
                 if (bestPath == null || path.Count < bestPath.Count)
@@ -91,13 +99,11 @@ public sealed class GhostSystem : IGameLogicSystem
 
         Vec2I moveDir = bestPath[0] - pStart;
         await MakeMove(entity, pStart, moveDir);
+        loop.Stop();
     }
 
     private async Task MakeMove(int entity, Vec2I start, Vec2I moveDir, int howManyTimesAlreadyWasRepeated = 0)
     {
-        try
-        {
-
         if (howManyTimesAlreadyWasRepeated == 0) map.QuitMap(entity);
         
         world.GetOrAdd(entity, (ref RotationTween t) => 
@@ -169,12 +175,5 @@ public sealed class GhostSystem : IGameLogicSystem
             currentCell = nextCell;
             return currentCell;
         }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-
     }
 }

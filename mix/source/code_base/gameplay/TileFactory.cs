@@ -133,7 +133,7 @@ public sealed class TileFactory : ITileFactory
                     .With(Sprite.From(SpriteAssets.Ghost))
                     .With<Tile>()
                     .With<EnemyUnit>()
-                    .With<Ghost>()
+                    .With<Ghost>(new Ghost(1))
                     .With<HitSound>(new HitSound(SFX.GhostHit, 0.8f))
                     .With<BlockCell>()
                     .With(new Health(5, 5))

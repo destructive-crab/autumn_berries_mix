@@ -100,10 +100,9 @@ public sealed class OverlayFactory
     public int SpawnAttackPointer(int x, int y)
     {
         return world.New()
-            .With<Position>(new Position(x, y - 0.5f, Const.EntitiesOverlayZ))
+            .With<Position>(new Position(x, y, Const.TerrainOverlayZ))
             .With<Scale>(new Scale(1, 1))
             .With<Origin>(new Origin(0.5f, 0.5f))
-            .With<Hoverable>()
             .With<Sprite>(Sprite.From("assets/overlay/attack_pointer.png"))
             .Id;
     }

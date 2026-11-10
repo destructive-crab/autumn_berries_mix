@@ -268,4 +268,17 @@ public sealed class GameMap
     {
         LGR.PERR($"Cell position is out of bounds of map {position}. Map bounds ({LayerHeight}x{LayerWidth}");
     }
+    
+    public static bool TryGetCellPosition(ECSWorld world, int entity, out Vec2I position)
+    {
+        position = Vec2I.Zero;
+
+        if (world.HasIn<Tile>(entity))
+        {
+            position = world.GetFrom<Cell>(world.GetFrom<Tile>(entity).CellId).Position;
+            return true;
+        }
+
+        return false;
+    }
 }

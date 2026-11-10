@@ -6,8 +6,6 @@ using AsepriteDotNet.Processors;
 using mix.gameplay.systems;
 using Raylib_cs;
 
-namespace mix.aseprite;
-
 public static class AsepriteImporter
 {
     public static AnimationClip[] ImportClips(string assetPath)

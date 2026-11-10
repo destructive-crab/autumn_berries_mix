@@ -28,19 +28,6 @@ public static class UTL
         ];
     }
 
-    public static bool TryGetCellPosition(ECSWorld world, int entity, out Vec2I position)
-    {
-        position = Vec2I.Zero;
-
-        if (world.HasIn<Tile>(entity))
-        {
-            position = world.GetFrom<Cell>(world.GetFrom<Tile>(entity).CellId).Position;
-            return true;
-        }
-
-        return false;
-    }
-
     public static Vector2 TranslatePositionInPixelsToUnits(Vector2 pixels)
     {
         return new Vector2(pixels.X / Global.PixelsPerUnit, pixels.Y / Global.PixelsPerUnit);

@@ -76,6 +76,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\destruct\destruct.csproj" />
       <ProjectReference Include="..\third_party\AsepriteDotNet\AsepriteDotNet.csproj" />
     </ItemGroup>
 
